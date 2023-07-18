@@ -1,12 +1,16 @@
-import { Link } from 'react-router-dom';
+import { useRouteError } from 'react-router-dom';
 
-function NotFound() {
+export default function ErrorPage() {
+  const error = useRouteError();
+  console.error(error);
+
   return (
-    <>
-      <h1>Not found</h1>
-      <Link to="/">GO HOME</Link>
-    </>
+    <div id="error-page">
+      <h1>Oops!</h1>
+      <p>Sorry, an unexpected error has occurred.</p>
+      <p>
+        <i>{error.statusText || error.message}</i>
+      </p>
+    </div>
   );
 }
-
-export default NotFound;
