@@ -1,0 +1,204 @@
+@font-face {
+    font-family: 'PowerGroteskTrial'; /*Can be any text*/
+    src:
+        local('PowerGroteskTrialHeavy'),
+        local('Power Grotesk Trial Heavy'),
+        url('./assets/fonts/PowerGroteskTrial/PowerGroteskTrial-Heavy.ttf') format('truetype');
+        font-weight: 900;
+}
+
+@font-face {
+    font-family: 'PowerGroteskTrial'; /*Can be any text*/
+    src:
+        local('PowerGroteskTrialBlack'),
+        local('Power Grotesk Trial Black'),
+        url('./assets/fonts/PowerGroteskTrial/PowerGroteskTrial-Black.ttf') format('truetype');
+        font-weight: 800;
+}
+
+@font-face {
+    font-family: 'PowerGroteskTrial'; /*Can be any text*/
+    src:
+        local('PowerGroteskTrialUltraBold'),
+        local('Power Grotesk Trial Ultra Bold'),
+        url('./assets/fonts/PowerGroteskTrial/PowerGroteskTrial-UltraBold.ttf') format('truetype');
+        font-weight: 700;
+}
+
+@font-face {
+    font-family: 'PowerGroteskTrial'; /*Can be any text*/
+    src:
+        local('PowerGroteskTrialBold'),
+        local('Power Grotesk Trial Bold'),
+        url('./assets/fonts/PowerGroteskTrial/PowerGroteskTrial-Bold.ttf') format('truetype');
+        font-weight: 600;
+}
+
+@font-face {
+    font-family: 'PowerGroteskTrial'; /*Can be any text*/
+    src:
+        local('PowerGroteskTrialRegular'),
+        local('Power Grotesk Trial Regular'),
+        url('./assets/fonts/PowerGroteskTrial/PowerGroteskTrial-Regular.ttf') format('truetype');
+        font-weight: 400;
+}
+
+@font-face {
+    font-family: 'PowerGroteskTrial'; /*Can be any text*/
+    src:
+        local('PowerGroteskTrialLight'),
+        local('Power Grotesk Trial Light'),
+        url('./assets/fonts/PowerGroteskTrial/PowerGroteskTrial-Light.ttf') format('truetype');
+        font-weight: 300;
+}
+
+@font-face {
+    font-family: 'NeuePlak'; /*Can be any text*/
+    src:
+        local('NeuePlakBold'),
+        local('Neue Plak Bold'),
+        url('./assets/fonts/NeuePlak/NeuePlak-Bold.ttf') format('truetype');
+        font-weight: 600;
+}
+
+@font-face {
+    font-family: 'NeuePlak'; /*Can be any text*/
+    src:
+        local('NeuePlakRegular'),
+        local('Neue Plak Regular'),
+        url('./assets/fonts/NeuePlak/NeuePlak-Regular.ttf') format('truetype');
+        font-weight: 400;
+}
+
+
+
+
+:root {
+    --primary-color: #F1511B;
+    --white-color: #FFFFFF;
+    --black-color: #161A20;
+    --light-primary-color: #FEEEE8;
+}
+
+html, body, div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var,
+b, u, i, center,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td,
+article, aside, canvas, details, embed, 
+figure, figcaption, footer, header, hgroup, 
+menu, nav, output, ruby, section, summary,
+time, mark, audio, video {
+	margin: 0;
+	padding: 0;
+	border: 0;
+	font-size: 100%;
+	font: inherit;
+	vertical-align: baseline;
+}
+/* HTML5 display-role reset for older browsers */
+article, aside, details, figcaption, figure, 
+footer, header, hgroup, menu, nav, section {
+	display: block;
+}
+body {
+	line-height: 1;
+}
+ol, ul {
+	list-style: none;
+}
+blockquote, q {
+	quotes: none;
+}
+blockquote:before, blockquote:after,
+q:before, q:after {
+	content: '';
+	content: none;
+}
+table {
+	border-collapse: collapse;
+	border-spacing: 0;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+a {
+    font-family: "PowerGroteskTrial";
+    font-weight: 400;
+    color: var(--black-color);
+    text-decoration: none;
+}
+
+a:hover{
+    text-decoration: underline;
+}
+
+/* default settings */
+
+body{
+    font-family: "PowerGroteskTrial";
+    font-weight: 400;
+}
+
+h1, h2, h3, h4, h5, h6{
+    font-family: "PowerGroteskTrial";
+    font-weight: 900;
+}
+
+h1 {
+    font-size: 2.25rem;
+    font-weight: 800;
+    text-align: center;
+    line-height: normal;
+}
+
+
+/* FormStyles */
+form{
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    width: 100%;
+    align-items: center;
+    max-width: 50rem;
+    width: 100%;
+}
+
+
+
+
+
+
+/* Media */
+
+@media (max-width: 1536px) {
+
+}
+
+@media (max-width: 1280px) {
+
+}
+
+@media (max-width: 1024px) {
+
+}
+
+@media (max-width: 768px) {
+
+}
+
+@media (max-width: 576px) {
+    h1{
+        font-size: 1.75rem;
+    }
+}
+
+@media (max-width: 320px) {
+
+}
