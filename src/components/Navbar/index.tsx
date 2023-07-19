@@ -15,12 +15,10 @@ function Navbar() {
         <Logo />
         <Wordmark />
       </div>
-      {isUserLogged ? (
-        <div className="self-center hidden md:block">
-          <span className="text-persimmon mr-2 inline-block">MyDecks</span>
-          <span>Other Link</span>
-        </div>
-      ) : null}
+      <div className={isUserLogged ? 'self-center hidden md:block' : 'hidden'}>
+        <span className="text-persimmon mr-2 inline-block">MyDecks</span>
+        <span>Other Link</span>
+      </div>
       <div className="hidden md:block">
         <button className="bg-persimmon text-white p-2" type="button">
           <Link to="/login">{isUserLogged ? 'LOGOUT' : 'LOGIN'}</Link>
