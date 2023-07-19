@@ -4,7 +4,7 @@ import hideInputText from '../../assets/images/HideInput.png';
 import showInputText from '../../assets/images/ShowInput.png';
 import uploadFileIcon from '../../assets/images/ArrowTopRight.svg';
 
-interface InputProps {
+export interface InputProps {
   type?;
   style: 'password' | 'toggle' | 'upload' | 'default';
   placeholder?: string;
