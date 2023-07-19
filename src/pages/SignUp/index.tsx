@@ -45,7 +45,11 @@ function SignUp({ title }: { title: string }) {
         <div className={styles.formWrapper}>
           {/* set title from props here */}
           <h1 className={styles.headingStyle}>Sign Up To VC Account</h1>
-          <form onSubmit={submitHandler} className={styles.form} action="submit">
+          <form
+            onSubmit={submitHandler}
+            className={styles.form}
+            action="submit"
+          >
             <Input
               ref={signUpInputsRef}
               style="default"
