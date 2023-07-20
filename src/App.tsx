@@ -5,8 +5,8 @@ import { testService } from './services';
 
 const router = createBrowserRouter([
   { path: '/', element: <Home /> },
-  { path: '/login', element: <LogIn title="Log In" /> },
-  { path: '/signup', element: <SignUp title="Log In" /> },
+  { path: '/login', element: <LogIn /> },
+  { path: '/signup', element: <SignUp /> },
   { path: '*', element: <NotFound /> },
 ]);
 

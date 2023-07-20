@@ -1,4 +1,4 @@
-class SignUp {
+class SignUpFormData {
   email: string;
 
   password: string;
@@ -28,4 +28,4 @@ class SignUp {
   }
 }
 
-export default SignUp;
+export default SignUpFormData;

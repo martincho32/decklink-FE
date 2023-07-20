@@ -5,34 +5,71 @@ import showInputText from '../../assets/images/ShowInput.png';
 import uploadFileIcon from '../../assets/images/ArrowTopRight.svg';
 
 export interface InputProps {
-  type?;
+  type?: string;
   style: 'password' | 'toggle' | 'upload' | 'default';
   placeholder?: string;
   id: string;
   label: string;
-  onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  value?: string;
+  onChange?: (value: string) => void;
 }
 
-function Input({ style, type, placeholder, id, label, onChange }: InputProps) {
+function Input({
+  style,
+  type,
+  placeholder,
+  id,
+  label,
+  value,
+  onChange,
+}: InputProps) {
   let inputElement: JSX.Element;
 
-  const [inputValue, setInputValue] = useState('');
   const [isChecked, setIsChecked] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
 
+  // const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  //   if (onChange) {
+  //     onChange(event.target.value);
+  //   }
+
+  const onDefaultInputEntered = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    console.log('default: ', event);
+    if (onChange) {
+      onChange(event.target.value);
+    }
+  };
+
+  const onFileInputEntered = (event: React.ChangeEvent<HTMLInputElement>) => {
+    console.log('file: ', event);
+    if (onChange) {
+      onChange(event.target.value);
+    }
+  };
+
+  const onToggleInputEntered = (event: React.ChangeEvent<HTMLInputElement>) => {
+    console.log('toggle: ', event);
+    if (onChange) {
+      onChange(event.target.value);
+    }
+
+    if (isChecked) {
+      setIsChecked(false);
+    }
+
+    if (!isChecked) {
+      setIsChecked(true);
+    }
+
+    if (onChange) {
+      onChange(event.target.value);
+    }
+  };
+
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
-  };
-
-  const onInputEntered = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setInputValue(event.target.value);
-  };
-
-  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setIsChecked(event.target.checked);
-    if (onChange) {
-      onChange(event);
-    }
   };
 
   switch (style) {
@@ -45,9 +82,10 @@ function Input({ style, type, placeholder, id, label, onChange }: InputProps) {
               id={id}
               type={showPassword ? 'text' : 'password'}
               placeholder={placeholder}
-              onChange={onInputEntered}
+              value={value}
+              onChange={onDefaultInputEntered}
               className={
-                inputValue ? styles.defaultInputWithValue : styles.defaultInput
+                value ? styles.defaultInputWithValue : styles.defaultInput
               }
             />
             <img
@@ -73,7 +111,8 @@ function Input({ style, type, placeholder, id, label, onChange }: InputProps) {
             <input
               id={id}
               type="checkbox"
-              onChange={handleInputChange}
+              value={value}
+              onChange={onToggleInputEntered}
               checked={isChecked}
             />
             <span className={styles.toggleSlider} />
@@ -88,10 +127,15 @@ function Input({ style, type, placeholder, id, label, onChange }: InputProps) {
           <div className={styles.UploadFileInputWrapper}>
             <label htmlFor={id} className={styles.fileInput}>
               Upload Deck File <img src={uploadFileIcon} alt="" />
+              <div className={styles.uploadInput}>
+                <input
+                  id={id}
+                  type="file"
+                  value={value}
+                  onChange={onFileInputEntered}
+                />
+              </div>
             </label>
-            <div className={styles.uploadInput}>
-              <input id={id} type="file" onChange={onChange} />
-            </div>
           </div>
         </div>
       );
@@ -104,9 +148,10 @@ function Input({ style, type, placeholder, id, label, onChange }: InputProps) {
             type={type}
             id={id}
             placeholder={placeholder}
-            onChange={onInputEntered}
+            value={value}
+            onChange={onDefaultInputEntered}
             className={
-              inputValue ? styles.defaultInputWithValue : styles.defaultInput
+              value ? styles.defaultInputWithValue : styles.defaultInput
             }
           />
         </div>
@@ -120,9 +165,10 @@ function Input({ style, type, placeholder, id, label, onChange }: InputProps) {
             type={type}
             id={id}
             placeholder={placeholder}
-            onChange={onInputEntered}
+            value={value}
+            onChange={onDefaultInputEntered}
             className={
-              inputValue ? styles.defaultInputWithValue : styles.defaultInput
+              value ? styles.defaultInputWithValue : styles.defaultInput
             }
           />
         </div>
@@ -134,9 +180,3 @@ function Input({ style, type, placeholder, id, label, onChange }: InputProps) {
 }
 
 export default Input;
-
-{
-  /* <Input type="password" placeholder="Enter text" label="Password" id="passwod" onChange={handleInputChange} />
-<Input type="toggle" label="True or False" id="true-or-false" onChange={handleInputChange} />
-<Input type="upload" label="Upload File" id="upload" onChange={handleInputChange} /> */
-}
