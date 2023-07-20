@@ -1,16 +1,19 @@
+/* eslint-disable react/button-has-type */
 import React from 'react';
 import styles from './Button.module.css';
 
-interface ButtonProps {
+export interface ButtonProps {
+  type: 'button' | 'submit' | 'reset' | undefined;
   text?: string;
   icon?: React.ReactNode;
   backgroundColor?: string;
   borderColor?: string;
   textColor?: string;
-  onClick?: () => void;
+  onClick?: React.MouseEventHandler<HTMLButtonElement>;
 }
 
 function Button({
+  type,
   text,
   icon,
   backgroundColor,
@@ -34,10 +37,10 @@ function Button({
 
   return (
     <button
-      type="button"
+      type={type}
       className={buttonStyles}
       style={{ backgroundColor, borderColor, color: textColor }}
-      onClick={onClick}
+      onClick={onClick || undefined}
     >
       {text}
       {icon && <span className={styles.icon}>{icon}</span>}

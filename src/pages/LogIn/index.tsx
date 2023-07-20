@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom';
+import { useState } from 'react';
 import Input from '../../UI/Input';
 import Button from '../../UI/Button';
 import whiteTopRightArrow from '../../assets/images/ArrowTopRight.svg';
@@ -8,13 +9,31 @@ import graphImageStanding from '../../assets/images/graph-image-standing.png';
 import { MainLayout } from '../../components/layouts';
 
 function LogIn({ title }: { title: string }) {
+  const [email, setEmail] = useState<string>('');
+  const [password, setPassword] = useState<string>('');
+  const [repeatPassword, setRepeatPassword] = useState<string>('');
+
   console.log('title: ', title);
-  const handleInputChange = () => {
-    console.log('testing');
+
+  const handleEmailChange = (value: string) => {
+    setEmail(value);
+    console.log('email: ', value);
   };
 
-  const handleButtonLogInToVCAccount = () => {
-    console.log('testing');
+  const handlePasswordChange = (value: string) => {
+    setPassword(value);
+    console.log('password: ', value);
+  };
+
+  const handleRepeatPasswordChange = (value: string) => {
+    setRepeatPassword(value);
+    console.log('repeat password: ', value);
+  };
+
+  const submitHandler = () => {
+    console.log('Email:', email);
+    console.log('Password:', password);
+    console.log('Repeat Password:', repeatPassword);
   };
 
   return (
@@ -33,35 +52,42 @@ function LogIn({ title }: { title: string }) {
         <div className={styles.formWrapper}>
           {/* set title from props here */}
           <h1 className={styles.headingStyle}>Log In To VC Account</h1>
-          <form className={styles.form} action="submit">
+          <form
+            onSubmit={submitHandler}
+            className={styles.form}
+            action="submit"
+          >
             <Input
               style="default"
               type="email"
               placeholder="example@gmail.com"
               label="Your Email"
               id="email"
-              onChange={handleInputChange}
+              value={email}
+              onChange={handleEmailChange}
             />
             <Input
               style="password"
               placeholder="******"
               label="Password"
               id="passwod"
-              onChange={handleInputChange}
+              value={password}
+              onChange={handlePasswordChange}
             />
             <Input
               style="password"
               placeholder="******"
               label="Repeat Your Password"
               id="repeat-password"
-              onChange={handleInputChange}
+              value={repeatPassword}
+              onChange={handleRepeatPasswordChange}
             />
             <Button
+              type="submit"
               text="Log In"
               icon={<img src={whiteTopRightArrow} alt="Arrow" />}
               backgroundColor="#F1511B"
               textColor="#FFF"
-              onClick={handleButtonLogInToVCAccount}
             />
 
             {/* TODO add login process via google and linkedin */}

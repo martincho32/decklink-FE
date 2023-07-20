@@ -17,7 +17,12 @@ function SignUp({ title }: { title: string }) {
   const submitHandler = (event: React.FormEvent) => {
     event.preventDefault();
 
-    const enteredData = signUpInputsRef.current?.value;
+    const enteredData = signUpInputsRef.current!.value;
+
+    if (enteredData.trim().length === 0) {
+      return;
+    }
+
     console.log('enteredData: ', enteredData);
   };
 
@@ -45,7 +50,11 @@ function SignUp({ title }: { title: string }) {
         <div className={styles.formWrapper}>
           {/* set title from props here */}
           <h1 className={styles.headingStyle}>Sign Up To VC Account</h1>
-          <form onSubmit={submitHandler} className={styles.form} action="submit">
+          <form
+            onSubmit={submitHandler}
+            className={styles.form}
+            action="submit"
+          >
             <Input
               ref={signUpInputsRef}
               style="default"

@@ -112,12 +112,15 @@ input[type="file"] {
 }
 
 .fileInput {
-    display: inline-block;
-    padding: 1rem 1.25rem;
+    font-family: "PowerGroteskTrial";
+    font-weight: 600;
+    font-size: 1rem;
+    display: flex;
+    padding: 1.25rem 1rem;
     align-items: center;
     gap: 0.5rem;
-    align-self: stretch;
     cursor: pointer;
+    justify-content: center;
     border-radius: 0.25rem;
     background: var(--primary-color);
     color: var(--white-color);
