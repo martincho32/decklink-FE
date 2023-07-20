@@ -16,6 +16,7 @@ function LogIn() {
   const handleEmailChange = (value: string) => {
     setEmail(value);
     console.log('email: ', value);
+    console.log('email2: ', value);
   };
 
   const handlePasswordChange = (value: string) => {
