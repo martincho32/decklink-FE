@@ -1,4 +1,4 @@
-import { useState, memo } from 'react';
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import Button from '../../UI/Button';
 import whiteTopRightArrow from '../../assets/images/ArrowTopRight.svg';
@@ -25,16 +25,16 @@ function SignUp() {
 
   const formTitles = ['Sign Up', 'Additional Information'];
 
-  const PageDisplay = memo(() => {
-    if (page === 0) {
-      return (
-        <RequiredSignUpInfo formData={formData} setFormData={setFormData} />
-      );
-    }
-    return (
-      <NotRequiredSignUpInfo formData={formData} setFormData={setFormData} />
-    );
-  });
+  // const PageDisplay = memo(() => {
+  //   if (page === 0) {
+  //     return (
+  //       <RequiredSignUpInfo formData={formData} setFormData={setFormData} />
+  //     );
+  //   }
+  //   return (
+  //     <NotRequiredSignUpInfo formData={formData} setFormData={setFormData} />
+  //   );
+  // });
 
   const submitHandler = () => {
     console.log(formData);
@@ -56,37 +56,45 @@ function SignUp() {
         <div className={styles.formWrapper}>
           {/* set title from props here */}
           <h1 className={styles.headingStyle}>{formTitles[page]}</h1>
-          <form
-            onSubmit={submitHandler}
-            className={styles.form}
-            action="submit"
-          >
-            <PageDisplay />
+          <form className={styles.form}>
+            {/* <PageDisplay /> */}
             {page === 0 ? (
-              <Button
-                type="button"
-                text="Continue"
-                icon={<img src={whiteTopRightArrow} alt="Arrow" />}
-                backgroundColor="#F1511B"
-                textColor="#FFF"
-                onClick={() => {
-                  setPage((currPage) => currPage + 1);
-                }}
-              />
+              <>
+                <RequiredSignUpInfo
+                  formData={formData}
+                  setFormData={setFormData}
+                />
+                <Button
+                  type="button"
+                  text="Continue"
+                  icon={<img src={whiteTopRightArrow} alt="Arrow" />}
+                  backgroundColor="#F1511B"
+                  textColor="#FFF"
+                  onClick={() => {
+                    setPage((currPage) => currPage + 1);
+                  }}
+                />
+              </>
             ) : (
               <>
+                <NotRequiredSignUpInfo
+                  formData={formData}
+                  setFormData={setFormData}
+                />
                 <Button
-                  type="submit"
+                  type="button"
                   text="Sign up"
                   icon={<img src={whiteTopRightArrow} alt="Arrow" />}
                   backgroundColor="#F1511B"
                   textColor="#FFF"
+                  onClick={submitHandler}
                 />
 
                 <Button
-                  type="submit"
-                  text="Continue without this infromation"
+                  type="button"
+                  text="Continue without this information"
                   textColor="#161a2088"
+                  onClick={submitHandler}
                 />
 
                 <Button
