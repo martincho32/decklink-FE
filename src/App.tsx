@@ -1,18 +1,21 @@
 import { useEffect } from 'react';
-import { Routes, Route } from 'react-router-dom';
+import { createBrowserRouter, RouterProvider } from 'react-router-dom';
+import { Home, LogIn, NotFound, SignUp } from './pages';
 import { testService } from './services';
-import { Home } from './pages';
+
+const router = createBrowserRouter([
+  { path: '/', element: <Home /> },
+  { path: '/login', element: <LogIn /> },
+  { path: '/signup', element: <SignUp /> },
+  { path: '*', element: <NotFound /> },
+]);
 
 function App() {
   useEffect(() => {
     testService.testApi().then((data) => console.log('data: ', data));
   }, []);
 
-  return (
-    <Routes>
-      <Route path="/" element={<Home />} />
-    </Routes>
-  );
+  return <RouterProvider router={router} />;
 }
 
 export default App;

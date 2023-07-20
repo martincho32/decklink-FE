@@ -1,0 +1,107 @@
+@import '../../index.module.css';
+
+.h1{
+    color: var(--black-color);
+}
+
+.textOrange{
+    color: var(--primary-color);
+}
+
+.logotype{
+    height: 3rem;
+}
+
+.imgTopRight{
+    position: absolute;
+    z-index: 0;
+    top: 0;
+    right: 0;
+    height: 15rem;
+}
+
+.imgBotLeft{
+    position: absolute;
+    z-index: 0;
+    bottom: 0;
+    left: 0;
+    height: 15rem;
+}
+
+.buttonWrap{
+    width: 100%;
+    display: flex;
+    justify-content: center;   
+    gap: 1rem;
+}
+
+.blockContainer{
+    display: flex;
+    justify-content: center;
+    position: relative;
+}
+
+.mainContent{
+    margin: auto;
+    max-width: 52rem;
+    width: 60%;
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center; 
+    justify-content: center; 
+    gap: 2rem;
+    padding: 10rem 0rem;
+}
+
+
+@media (max-width: 1536px) {
+
+}
+
+@media (max-width: 1280px) {
+
+}
+
+@media (max-width: 1024px) {
+    .imgTopRight{
+        display: none;
+    }
+    
+    .imgBotLeft{
+        display: none;
+    } 
+
+    .mainContent{
+        width: 80%;
+    }
+}
+
+@media (max-width: 768px) {
+    .mainContent{
+        width: 90%;
+    }
+}
+
+@media (max-width: 576px) {
+    .buttonWrap{
+        display: flex;
+        flex-direction: column;
+        justify-content: center;  
+        align-items: center;  
+        gap: 1rem;    
+    }
+
+    .h1{
+        font-size: 1.5rem;
+    }
+
+    .logotype{
+        height: 2rem;
+    }
+}
+
+@media (max-width: 320px) {
+
+}
