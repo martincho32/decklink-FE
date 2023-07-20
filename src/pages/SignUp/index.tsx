@@ -1,37 +1,43 @@
-import { useRef } from 'react';
+import { useState, memo } from 'react';
 import { Link } from 'react-router-dom';
-import Input from '../../UI/Input';
 import Button from '../../UI/Button';
 import whiteTopRightArrow from '../../assets/images/ArrowTopRight.svg';
 import styles from './SignUp.module.css';
 import graphImageFlying from '../../assets/images/graph-image-flying.png';
 import graphImageStanding from '../../assets/images/graph-image-standing.png';
 import { MainLayout } from '../../components/layouts';
+import SignUpFormData from '../../models/signup';
+import RequiredSignUpInfo from './RequiredSignUpInfo';
+import NotRequiredSignUpInfo from './NotRequiredSignUpInfo';
+import OrangeIconBottomLeft from '../../assets/images/OrangeArrowBottomLeft.svg';
 
-// import useSignUpFormContext from '../../hooks/useSignUpFormContext';
+function SignUp() {
+  const [page, setPage] = useState<number>(0);
 
-function SignUp({ title }: { title: string }) {
-  console.log('title: ', title);
-  const signUpInputsRef = useRef<HTMLInputElement>(null);
+  const [formData, setFormData] = useState<SignUpFormData>({
+    email: '',
+    password: '',
+    confirmPassword: '',
+    companyName: '',
+    companyWebUrl: '',
+    companyLinkedInUrl: '',
+  });
 
-  const submitHandler = (event: React.FormEvent) => {
-    event.preventDefault();
+  const formTitles = ['Sign Up', 'Additional Information'];
 
-    const enteredData = signUpInputsRef.current!.value;
-
-    if (enteredData.trim().length === 0) {
-      return;
+  const PageDisplay = memo(() => {
+    if (page === 0) {
+      return (
+        <RequiredSignUpInfo formData={formData} setFormData={setFormData} />
+      );
     }
+    return (
+      <NotRequiredSignUpInfo formData={formData} setFormData={setFormData} />
+    );
+  });
 
-    console.log('enteredData: ', enteredData);
-  };
-
-  const handleInputChange = () => {
-    console.log('testing');
-  };
-
-  const handleButtonLogInToVCAccount = () => {
-    console.log('testing');
+  const submitHandler = () => {
+    console.log(formData);
   };
 
   return (
@@ -49,44 +55,51 @@ function SignUp({ title }: { title: string }) {
         />
         <div className={styles.formWrapper}>
           {/* set title from props here */}
-          <h1 className={styles.headingStyle}>Sign Up To VC Account</h1>
+          <h1 className={styles.headingStyle}>{formTitles[page]}</h1>
           <form
             onSubmit={submitHandler}
             className={styles.form}
             action="submit"
           >
-            <Input
-              ref={signUpInputsRef}
-              style="default"
-              type="email"
-              placeholder="example@gmail.com"
-              label="Your Email"
-              id="email"
-              onChange={handleInputChange}
-            />
-            <Input
-              ref={signUpInputsRef}
-              style="password"
-              placeholder="******"
-              label="Password"
-              id="passwod"
-              onChange={handleInputChange}
-            />
-            <Input
-              ref={signUpInputsRef}
-              style="password"
-              placeholder="******"
-              label="Repeat Your Password"
-              id="repeat-password"
-              onChange={handleInputChange}
-            />
-            <Button
-              text="Continue"
-              icon={<img src={whiteTopRightArrow} alt="Arrow" />}
-              backgroundColor="#F1511B"
-              textColor="#FFF"
-              onClick={handleButtonLogInToVCAccount}
-            />
+            <PageDisplay />
+            {page === 0 ? (
+              <Button
+                type="button"
+                text="Continue"
+                icon={<img src={whiteTopRightArrow} alt="Arrow" />}
+                backgroundColor="#F1511B"
+                textColor="#FFF"
+                onClick={() => {
+                  setPage((currPage) => currPage + 1);
+                }}
+              />
+            ) : (
+              <>
+                <Button
+                  type="submit"
+                  text="Sign up"
+                  icon={<img src={whiteTopRightArrow} alt="Arrow" />}
+                  backgroundColor="#F1511B"
+                  textColor="#FFF"
+                />
+
+                <Button
+                  type="submit"
+                  text="Continue without this infromation"
+                  textColor="#161a2088"
+                />
+
+                <Button
+                  type="button"
+                  text="Go Back"
+                  icon={<img src={OrangeIconBottomLeft} alt="Arrow" />}
+                  textColor="#F1511B"
+                  onClick={() => {
+                    setPage((currPage) => currPage - 1);
+                  }}
+                />
+              </>
+            )}
 
             {/* TODO add login process via google and linkedin */}
           </form>

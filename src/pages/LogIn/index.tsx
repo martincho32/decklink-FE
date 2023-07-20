@@ -8,12 +8,10 @@ import graphImageFlying from '../../assets/images/graph-image-flying.png';
 import graphImageStanding from '../../assets/images/graph-image-standing.png';
 import { MainLayout } from '../../components/layouts';
 
-function LogIn({ title }: { title: string }) {
+function LogIn() {
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
   const [repeatPassword, setRepeatPassword] = useState<string>('');
-
-  console.log('title: ', title);
 
   const handleEmailChange = (value: string) => {
     setEmail(value);
