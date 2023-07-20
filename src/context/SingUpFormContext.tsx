@@ -29,7 +29,7 @@ export function SignUpFormProvider({ children }: Props) {
 
   const canSubmit =
     [...Object.values(requiredInputs)].every(Boolean) &&
-    page === Object.keys(title).length - 1;
+    page === Object.keys(pageTitle).length - 1;
 
   return (
     <SignUpFormContext.Provider
