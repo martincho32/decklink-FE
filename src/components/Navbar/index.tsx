@@ -1,14 +1,32 @@
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
-import { Hamburguer, Logo, Wordmark } from '../icons';
+import { useNavigate } from 'react-router-dom';
+import { Logo, Wordmark } from '../icons';
+import HamburguerMenu from './HamburguerMenu';
+import NavLinks from './NavLinks';
+import AuthActions from './AuthActions';
 
-function Navbar() {
+interface Props {
+  isUserLogged: boolean;
+}
+
+function Navbar({ isUserLogged = true }: Props) {
+  const navigate = useNavigate();
+  const [isOpen, setIsOpen] = useState(false);
+
   const onClickHamburguer = () => {
-    console.log('clicked hamburguer menu!');
+    setIsOpen(!isOpen);
   };
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [isUserLogged, setIsUserLogged] = useState(false);
+  const handleActions = {
+    handleButtonLogIn: (): void => {
+      navigate('/login');
+    },
+    handleButtonSignUp: (): void => {
+      navigate('/signup');
+    },
+    handleButtonLogout: (): void => {},
+  };
+
   return (
     <nav className="flex justify-between border border-persimmon rounded p-2 md:py-2 md:px-5">
       <div className="self-center flex gap-0.7">
@@ -16,21 +34,20 @@ function Navbar() {
         <Wordmark />
       </div>
       <div className={isUserLogged ? 'self-center hidden md:block' : 'hidden'}>
-        <span className="text-persimmon mr-2 inline-block">MyDecks</span>
-        <span>Other Link</span>
+        <NavLinks />
       </div>
       <div className="hidden md:block">
-        <button className="bg-persimmon text-white p-2" type="button">
-          <Link to="/login">{isUserLogged ? 'LOGOUT' : 'LOGIN'}</Link>
-        </button>
+        <AuthActions
+          handleActions={handleActions}
+          isUserLogged={isUserLogged}
+        />
       </div>
-      <button
-        type="button"
-        onClick={onClickHamburguer}
-        className="block md:hidden"
-      >
-        <Hamburguer />
-      </button>
+      <HamburguerMenu
+        handleActions={handleActions}
+        onClickHamburguer={onClickHamburguer}
+        isUserLogged={isUserLogged}
+        isOpen={isOpen}
+      />
     </nav>
   );
 }
