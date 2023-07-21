@@ -1,25 +1,31 @@
-import { Link, useNavigate } from 'react-router-dom';
+import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Logo, Wordmark } from '../icons';
-import HamburguerButton from './HamburguerButton';
-import Button from '../../UI/Button';
+import HamburguerMenu from './HamburguerMenu';
+import NavLinks from './NavLinks';
+import AuthActions from './AuthActions';
 
 interface Props {
   isUserLogged: boolean;
 }
 
-function Navbar({ isUserLogged = false }: Props) {
+function Navbar({ isUserLogged = true }: Props) {
   const navigate = useNavigate();
+  const [isOpen, setIsOpen] = useState(false);
+
   const onClickHamburguer = () => {
-    console.log('clicked hamburguer menu!');
+    setIsOpen(!isOpen);
   };
 
-  const handleButtonLogIn = (): void => {
-    navigate('/login');
+  const handleActions = {
+    handleButtonLogIn: (): void => {
+      navigate('/login');
+    },
+    handleButtonSignUp: (): void => {
+      navigate('/signup');
+    },
+    handleButtonLogout: (): void => {},
   };
-  const handleButtonSignUp = (): void => {
-    navigate('/signup');
-  };
-  const handleButtonLogout = (): void => {};
 
   return (
     <nav className="flex justify-between border border-persimmon rounded p-2 md:py-2 md:px-5">
@@ -28,39 +34,20 @@ function Navbar({ isUserLogged = false }: Props) {
         <Wordmark />
       </div>
       <div className={isUserLogged ? 'self-center hidden md:block' : 'hidden'}>
-        <Link to="/" className="text-persimmon mr-2 inline-block">
-          MyDecks
-        </Link>
-        <Link to="/">Other Link</Link>
+        <NavLinks />
       </div>
-      <div className="hidden md:flex gap-1 p-1">
-        {!isUserLogged ? (
-          <>
-            <Button
-              text="Log In"
-              icon={<Logo color="#FFFFFF" width="10" height="11" />}
-              backgroundColor="#F1511B"
-              textColor="#FFF"
-              onClick={handleButtonLogIn}
-            />
-            <Button
-              text="Sign In"
-              icon={<Logo color="#FFFFFF" width="10" height="11" />}
-              backgroundColor="#F1511B"
-              textColor="#FFF"
-              onClick={handleButtonLogout}
-            />
-          </>
-        ) : (
-          <Button
-            text="Log Out"
-            icon={<Logo />}
-            textColor="#F1511B"
-            onClick={handleButtonSignUp}
-          />
-        )}
+      <div className="hidden md:block">
+        <AuthActions
+          handleActions={handleActions}
+          isUserLogged={isUserLogged}
+        />
       </div>
-      <HamburguerButton onClickHamburguer={onClickHamburguer} />
+      <HamburguerMenu
+        handleActions={handleActions}
+        onClickHamburguer={onClickHamburguer}
+        isUserLogged={isUserLogged}
+        isOpen={isOpen}
+      />
     </nav>
   );
 }
