@@ -5,8 +5,8 @@ import HamburguerMenu from './HamburguerMenu';
 import NavLinks from './NavLinks';
 import AuthActions from './AuthActions';
 
-interface Props {
-  isUserLogged: boolean;
+export interface Props {
+  isUserLogged?: boolean;
 }
 
 function Navbar({ isUserLogged = true }: Props) {
