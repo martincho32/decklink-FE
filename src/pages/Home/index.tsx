@@ -42,6 +42,7 @@ function Home() {
           </h1>
           <div className={styles.buttonWrap}>
             <Button
+              type="button"
               text="Log In To VC Account"
               icon={<img src={whiteTopRightArrow} alt="Arrow" />}
               backgroundColor="#F1511B"
@@ -49,6 +50,7 @@ function Home() {
               onClick={handleButtonLogInToVCAccount}
             />
             <Button
+              type="button"
               text="Log In To Founder Account"
               icon={<img src={orangeTopRightArrow} alt="Arrow" />}
               borderColor="#F1511B"
