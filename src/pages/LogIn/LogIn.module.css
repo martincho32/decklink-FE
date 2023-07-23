@@ -52,6 +52,24 @@
     line-height: normal;
 }
 
+.errorMessage{
+    color: rgb(226, 85, 85);
+    font-size: 0.75rem;
+    font-weight: 300;
+    text-align: left;
+}
+
+.inputBlock {
+    display: flex;
+    flex-direction: column;
+    gap: 0.125rem;
+    width: inherit;
+}
+
+.inputBlockError input{
+    border: none;
+    outline: 1px solid rgb(226, 85, 85);
+}
 
 @media (max-width: 1536px) {
 

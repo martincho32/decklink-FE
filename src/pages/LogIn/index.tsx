@@ -13,27 +13,86 @@ function LogIn() {
   const [password, setPassword] = useState<string>('');
   const [repeatPassword, setRepeatPassword] = useState<string>('');
 
+  const [enteredEmailTouched, setEnteredEmailTouched] =
+    useState<boolean>(false);
+  const [enteredPasswordTouched, setEnteredPasswordTouched] =
+    useState<boolean>(false);
+  const [enternedRepeatPasswordTouched, setEnternedRepeatPasswordTouched] =
+    useState<boolean>(false);
+
+  const enteredEmailIsValid = email.trim() !== '' && email.includes('@');
+  const emailInputIsInvalid = !enteredEmailIsValid && enteredEmailTouched;
+
+  const enteredPasswordIsValid = password.length >= 6 && password.length <= 35;
+  const passwordInputIsInvalid =
+    !enteredPasswordIsValid && enteredPasswordTouched;
+
+  const enteredRepeatPasswordIsValid =
+    repeatPassword.trim() !== '' && repeatPassword === password;
+  const repeatPasswordInputIsInvalid =
+    !enteredRepeatPasswordIsValid && enternedRepeatPasswordTouched;
+
   const handleEmailChange = (value: string) => {
     setEmail(value);
-    console.log('email: ', value);
-    console.log('email2: ', value);
+  };
+
+  const emailInputBlur = (event: React.FocusEvent<HTMLInputElement>) => {
+    setEnteredEmailTouched(true);
   };
 
   const handlePasswordChange = (value: string) => {
     setPassword(value);
-    console.log('password: ', value);
+  };
+
+  const passwordInputBlur = (event: React.FocusEvent<HTMLInputElement>) => {
+    setEnteredPasswordTouched(true);
   };
 
   const handleRepeatPasswordChange = (value: string) => {
     setRepeatPassword(value);
-    console.log('repeat password: ', value);
   };
 
-  const submitHandler = () => {
-    console.log('Email:', email);
-    console.log('Password:', password);
-    console.log('Repeat Password:', repeatPassword);
+  const repeatPasswordInputBlur = (
+    event: React.FocusEvent<HTMLInputElement>
+  ) => {
+    setEnternedRepeatPasswordTouched(true);
   };
+
+  const submitHandler = (event: React.FormEvent) => {
+    event.preventDefault();
+
+    setEnteredEmailTouched(true);
+    setEnteredPasswordTouched(true);
+    setEnternedRepeatPasswordTouched(true);
+
+    if (
+      !enteredEmailIsValid ||
+      !enteredPasswordIsValid ||
+      !enteredRepeatPasswordIsValid
+    ) {
+      return;
+    }
+    console.log(email, password);
+
+    setEmail('');
+    setEnteredEmailTouched(false);
+    setPassword('');
+    setEnteredPasswordTouched(false);
+    setRepeatPassword('');
+    setEnternedRepeatPasswordTouched(false);
+  };
+
+  const emailInputClasses = emailInputIsInvalid
+    ? `${styles.inputBlock} ${styles.inputBlockError}`
+    : styles.inputBlock;
+
+  const passwordInputClasses = passwordInputIsInvalid
+    ? `${styles.inputBlock} ${styles.inputBlockError}`
+    : styles.inputBlock;
+
+  const repeatPasswordInputClasses = repeatPasswordInputIsInvalid
+    ? `${styles.inputBlock} ${styles.inputBlockError}`
+    : styles.inputBlock;
 
   return (
     <MainLayout>
@@ -56,31 +115,51 @@ function LogIn() {
             className={styles.form}
             action="submit"
           >
-            <Input
-              style="default"
-              type="email"
-              placeholder="example@gmail.com"
-              label="Your Email"
-              id="email"
-              value={email}
-              onChange={handleEmailChange}
-            />
-            <Input
-              style="password"
-              placeholder="******"
-              label="Password"
-              id="passwod"
-              value={password}
-              onChange={handlePasswordChange}
-            />
-            <Input
-              style="password"
-              placeholder="******"
-              label="Repeat Your Password"
-              id="repeat-password"
-              value={repeatPassword}
-              onChange={handleRepeatPasswordChange}
-            />
+            <div className={emailInputClasses}>
+              <Input
+                style="default"
+                type="email"
+                placeholder="example@gmail.com"
+                label="Your Email"
+                id="email"
+                value={email}
+                onChange={handleEmailChange}
+                onBlur={emailInputBlur}
+              />
+              {emailInputIsInvalid && (
+                <p className={styles.errorMessage}>Enter valid email</p>
+              )}
+            </div>
+            <div className={passwordInputClasses}>
+              <Input
+                style="password"
+                placeholder="******"
+                label="Password"
+                id="passwod"
+                value={password}
+                onChange={handlePasswordChange}
+                onBlur={passwordInputBlur}
+              />
+              {passwordInputIsInvalid && (
+                <p className={styles.errorMessage}>
+                  Password must be 6-35 characters long
+                </p>
+              )}
+            </div>
+            <div className={repeatPasswordInputClasses}>
+              <Input
+                style="password"
+                placeholder="******"
+                label="Repeat Your Password"
+                id="repeat-password"
+                value={repeatPassword}
+                onChange={handleRepeatPasswordChange}
+                onBlur={repeatPasswordInputBlur}
+              />
+              {repeatPasswordInputIsInvalid && (
+                <p className={styles.errorMessage}>Passwords do not match</p>
+              )}
+            </div>
             <Button
               type="submit"
               text="Log In"
