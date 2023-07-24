@@ -1,25 +1,23 @@
-import styles from './home.module.css';
-import Button from '../../UI/Button';
-import Input from '../../UI/Input';
+import { useNavigate } from 'react-router-dom';
+import styles from './landing.module.css';
 import Logotype from '../../assets/images/logo-on-type-bg.svg';
-import whiteTopRightArrow from '../../assets/images/ArrowTopRight.svg';
 import orangeTopRightArrow from '../../assets/images/OrangeArrowTopRight.svg';
 import graphImageFlying from '../../assets/images/graph-image-flying.png';
 import graphImageStanding from '../../assets/images/graph-image-standing.png';
-import { MainLayout } from '../../components/layouts';
+import { MainLayout, Button, Input } from '../../components';
 
-function Home() {
-  const handleButtonLogInToVCAccount = () => {
-    console.log('test vc');
-  };
+function Landing() {
+  const navigate = useNavigate();
+
+  // const handleButtonLogInToVCAccount = () => {
+  //   console.log('test vc');
+  // };
 
   const handleButtonLogInToFounderAccount = () => {
-    console.log('test founder');
+    navigate('/login');
   };
 
-  const handleInputChange = () => {
-    console.log('test founder');
-  };
+  const handleInputChange = () => {};
 
   return (
     <MainLayout>
@@ -41,14 +39,14 @@ function Home() {
             to log in to?
           </h1>
           <div className={styles.buttonWrap}>
-            <Button
+            {/* <Button
               type="button"
               text="Log In To VC Account"
               icon={<img src={whiteTopRightArrow} alt="Arrow" />}
               backgroundColor="#F1511B"
               textColor="#FFF"
               onClick={handleButtonLogInToVCAccount}
-            />
+            /> */}
             <Button
               type="button"
               text="Log In To Founder Account"
@@ -74,4 +72,4 @@ function Home() {
   );
 }
 
-export default Home;
+export default Landing;

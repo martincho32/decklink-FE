@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import styles from './Input.module.css';
-import hideInputText from '../../assets/images/HideInput.png';
-import showInputText from '../../assets/images/ShowInput.png';
-import uploadFileIcon from '../../assets/images/ArrowTopRight.svg';
+import hideInputText from '../../../assets/images/HideInput.png';
+import showInputText from '../../../assets/images/ShowInput.png';
+import uploadFileIcon from '../../../assets/images/ArrowTopRight.svg';
 
 export interface InputProps {
   type?: string;
@@ -12,6 +12,7 @@ export interface InputProps {
   label: string;
   value?: string;
   onChange?: (value: string) => void;
+  onBlur?: (event: React.FocusEvent<HTMLInputElement>) => void;
 }
 
 function Input({
@@ -22,6 +23,7 @@ function Input({
   label,
   value,
   onChange,
+  onBlur,
 }: InputProps) {
   let inputElement: JSX.Element;
 
@@ -36,21 +38,18 @@ function Input({
   const onDefaultInputEntered = (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
-    console.log('default: ', event);
     if (onChange) {
       onChange(event.target.value);
     }
   };
 
   const onFileInputEntered = (event: React.ChangeEvent<HTMLInputElement>) => {
-    console.log('file: ', event);
     if (onChange) {
       onChange(event.target.value);
     }
   };
 
   const onToggleInputEntered = (event: React.ChangeEvent<HTMLInputElement>) => {
-    console.log('toggle: ', event);
     if (onChange) {
       onChange(event.target.value);
     }
@@ -87,6 +86,7 @@ function Input({
               className={
                 value ? styles.defaultInputWithValue : styles.defaultInput
               }
+              onBlur={onBlur}
             />
             <img
               className={styles.hideInputText}
@@ -153,6 +153,7 @@ function Input({
             className={
               value ? styles.defaultInputWithValue : styles.defaultInput
             }
+            onBlur={onBlur}
           />
         </div>
       );
@@ -170,6 +171,7 @@ function Input({
             className={
               value ? styles.defaultInputWithValue : styles.defaultInput
             }
+            onBlur={onBlur}
           />
         </div>
       );

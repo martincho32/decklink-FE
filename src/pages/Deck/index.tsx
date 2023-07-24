@@ -1,7 +1,6 @@
 import { useNavigate } from 'react-router-dom';
-import Button from '../../UI/Button';
 import { Logo } from '../../components/icons';
-import { MainLayout } from '../../components/layouts';
+import { MainLayout, Button } from '../../components';
 
 function Deckpage() {
   const navigate = useNavigate();

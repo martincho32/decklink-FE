@@ -1,4 +1,4 @@
-import Button from '../../UI/Button';
+import { Button } from '..';
 import { Hamburguer, Logo, CloseIcon } from '../icons';
 import NavLinks from './NavLinks';
 
