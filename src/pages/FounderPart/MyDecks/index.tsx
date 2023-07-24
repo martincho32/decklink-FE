@@ -9,7 +9,7 @@ import AverageTimeIcon from '../../../assets/images/AverageTime.png';
 import orangeTopRightArrow from '../../../assets/images/OrangeArrowTopRight.svg';
 import deleteIcon from '../../../assets/images/Delete.png';
 
-function MyDesks() {
+function MyDecks() {
   return (
     <MainLayout>
       <div className={styles.myDesksWrapper}>
@@ -312,4 +312,4 @@ function MyDesks() {
   );
 }
 
-export default MyDesks;
+export default MyDecks;

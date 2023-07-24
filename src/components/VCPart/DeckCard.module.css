@@ -1,0 +1,174 @@
+.deckBlock {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  border-radius: 0.5rem;
+  box-shadow: 3px 3px 10px 0px rgba(0, 0, 0, 0.2);
+}
+
+.deckBlock:hover {
+  box-shadow: 3px 3px 10px 0px #f1501b9d;
+  transform: scale(1.01);
+}
+
+.deckMainContentWrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 1rem;
+  gap: 1rem;
+  align-items: flex-start;
+}
+
+.deckFirstRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  align-content: center;
+  align-self: stretch;
+}
+
+.deckTitleWrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.deckTitle {
+  color: var(--organge, #f1511b);
+  font-family: 'PowerGroteskTrial';
+  font-size: 1.5rem;
+  font-style: normal;
+  font-weight: 700;
+  line-height: normal;
+}
+
+.subtitle {
+  color: var(--black, #161a20);
+  font-family: 'PowerGroteskTrial';
+  font-size: 0.625rem;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+}
+
+.deckMainInfoItemDataIcon {
+  width: 1.875rem;
+  height: 1.875rem;
+}
+
+.deckMainInfoItemTitle {
+  color: var(--black, #161a20);
+  font-family: 'NeuePlak';
+  font-size: 1rem;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+}
+
+.buttons {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.secondaryButtonsWrapper {
+  justify-content: space-between;
+  width: 100%;
+  display: flex;
+  gap: 0.5rem;
+}
+
+.secondaryButtonsWrapper > :first-child {
+  flex: 1;
+}
+
+.moreInformation {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.moreInformationItem {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.itemTitle {
+  display: flex;
+  flex-direction: row;
+  gap: 0.25rem;
+  align-items: center;
+}
+
+.itemInfoParagraph {
+  color: var(--organge, #f1511b);
+  font-family: 'NeuePlak';
+  font-size: 1rem;
+  font-style: normal;
+  font-weight: 600;
+  line-height: normal;
+}
+
+.expandButtonWrapper{
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.expandMoreInfoButton{
+  width: 100%;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid #161a20;
+  opacity: 0.5;
+}
+
+@media (max-width: 1536px) {
+}
+
+@media (max-width: 1280px) {
+  .decksBlock {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr); /* Four elements per row */
+    gap: 0.75rem;
+  }
+}
+
+@media (max-width: 1024px) {
+  .decksBlock {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr); /* Four elements per row */
+    gap: 0.75rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .decksBlock {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr); /* Four elements per row */
+    gap: 0.75rem;
+  }
+}
+
+@media (max-width: 576px) {
+  .decksBlock {
+    display: grid;
+    grid-template-columns: repeat(1, 1fr); /* Four elements per row */
+    gap: 0.75rem;
+  }
+
+  .pageNavigation {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: stretch;
+    gap: 1rem;
+  }
+}
+
+@media (max-width: 320px) {
+}
