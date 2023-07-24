@@ -1,4 +1,4 @@
-import Input from '../../UI/Input/index';
+import { Input } from '../../components';
 import SignUpFormData from '../../models/signup';
 
 export interface RequiredSignUpInfoProps {

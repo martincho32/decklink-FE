@@ -1,11 +1,10 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import Button from '../../UI/Button';
 import whiteTopRightArrow from '../../assets/images/ArrowTopRight.svg';
 import styles from './SignUp.module.css';
 import graphImageFlying from '../../assets/images/graph-image-flying.png';
 import graphImageStanding from '../../assets/images/graph-image-standing.png';
-import { MainLayout } from '../../components/layouts';
+import { MainLayout, Button } from '../../components';
 import SignUpFormData from '../../models/signup';
 import RequiredSignUpInfo from './RequiredSignUpInfo';
 import NotRequiredSignUpInfo from './NotRequiredSignUpInfo';
@@ -177,15 +176,15 @@ function SignUp() {
             {/* TODO add login process via google and linkedin */}
           </form>
           <div className={styles.links}>
-            <Link className={styles.link} to="/">
+            <Link className={styles.link} to="/login">
               Log In To Founder Account
             </Link>
-            <Link className={styles.link} to="/">
+            {/* <Link className={styles.link} to="/">
               Log In To VC Account
             </Link>
             <Link className={styles.link} to="/">
               Create VC Account
-            </Link>
+            </Link> */}
           </div>
         </div>
       </div>

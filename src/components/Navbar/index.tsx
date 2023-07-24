@@ -1,15 +1,15 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Logo, Wordmark } from '../icons';
-import HamburguerMenu from './HamburguerMenu';
-import NavLinks from './NavLinks';
+import HamburguerMenu from '../HamburguerMenu';
+import NavLinks from '../HamburguerMenu/NavLinks';
 import AuthActions from './AuthActions';
 
 export interface Props {
   isUserLogged?: boolean;
 }
 
-function Navbar({ isUserLogged = true }: Props) {
+function Navbar({ isUserLogged = false }: Props) {
   const navigate = useNavigate();
   const [isOpen, setIsOpen] = useState(false);
 

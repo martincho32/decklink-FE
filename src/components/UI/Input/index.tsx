@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import styles from './Input.module.css';
-import hideInputText from '../../assets/images/HideInput.png';
-import showInputText from '../../assets/images/ShowInput.png';
-import uploadFileIcon from '../../assets/images/ArrowTopRight.svg';
+import hideInputText from '../../../assets/images/HideInput.png';
+import showInputText from '../../../assets/images/ShowInput.png';
+import uploadFileIcon from '../../../assets/images/ArrowTopRight.svg';
 
 export interface InputProps {
   type?: string;
