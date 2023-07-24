@@ -14,5 +14,8 @@ type RegisterUserCredentials = UserCredentials & {
 export const registerUser = (user: RegisterUserCredentials, role = 'FOUNDER') =>
   api.post(`${resource}/register?role=${role}`, user);
 
-export const loginUser = (userCredentials: UserCredentials) =>
-  api.post(`${resource}/login`, userCredentials);
+export const loginUser = (
+  userCredentials: UserCredentials
+): Promise<{
+  data: { email: string; role: string; token: string };
+}> => api.post(`${resource}/login`, userCredentials);

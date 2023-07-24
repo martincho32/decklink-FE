@@ -5,9 +5,10 @@ import styles from './LogIn.module.css';
 import graphImageFlying from '../../assets/images/graph-image-flying.png';
 import graphImageStanding from '../../assets/images/graph-image-standing.png';
 import { MainLayout, Input, Button } from '../../components';
-import { loginService } from '../../services';
+import { useAuth } from '../../hooks/useAuth';
 
 function LogIn() {
+  const { login } = useAuth();
   const navigate = useNavigate();
 
   const [email, setEmail] = useState<string>('');
@@ -44,7 +45,7 @@ function LogIn() {
     setEnteredPasswordTouched(true);
   };
 
-  const submitHandler = (event: React.FormEvent) => {
+  const submitHandler = async (event: React.FormEvent) => {
     event.preventDefault();
 
     setEnteredEmailTouched(true);
@@ -54,26 +55,17 @@ function LogIn() {
       return;
     }
     // Call login service and handle response
-    loginService
-      .loginUser({ email, password })
-      .then((data) => {
-        console.log('data: ', data);
-        // Save token and maybe some user info
-        // redirect to home page (decks list page)
-        navigate('/mydecks');
-      })
-      .catch((error) => {
-        console.error('Login Error: ', error);
-        if (error.response.status === 401) {
-          // handle "Unauthorized" error response from API
-          setLoginError('Whoops! Incorrect email or password.');
-        } else {
-          setLoginError(
-            'Whoops! Looks like something went wrong, please contact support.'
-          );
-        }
-      });
-
+    const response = await login({ email, password });
+    console.log('isLogin: ', response);
+    if (typeof response === 'boolean') {
+      navigate('/mydecks');
+    } else {
+      const errorMessage =
+        response.response.status === 401
+          ? 'Whoops! Incorrect email or password.'
+          : 'Whoops! Looks like something went wrong, please contact support.';
+      setLoginError(errorMessage);
+    }
     setEmail('');
     setEnteredEmailTouched(false);
     setPassword('');
