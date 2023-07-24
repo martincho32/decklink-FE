@@ -1,22 +1,22 @@
-import { useEffect } from 'react';
-import { createBrowserRouter, RouterProvider } from 'react-router-dom';
-import { Home, LogIn, MyDesks, NotFound, SignUp } from './pages';
-import { testService } from './services';
-
-const router = createBrowserRouter([
-  { path: '/', element: <Home /> },
-  { path: '/login', element: <LogIn /> },
-  { path: '/signup', element: <SignUp /> },
-  { path: '/decks', element: <MyDesks /> },
-  { path: '*', element: <NotFound /> },
-]);
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { Landing, LogIn, NotFound, SignUp, MyDesks } from './pages';
+import ProtectedRoute from './components/ProtectedRoute';
 
 function App() {
-  useEffect(() => {
-    testService.testApi().then((data) => console.log('data: ', data));
-  }, []);
-
-  return <RouterProvider router={router} />;
+  return (
+    <BrowserRouter>
+      <Routes>
+        <Route index element={<Landing />} />
+        <Route path="/landing" element={<Landing />} />
+        <Route path="/login" element={<LogIn />} />
+        <Route path="/signup" element={<SignUp />} />
+        <Route element={<ProtectedRoute user={{}} />}>
+          <Route path="/signup" element={<MyDesks />} />
+        </Route>
+        <Route path="*" element={<NotFound />} />
+      </Routes>
+    </BrowserRouter>
+  );
 }
 
 export default App;

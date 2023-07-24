@@ -1,4 +1,4 @@
-import Input from '../../UI/Input/index';
+import { Input } from '../../components';
 import SignUpFormData from '../../models/signup';
 import styles from './SignUp.module.css';
 
@@ -40,7 +40,7 @@ function RequiredSignUpInfo({
     setFormData({ ...formData, email: value });
   };
 
-  const emailInputBlur = (event: React.FocusEvent<HTMLInputElement>) => {
+  const emailInputBlur = () => {
     setEnteredEmailTouched(true);
   };
 
@@ -48,7 +48,7 @@ function RequiredSignUpInfo({
     setFormData({ ...formData, password: value });
   };
 
-  const passwordInputBlur = (event: React.FocusEvent<HTMLInputElement>) => {
+  const passwordInputBlur = () => {
     setEnteredPasswordTouched(true);
   };
 
@@ -56,9 +56,7 @@ function RequiredSignUpInfo({
     setFormData({ ...formData, confirmPassword: value });
   };
 
-  const repeatPasswordInputBlur = (
-    event: React.FocusEvent<HTMLInputElement>
-  ) => {
+  const repeatPasswordInputBlur = () => {
     setEnteredRepeatPasswordTouched(true);
   };
 

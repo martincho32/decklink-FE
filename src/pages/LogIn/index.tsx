@@ -1,42 +1,38 @@
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useState } from 'react';
-import Input from '../../UI/Input';
-import Button from '../../UI/Button';
 import whiteTopRightArrow from '../../assets/images/ArrowTopRight.svg';
 import styles from './LogIn.module.css';
 import graphImageFlying from '../../assets/images/graph-image-flying.png';
 import graphImageStanding from '../../assets/images/graph-image-standing.png';
-import { MainLayout } from '../../components/layouts';
+import { MainLayout, Input, Button } from '../../components';
+import { loginService } from '../../services';
 
 function LogIn() {
+  const navigate = useNavigate();
+
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
-  const [repeatPassword, setRepeatPassword] = useState<string>('');
+  const [loginError, setLoginError] = useState<string | null>(null);
 
   const [enteredEmailTouched, setEnteredEmailTouched] =
     useState<boolean>(false);
   const [enteredPasswordTouched, setEnteredPasswordTouched] =
     useState<boolean>(false);
-  const [enternedRepeatPasswordTouched, setEnternedRepeatPasswordTouched] =
-    useState<boolean>(false);
 
-  const enteredEmailIsValid = email.trim() !== '' && email.includes('@');
+  const enteredEmailIsValid =
+    email.trim() !== '' && email.includes('@') && email.includes('.');
   const emailInputIsInvalid = !enteredEmailIsValid && enteredEmailTouched;
 
   const enteredPasswordIsValid = password.length >= 6 && password.length <= 35;
   const passwordInputIsInvalid =
     !enteredPasswordIsValid && enteredPasswordTouched;
 
-  const enteredRepeatPasswordIsValid =
-    repeatPassword.trim() !== '' && repeatPassword === password;
-  const repeatPasswordInputIsInvalid =
-    !enteredRepeatPasswordIsValid && enternedRepeatPasswordTouched;
-
   const handleEmailChange = (value: string) => {
     setEmail(value);
+    setLoginError(null);
   };
 
-  const emailInputBlur = (event: React.FocusEvent<HTMLInputElement>) => {
+  const emailInputBlur = () => {
     setEnteredEmailTouched(true);
   };
 
@@ -44,18 +40,8 @@ function LogIn() {
     setPassword(value);
   };
 
-  const passwordInputBlur = (event: React.FocusEvent<HTMLInputElement>) => {
+  const passwordInputBlur = () => {
     setEnteredPasswordTouched(true);
-  };
-
-  const handleRepeatPasswordChange = (value: string) => {
-    setRepeatPassword(value);
-  };
-
-  const repeatPasswordInputBlur = (
-    event: React.FocusEvent<HTMLInputElement>
-  ) => {
-    setEnternedRepeatPasswordTouched(true);
   };
 
   const submitHandler = (event: React.FormEvent) => {
@@ -63,23 +49,35 @@ function LogIn() {
 
     setEnteredEmailTouched(true);
     setEnteredPasswordTouched(true);
-    setEnternedRepeatPasswordTouched(true);
 
-    if (
-      !enteredEmailIsValid ||
-      !enteredPasswordIsValid ||
-      !enteredRepeatPasswordIsValid
-    ) {
+    if (!enteredEmailIsValid || !enteredPasswordIsValid) {
       return;
     }
-    console.log(email, password);
+    // Call login service and handle response
+    loginService
+      .loginUser({ email, password })
+      .then((data) => {
+        console.log('data: ', data);
+        // Save token and maybe some user info
+        // redirect to home page (decks list page)
+        navigate('/mydecks');
+      })
+      .catch((error) => {
+        console.error('Login Error: ', error);
+        if (error.response.status === 401) {
+          // handle "Unauthorized" error response from API
+          setLoginError('Whoops! Incorrect email or password.');
+        } else {
+          setLoginError(
+            'Whoops! Looks like something went wrong, please contact support.'
+          );
+        }
+      });
 
     setEmail('');
     setEnteredEmailTouched(false);
     setPassword('');
     setEnteredPasswordTouched(false);
-    setRepeatPassword('');
-    setEnternedRepeatPasswordTouched(false);
   };
 
   const emailInputClasses = emailInputIsInvalid
@@ -87,10 +85,6 @@ function LogIn() {
     : styles.inputBlock;
 
   const passwordInputClasses = passwordInputIsInvalid
-    ? `${styles.inputBlock} ${styles.inputBlockError}`
-    : styles.inputBlock;
-
-  const repeatPasswordInputClasses = repeatPasswordInputIsInvalid
     ? `${styles.inputBlock} ${styles.inputBlockError}`
     : styles.inputBlock;
 
@@ -109,7 +103,7 @@ function LogIn() {
         />
         <div className={styles.formWrapper}>
           {/* set title from props here */}
-          <h1 className={styles.headingStyle}>Log In To VC Account</h1>
+          <h1 className={styles.headingStyle}>Log In</h1>
           <form
             onSubmit={submitHandler}
             className={styles.form}
@@ -146,20 +140,11 @@ function LogIn() {
                 </p>
               )}
             </div>
-            <div className={repeatPasswordInputClasses}>
-              <Input
-                style="password"
-                placeholder="******"
-                label="Repeat Your Password"
-                id="repeat-password"
-                value={repeatPassword}
-                onChange={handleRepeatPasswordChange}
-                onBlur={repeatPasswordInputBlur}
-              />
-              {repeatPasswordInputIsInvalid && (
-                <p className={styles.errorMessage}>Passwords do not match</p>
-              )}
-            </div>
+            {loginError && (
+              <span className={`${styles.errorMessage} text-2xl`}>
+                {loginError}
+              </span>
+            )}
             <Button
               type="submit"
               text="Log In"
@@ -171,13 +156,13 @@ function LogIn() {
             {/* TODO add login process via google and linkedin */}
           </form>
           <div className={styles.links}>
-            <Link className={styles.link} to="/">
+            {/* <Link className={styles.link} to="/">
               Create VC Account
             </Link>
             <Link className={styles.link} to="/">
               Log In To Founder Account
-            </Link>
-            <Link className={styles.link} to="/">
+            </Link> */}
+            <Link className={styles.link} to="/signup">
               Create Founder Account
             </Link>
           </div>
