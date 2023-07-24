@@ -2,7 +2,17 @@ import { api } from '../adapters/api';
 
 const resource = 'auth';
 
-export const registerUser = (user, role = 'USER') =>
+type UserCredentials = {
+  email: string;
+  password: string;
+};
+
+type RegisterUserCredentials = UserCredentials & {
+  cfpassword: string;
+};
+
+export const registerUser = (user: RegisterUserCredentials, role = 'FOUNDER') =>
   api.post(`${resource}/register?role=${role}`, user);
 
-export const loginUser = (user) => api.post(`${resource}/login`, user);
+export const loginUser = (userCredentials: UserCredentials) =>
+  api.post(`${resource}/login`, userCredentials);

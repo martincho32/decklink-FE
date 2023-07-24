@@ -1,11 +1,10 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import Button from '../../UI/Button';
 import whiteTopRightArrow from '../../assets/images/ArrowTopRight.svg';
 import styles from './SignUp.module.css';
 import graphImageFlying from '../../assets/images/graph-image-flying.png';
 import graphImageStanding from '../../assets/images/graph-image-standing.png';
-import { MainLayout } from '../../components/layouts';
+import { MainLayout, Button } from '../../components';
 import SignUpFormData from '../../models/signup';
 import RequiredSignUpInfo from './RequiredSignUpInfo';
 import NotRequiredSignUpInfo from './NotRequiredSignUpInfo';
@@ -13,6 +12,14 @@ import OrangeIconBottomLeft from '../../assets/images/OrangeArrowBottomLeft.svg'
 
 function SignUp() {
   const [page, setPage] = useState<number>(0);
+
+  const [enteredEmailTouched, setEnteredEmailTouched] =
+    useState<boolean>(false);
+  const [enteredPasswordTouched, setEnteredPasswordTouched] =
+    useState<boolean>(false);
+  useState<boolean>(false);
+  const [enternedRepeatPasswordTouched, setEnternedRepeatPasswordTouched] =
+    useState<boolean>(false);
 
   const [formData, setFormData] = useState<SignUpFormData>({
     email: '',
@@ -25,20 +32,68 @@ function SignUp() {
 
   const formTitles = ['Sign Up', 'Additional Information'];
 
-  // const PageDisplay = memo(() => {
-  //   if (page === 0) {
-  //     return (
-  //       <RequiredSignUpInfo formData={formData} setFormData={setFormData} />
-  //     );
-  //   }
-  //   return (
-  //     <NotRequiredSignUpInfo formData={formData} setFormData={setFormData} />
-  //   );
-  // });
+  const enteredEmailIsValid =
+    formData.email.trim() !== '' && formData.email.includes('@');
+  const emailInputIsInvalid = !enteredEmailIsValid && enteredEmailTouched;
 
-  const submitHandler = () => {
-    console.log(formData);
+  const enteredPasswordIsValid =
+    formData.password.length >= 6 && formData.password.length <= 35;
+  const passwordInputIsInvalid =
+    !enteredPasswordIsValid && enteredPasswordTouched;
+
+  const enteredRepeatPasswordIsValid =
+    formData.confirmPassword.trim() !== '' &&
+    formData.confirmPassword === formData.password;
+  const repeatPasswordInputIsInvalid =
+    !enteredRepeatPasswordIsValid && enternedRepeatPasswordTouched;
+
+  const continueHandler = (event: React.MouseEvent<HTMLButtonElement>) => {
+    event.preventDefault();
+    setEnteredEmailTouched(true);
+    setEnteredPasswordTouched(true);
+    setEnternedRepeatPasswordTouched(true);
+
+    if (
+      !enteredEmailIsValid ||
+      !enteredPasswordIsValid ||
+      !enteredRepeatPasswordIsValid
+    ) {
+      return;
+    }
+
+    setPage((currPage) => currPage + 1);
   };
+
+  const submitHandler = (event: React.FormEvent) => {
+    event.preventDefault();
+
+    if (
+      !enteredEmailIsValid ||
+      !enteredPasswordIsValid ||
+      !enteredRepeatPasswordIsValid
+    ) {
+      return;
+    }
+
+    formData.email = '';
+    setEnteredEmailTouched(false);
+    formData.password = '';
+    setEnteredPasswordTouched(false);
+    formData.confirmPassword = '';
+    setEnternedRepeatPasswordTouched(false);
+  };
+
+  const emailInputClasses = emailInputIsInvalid
+    ? `${styles.inputBlock} ${styles.inputBlockError}`
+    : styles.inputBlock;
+
+  const passwordInputClasses = passwordInputIsInvalid
+    ? `${styles.inputBlock} ${styles.inputBlockError}`
+    : styles.inputBlock;
+
+  const repeatPasswordInputClasses = repeatPasswordInputIsInvalid
+    ? `${styles.inputBlock} ${styles.inputBlockError}`
+    : styles.inputBlock;
 
   return (
     <MainLayout>
@@ -63,6 +118,17 @@ function SignUp() {
                 <RequiredSignUpInfo
                   formData={formData}
                   setFormData={setFormData}
+                  emailInputClasses={emailInputClasses}
+                  emailInputIsInvalid={emailInputIsInvalid}
+                  passwordInputClasses={passwordInputClasses}
+                  passwordInputIsInvalid={passwordInputIsInvalid}
+                  repeatPasswordInputClasses={repeatPasswordInputClasses}
+                  repeatPasswordInputIsInvalid={repeatPasswordInputIsInvalid}
+                  setEnteredEmailTouched={setEnteredEmailTouched}
+                  setEnteredPasswordTouched={setEnteredPasswordTouched}
+                  setEnteredRepeatPasswordTouched={
+                    setEnternedRepeatPasswordTouched
+                  }
                 />
                 <Button
                   type="button"
@@ -70,9 +136,7 @@ function SignUp() {
                   icon={<img src={whiteTopRightArrow} alt="Arrow" />}
                   backgroundColor="#F1511B"
                   textColor="#FFF"
-                  onClick={() => {
-                    setPage((currPage) => currPage + 1);
-                  }}
+                  onClick={continueHandler}
                 />
               </>
             ) : (
@@ -112,15 +176,15 @@ function SignUp() {
             {/* TODO add login process via google and linkedin */}
           </form>
           <div className={styles.links}>
-            <Link className={styles.link} to="/">
+            <Link className={styles.link} to="/login">
               Log In To Founder Account
             </Link>
-            <Link className={styles.link} to="/">
+            {/* <Link className={styles.link} to="/">
               Log In To VC Account
             </Link>
             <Link className={styles.link} to="/">
               Create VC Account
-            </Link>
+            </Link> */}
           </div>
         </div>
       </div>
