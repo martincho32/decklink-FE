@@ -1,5 +1,5 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import { Landing, LogIn, NotFound, SignUp, DeckList } from './pages';
+import { Landing, LogIn, NotFound, SignUp, DeckList, DeckPage } from './pages';
 import ProtectedRoute from './components/ProtectedRoute';
 
 function App() {
@@ -11,7 +11,8 @@ function App() {
         <Route path="/login" element={<LogIn />} />
         <Route path="/signup" element={<SignUp />} />
         <Route element={<ProtectedRoute user={{}} />}>
-          <Route path="/signup" element={<DeckList />} />
+          <Route path="/myDecks" element={<DeckList />} />
+          <Route path="/deck" element={<DeckPage />} />
         </Route>
         <Route path="*" element={<NotFound />} />
       </Routes>
