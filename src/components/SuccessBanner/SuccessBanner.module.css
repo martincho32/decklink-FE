@@ -1,0 +1,39 @@
+.alignBannerCenter {
+  display: flex;
+  justify-content: center;
+}
+
+.successBanner {
+  width: fit-content;
+  display: flex;
+  padding: 0.875rem 4rem;
+  flex-direction: row;
+  align-items: center;
+  border-radius: 0.75rem;
+  background: var(--organge, #f1511b);
+  position: relative;
+}
+
+.message {
+  width: fit-content;
+  flex: 1;
+  margin-right: 8px;
+  color: var(--white, #fff);
+  text-align: center;
+  font-family: "PowerGroteskTrial";
+  font-size: 1rem;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+}
+
+.closeButton {
+  position: absolute;
+  top: 0.75rem;
+  right: 1rem;
+  color: #ffffff!important;
+  background-color: none;
+  border: none;
+  font-size: 0.75rem;
+  cursor: pointer;
+}

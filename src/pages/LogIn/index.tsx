@@ -1,13 +1,16 @@
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 import whiteTopRightArrow from '../../assets/images/ArrowTopRight.svg';
 import styles from './LogIn.module.css';
 import graphImageFlying from '../../assets/images/graph-image-flying.png';
 import graphImageStanding from '../../assets/images/graph-image-standing.png';
-import { MainLayout, Input, Button } from '../../components';
-import { loginService } from '../../services';
+import { MainLayout, Input, Button, SuccessBanner } from '../../components';
+import { useAuth } from '../../hooks/useAuth';
 
 function LogIn() {
+  const location = useLocation();
+
+  const { login } = useAuth();
   const navigate = useNavigate();
 
   const [email, setEmail] = useState<string>('');
@@ -44,7 +47,7 @@ function LogIn() {
     setEnteredPasswordTouched(true);
   };
 
-  const submitHandler = (event: React.FormEvent) => {
+  const submitHandler = async (event: React.FormEvent) => {
     event.preventDefault();
 
     setEnteredEmailTouched(true);
@@ -53,27 +56,21 @@ function LogIn() {
     if (!enteredEmailIsValid || !enteredPasswordIsValid) {
       return;
     }
-    // Call login service and handle response
-    loginService
-      .loginUser({ email, password })
-      .then((data) => {
-        console.log('data: ', data);
-        // Save token and maybe some user info
-        // redirect to home page (decks list page)
-        navigate('/mydecks');
-      })
-      .catch((error) => {
-        console.error('Login Error: ', error);
-        if (error.response.status === 401) {
-          // handle "Unauthorized" error response from API
-          setLoginError('Whoops! Incorrect email or password.');
-        } else {
-          setLoginError(
-            'Whoops! Looks like something went wrong, please contact support.'
-          );
-        }
-      });
 
+    const response: boolean | { response: { status: number } } = await login({
+      email,
+      password,
+    });
+    console.log('isLogin: ', response);
+    if (typeof response === 'boolean') {
+      navigate('/founder/decks', { state: { isLoggedIn: response } });
+    } else {
+      const errorMessage =
+        response.response.status === 401
+          ? 'Whoops! Incorrect email or password.'
+          : 'Whoops! Looks like something went wrong, please contact support.';
+      setLoginError(errorMessage);
+    }
     setEmail('');
     setEnteredEmailTouched(false);
     setPassword('');
@@ -90,6 +87,9 @@ function LogIn() {
 
   return (
     <MainLayout>
+      {location?.state?.isSignedUp && (
+        <SuccessBanner message="You succesfully signed up! Now you just need to log in" />
+      )}
       <div className={styles.blockContainer}>
         <img
           className={styles.imgTopRight}
@@ -122,9 +122,6 @@ function LogIn() {
                 onChange={handleEmailChange}
                 onBlur={emailInputBlur}
               />
-              {emailInputIsInvalid && (
-                <p className={styles.errorMessage}>Enter valid email</p>
-              )}
             </div>
             <div className={passwordInputClasses}>
               <Input
@@ -133,14 +130,11 @@ function LogIn() {
                 label="Password"
                 id="passwod"
                 value={password}
+                inputIsInvalid={passwordInputIsInvalid}
+                errorMessage="Password must be 6-35 characters long"
                 onChange={handlePasswordChange}
                 onBlur={passwordInputBlur}
               />
-              {passwordInputIsInvalid && (
-                <p className={styles.errorMessage}>
-                  Password must be 6-35 characters long
-                </p>
-              )}
             </div>
             {loginError && (
               <span className={`${styles.errorMessage} text-2xl`}>

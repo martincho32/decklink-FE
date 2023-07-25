@@ -70,12 +70,11 @@ function RequiredSignUpInfo({
           label="Your Email"
           id="email"
           value={formData.email}
+          inputIsInvalid={emailInputIsInvalid}
+          errorMessage="Enter valid email address"
           onChange={handleEmailChange}
           onBlur={emailInputBlur}
         />
-        {emailInputIsInvalid && (
-          <p className={styles.errorMessage}>Enter valid email address</p>
-        )}
       </div>
       <div className={passwordInputClasses}>
         <Input
@@ -84,14 +83,11 @@ function RequiredSignUpInfo({
           label="Password"
           id="passwod"
           value={formData.password}
+          inputIsInvalid={passwordInputIsInvalid}
+          errorMessage="Password must be 6-35 characters long"
           onChange={handlePasswordChange}
           onBlur={passwordInputBlur}
         />
-        {passwordInputIsInvalid && (
-          <p className={styles.errorMessage}>
-            Password must be 6-35 characters long
-          </p>
-        )}
       </div>
       <div className={repeatPasswordInputClasses}>
         <Input
@@ -100,12 +96,11 @@ function RequiredSignUpInfo({
           label="Repeat Your Password"
           id="repeat-password"
           value={formData.confirmPassword}
+          inputIsInvalid={repeatPasswordInputIsInvalid}
+          errorMessage="Passwords do not match"
           onChange={handleRepeatPasswordChange}
           onBlur={repeatPasswordInputBlur}
         />
-        {repeatPasswordInputIsInvalid && (
-          <p className={styles.errorMessage}>Passwords do not match</p>
-        )}
       </div>
     </>
   );

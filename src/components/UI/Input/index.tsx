@@ -124,6 +124,9 @@ function Input({
             />
             <span className={styles.toggleSlider} />
           </label>
+          {inputIsInvalid && (
+            <p className={styles.errorMessage}>{errorMessage}</p>
+          )}
         </div>
       );
       break;
@@ -144,6 +147,9 @@ function Input({
               </div>
             </label>
           </div>
+          {inputIsInvalid && (
+            <p className={styles.errorMessage}>{errorMessage}</p>
+          )}
         </div>
       );
       break;
@@ -162,6 +168,9 @@ function Input({
             }
             onBlur={onBlur}
           />
+          {inputIsInvalid && (
+            <p className={styles.errorMessage}>{errorMessage}</p>
+          )}
         </div>
       );
       break;
@@ -180,6 +189,9 @@ function Input({
             }
             onBlur={onBlur}
           />
+          {inputIsInvalid && (
+            <p className={styles.errorMessage}>{errorMessage}</p>
+          )}
         </div>
       );
       break;
