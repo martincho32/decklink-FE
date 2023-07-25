@@ -1,13 +1,17 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { pdfjs, Document, Thumbnail } from 'react-pdf';
-import type { PDFDocumentProxy } from 'pdfjs-dist';
+import {
+  pdfjs,
+  Document,
+  Thumbnail,
+  Page,
+} from 'react-pdf'; /** File library */
+import type { PDFDocumentProxy } from 'pdfjs-dist'; /** File library */
 import { Logo } from '../../components/icons';
 import { MainLayout, Button, Input } from '../../components';
+/** File library */
 import 'react-pdf/dist/esm/Page/AnnotationLayer.css';
 import 'react-pdf/dist/esm/Page/TextLayer.css';
-
-// import './deck.css';
 
 pdfjs.GlobalWorkerOptions.workerSrc = new URL(
   'pdfjs-dist/build/pdf.worker.min.js',
@@ -22,6 +26,7 @@ const options = {
 type PDFFile = string | File | null;
 
 function Deckpage() {
+  /** File Library */
   const [file, setFile] = useState<PDFFile>(null);
   const [numPages, setNumPages] = useState<number>();
   const [pageNumber, setPageNumber] = useState(1);
@@ -38,7 +43,7 @@ function Deckpage() {
   }: PDFDocumentProxy): void => {
     setNumPages(nextNumPages);
   };
-
+  /** File Library */
   const navigate = useNavigate();
   const [deckName, setDeckName] = useState<string>('');
   const [enteredDeckNameTouched, setEnteredDeckNameTouched] =
