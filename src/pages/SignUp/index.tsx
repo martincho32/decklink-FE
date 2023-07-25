@@ -88,7 +88,7 @@ function SignUp() {
     });
     console.log('isSignup: ', response);
     if (typeof response === 'boolean') {
-      navigate('/login');
+      navigate('/login', { state: { isSignedUp: response } });
     } else {
       const errorMessage =
         response.response.status === 401
@@ -119,6 +119,7 @@ function SignUp() {
 
   return (
     <MainLayout>
+
       <div className={styles.blockContainer}>
         <img
           className={styles.imgTopRight}

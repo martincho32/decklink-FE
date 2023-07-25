@@ -1,13 +1,15 @@
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 import whiteTopRightArrow from '../../assets/images/ArrowTopRight.svg';
 import styles from './LogIn.module.css';
 import graphImageFlying from '../../assets/images/graph-image-flying.png';
 import graphImageStanding from '../../assets/images/graph-image-standing.png';
-import { MainLayout, Input, Button } from '../../components';
+import { MainLayout, Input, Button, SuccessBanner } from '../../components';
 import { useAuth } from '../../hooks/useAuth';
 
 function LogIn() {
+  const location = useLocation();
+
   const { login } = useAuth();
   const navigate = useNavigate();
 
@@ -59,7 +61,7 @@ function LogIn() {
     const response = await login({ email, password });
     console.log('isLogin: ', response);
     if (typeof response === 'boolean') {
-      navigate('/founder/decks');
+      navigate('/founder/decks', { state: { isLoggedIn: response } });
     } else {
       const errorMessage =
         response.response.status === 401
@@ -83,6 +85,9 @@ function LogIn() {
 
   return (
     <MainLayout>
+      {location.state.isSignedUp && (
+        <SuccessBanner message="You succesfully signed up! Now you just need to log in" />
+      )}
       <div className={styles.blockContainer}>
         <img
           className={styles.imgTopRight}
