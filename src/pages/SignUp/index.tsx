@@ -119,7 +119,6 @@ function SignUp() {
 
   return (
     <MainLayout>
-
       <div className={styles.blockContainer}>
         <img
           className={styles.imgTopRight}
