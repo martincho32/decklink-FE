@@ -32,7 +32,6 @@ function LogIn() {
 
   const handleEmailChange = (value: string) => {
     setEmail(value);
-    setLoginError(null);
   };
 
   const emailInputBlur = () => {
@@ -61,7 +60,6 @@ function LogIn() {
       email,
       password,
     });
-    console.log('isLogin: ', response);
     if (typeof response === 'boolean') {
       navigate('/founder/decks', { state: { isLoggedIn: response } });
     } else {

@@ -86,7 +86,6 @@ function SignUp() {
       password: formData.password,
       cfpassword: formData.password,
     });
-    console.log('isSignup: ', response);
     if (typeof response === 'boolean') {
       navigate('/login', { state: { isSignedUp: response } });
     } else {

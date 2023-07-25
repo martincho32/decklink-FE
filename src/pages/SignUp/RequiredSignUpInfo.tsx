@@ -1,6 +1,5 @@
 import { Input } from '../../components';
 import SignUpFormData from '../../models/signup';
-import styles from './SignUp.module.css';
 
 export interface RequiredSignUpInfoProps {
   formData: SignUpFormData;
