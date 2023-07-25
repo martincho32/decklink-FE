@@ -37,6 +37,7 @@ module.exports = {
     'react/style-prop-object': 0,
     'jsx-a11y/no-noninteractive-element-interactions': 0,
     'no-lone-blocks': 0,
+    '@typescript-eslint/no-explicit-any': 0,
     'prettier/prettier': [
       'error',
       {

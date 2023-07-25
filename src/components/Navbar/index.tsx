@@ -4,12 +4,10 @@ import { Logo, Wordmark } from '../icons';
 import HamburguerMenu from '../HamburguerMenu';
 import NavLinks from '../HamburguerMenu/NavLinks';
 import AuthActions from './AuthActions';
+import { useAuth } from '../../hooks/useAuth';
 
-export interface Props {
-  isUserLogged?: boolean;
-}
-
-function Navbar({ isUserLogged = false }: Props) {
+function Navbar() {
+  const { logout, user } = useAuth();
   const navigate = useNavigate();
   const [isOpen, setIsOpen] = useState(false);
 
@@ -24,7 +22,9 @@ function Navbar({ isUserLogged = false }: Props) {
     handleButtonSignUp: (): void => {
       navigate('/signup');
     },
-    handleButtonLogout: (): void => {},
+    handleButtonLogout: (): void => {
+      logout();
+    },
   };
 
   return (
@@ -33,19 +33,21 @@ function Navbar({ isUserLogged = false }: Props) {
         <Logo />
         <Wordmark />
       </div>
-      <div className={isUserLogged ? 'self-center hidden md:block' : 'hidden'}>
+      <div
+        className={user?.authToken ? 'self-center hidden md:block' : 'hidden'}
+      >
         <NavLinks />
       </div>
       <div className="hidden md:block">
         <AuthActions
           handleActions={handleActions}
-          isUserLogged={isUserLogged}
+          isUserLogged={!!user?.authToken}
         />
       </div>
       <HamburguerMenu
         handleActions={handleActions}
         onClickHamburguer={onClickHamburguer}
-        isUserLogged={isUserLogged}
+        isUserLogged={!!user?.authToken}
         isOpen={isOpen}
       />
     </nav>
