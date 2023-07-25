@@ -1,9 +1,9 @@
 import { MainLayout, Button } from '../../../components';
 import whiteTopRightArrow from '../../../assets/images/ArrowTopRight.svg';
-import styles from './MyDesks.module.css';
+import styles from './MyDecks.module.css';
 import Card from '../../../components/FounderPart/MyDecks/Card';
 
-function MyDesks() {
+function MyDecks() {
   return (
     <MainLayout>
       <div className={styles.myDesksWrapper}>
@@ -30,4 +30,4 @@ function MyDesks() {
   );
 }
 
-export default MyDesks;
+export default MyDecks;

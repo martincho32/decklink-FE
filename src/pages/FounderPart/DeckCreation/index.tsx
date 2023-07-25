@@ -7,8 +7,9 @@ import {
   Page,
 } from 'react-pdf'; /** File library */
 import type { PDFDocumentProxy } from 'pdfjs-dist'; /** File library */
-import { Logo } from '../../components/icons';
-import { MainLayout, Button, Input } from '../../components';
+import styles from './DeckCreation.module.css';
+import { Logo } from '../../../components/icons';
+import { MainLayout, Button, Input, DeckPreview } from '../../../components';
 /** File library */
 import 'react-pdf/dist/esm/Page/AnnotationLayer.css';
 import 'react-pdf/dist/esm/Page/TextLayer.css';
@@ -25,7 +26,7 @@ const options = {
 
 type PDFFile = string | File | null;
 
-function Deckpage() {
+function DeckCreation() {
   /** File Library */
   const [file, setFile] = useState<PDFFile>(null);
   const [numPages, setNumPages] = useState<number>();
@@ -246,8 +247,9 @@ function Deckpage() {
           </div>
         </div>
       </div>
+      <DeckPreview />
     </MainLayout>
   );
 }
 
-export default Deckpage;
+export default DeckCreation;
