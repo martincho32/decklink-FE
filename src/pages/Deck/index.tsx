@@ -1,9 +1,44 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { pdfjs, Document, Thumbnail } from 'react-pdf';
+import type { PDFDocumentProxy } from 'pdfjs-dist';
 import { Logo } from '../../components/icons';
 import { MainLayout, Button, Input } from '../../components';
+import 'react-pdf/dist/esm/Page/AnnotationLayer.css';
+import 'react-pdf/dist/esm/Page/TextLayer.css';
+
+// import './deck.css';
+
+pdfjs.GlobalWorkerOptions.workerSrc = new URL(
+  'pdfjs-dist/build/pdf.worker.min.js',
+  import.meta.url
+).toString();
+
+const options = {
+  cMapUrl: 'cmaps/',
+  standardFontDataUrl: 'standard_fonts/',
+};
+
+type PDFFile = string | File | null;
 
 function Deckpage() {
+  const [file, setFile] = useState<PDFFile>(null);
+  const [numPages, setNumPages] = useState<number>();
+  const [pageNumber, setPageNumber] = useState(1);
+
+  const onFileChange = (target): void => {
+    const { files } = target;
+
+    if (files && files[0]) {
+      setFile(files[0] || null);
+    }
+  };
+  const onDocumentLoadSuccess = ({
+    numPages: nextNumPages,
+  }: PDFDocumentProxy): void => {
+    setNumPages(nextNumPages);
+  };
+
   const navigate = useNavigate();
   const [deckName, setDeckName] = useState<string>('');
   const [enteredDeckNameTouched, setEnteredDeckNameTouched] =
@@ -161,6 +196,49 @@ function Deckpage() {
               Password must be 6-35 characters long
             </p>
           )}
+        </div>
+      </div>
+
+      {/* PDF thumbnail */}
+
+      <div className="Example__container__load mt-10 w-60">
+        <Input
+          style="upload"
+          placeholder="upload"
+          label=""
+          id="deck-upload"
+          onChange={onFileChange}
+        />
+      </div>
+      <div className="Example ">
+        <div className="Example__container">
+          <div className="Example__container__document">
+            <Document
+              file={file}
+              onLoadSuccess={onDocumentLoadSuccess}
+              options={options}
+              noData={<h4 className="my-5">No file selected</h4>}
+            >
+              {/* {Array.from(new Array(numPages), (el, index) => (
+                <Page key={`page_${index + 1}`} pageNumber={index + 1} />
+              ))} */}
+              {/* <Page pageNumber={pageNumber} /> */}
+
+              <div className="flex gap-3 overflow-auto my-6">
+                {Array.from(new Array(numPages), (el, index) => (
+                  <Thumbnail
+                    onItemClick={(args) => {
+                      console.log('args: ', args);
+                      setPageNumber(index + 1);
+                    }}
+                    key={`page_${index + 1}`}
+                    pageNumber={index + 1}
+                    scale={0.2}
+                  />
+                ))}
+              </div>
+            </Document>
+          </div>
         </div>
       </div>
     </MainLayout>

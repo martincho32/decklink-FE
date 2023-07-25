@@ -11,7 +11,7 @@ export interface InputProps {
   id: string;
   label: string;
   value?: string;
-  onChange?: (value: string) => void;
+  onChange?: (value: string | unknown) => void;
   onBlur?: (event: React.FocusEvent<HTMLInputElement>) => void;
 }
 
@@ -45,7 +45,7 @@ function Input({
 
   const onFileInputEntered = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (onChange) {
-      onChange(event.target.value);
+      onChange(event.target);
     }
   };
 
