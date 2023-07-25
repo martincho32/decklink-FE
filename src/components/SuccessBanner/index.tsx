@@ -13,7 +13,7 @@ function SuccessBanner({ message }: BannerProps) {
   };
 
   return (
-    <div>
+    <div className={styles.alignBannerCenter}>
       {showBanner && (
         <div className={styles.successBanner}>
           <span className={styles.message}>{message}</span>

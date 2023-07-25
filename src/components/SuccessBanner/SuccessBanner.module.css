@@ -1,3 +1,8 @@
+.alignBannerCenter {
+  display: flex;
+  justify-content: center;
+}
+
 .successBanner {
   width: fit-content;
   display: flex;
