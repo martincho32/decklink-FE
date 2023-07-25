@@ -15,13 +15,16 @@ export const useAuth = () => {
     }
   }, []);
 
-  const login = async ({ email, password }): Promise<boolean | unknown> => {
+  const login = async ({
+    email,
+    password,
+  }): Promise<boolean | { response: { status: number } }> => {
     try {
       const { data } = await loginService.loginUser({ email, password });
       addUser({ email: data.email, authToken: data.token, role: data.role });
       return true;
-    } catch (error) {
-      console.error('useAuth Error: ', error);
+    } catch (error: any) {
+      console.error('useAuth login Error: ', error);
       return error;
     }
   };
@@ -30,17 +33,16 @@ export const useAuth = () => {
     email,
     password,
     cfpassword,
-  }): Promise<boolean | unknown> => {
+  }): Promise<boolean | { response: { status: number } }> => {
     try {
       await loginService.registerUser({
         email,
         password,
         cfpassword,
       });
-      console.log('User Registrated Success');
       return true;
-    } catch (error) {
-      console.error('useAuth Error: ', error);
+    } catch (error: any) {
+      console.error('useAuth signup Error: ', error);
       return error;
     }
   };

@@ -57,8 +57,10 @@ function LogIn() {
       return;
     }
 
-    // Call login service and handle response
-    const response = await login({ email, password });
+    const response: boolean | { response: { status: number } } = await login({
+      email,
+      password,
+    });
     console.log('isLogin: ', response);
     if (typeof response === 'boolean') {
       navigate('/founder/decks', { state: { isLoggedIn: response } });
@@ -85,7 +87,7 @@ function LogIn() {
 
   return (
     <MainLayout>
-      {location.state.isSignedUp && (
+      {location?.state?.isSignedUp && (
         <SuccessBanner message="You succesfully signed up! Now you just need to log in" />
       )}
       <div className={styles.blockContainer}>
