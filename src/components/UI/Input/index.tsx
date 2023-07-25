@@ -13,6 +13,8 @@ export interface InputProps {
   value?: string;
   onChange?: (value: string | unknown) => void;
   onBlur?: (event: React.FocusEvent<HTMLInputElement>) => void;
+  inputIsInvalid?: boolean;
+  errorMessage?: string;
 }
 
 function Input({
@@ -24,6 +26,8 @@ function Input({
   value,
   onChange,
   onBlur,
+  inputIsInvalid,
+  errorMessage,
 }: InputProps) {
   let inputElement: JSX.Element;
 
@@ -95,6 +99,9 @@ function Input({
               onClick={togglePasswordVisibility}
             />
           </div>
+          {inputIsInvalid && (
+            <p className={styles.errorMessage}>{errorMessage}</p>
+          )}
         </div>
       );
       break;

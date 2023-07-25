@@ -142,4 +142,11 @@ input[type="file"] {
     transition: 0.2s;
 }
 
+.errorMessage{
+    color: rgb(226, 85, 85);
+    font-size: 0.75rem;
+    font-weight: 300;
+    text-align: left;
+}
+
 

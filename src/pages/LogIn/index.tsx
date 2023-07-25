@@ -117,6 +117,8 @@ function LogIn() {
                 label="Your Email"
                 id="email"
                 value={email}
+                inputIsInvalid={emailInputIsInvalid}
+                errorMessage="Enter valid email"
                 onChange={handleEmailChange}
                 onBlur={emailInputBlur}
               />
