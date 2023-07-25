@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import whiteTopRightArrow from '../../assets/images/ArrowTopRight.svg';
 import styles from './SignUp.module.css';
 import graphImageFlying from '../../assets/images/graph-image-flying.png';
@@ -9,9 +9,15 @@ import SignUpFormData from '../../models/signup';
 import RequiredSignUpInfo from './RequiredSignUpInfo';
 import NotRequiredSignUpInfo from './NotRequiredSignUpInfo';
 import OrangeIconBottomLeft from '../../assets/images/OrangeArrowBottomLeft.svg';
+import { useAuth } from '../../hooks/useAuth';
 
 function SignUp() {
+  const { signup } = useAuth();
+  const navigate = useNavigate();
+
   const [page, setPage] = useState<number>(0);
+
+  const [loginError, setLoginError] = useState<string | null>(null);
 
   const [enteredEmailTouched, setEnteredEmailTouched] =
     useState<boolean>(false);
@@ -64,7 +70,7 @@ function SignUp() {
     setPage((currPage) => currPage + 1);
   };
 
-  const submitHandler = (event: React.FormEvent) => {
+  const submitHandler = async (event: React.FormEvent) => {
     event.preventDefault();
 
     if (
@@ -73,6 +79,22 @@ function SignUp() {
       !enteredRepeatPasswordIsValid
     ) {
       return;
+    }
+
+    const response = await signup({
+      email: formData.email,
+      password: formData.password,
+      cfpassword: formData.password,
+    });
+    console.log('isSignup: ', response);
+    if (typeof response === 'boolean') {
+      navigate('/login');
+    } else {
+      const errorMessage =
+        response.response.status === 401
+          ? 'Whoops! Incorrect email or password.'
+          : 'Whoops! Looks like something went wrong, please contact support.';
+      setLoginError(errorMessage);
     }
 
     formData.email = '';
@@ -170,6 +192,11 @@ function SignUp() {
                     setPage((currPage) => currPage - 1);
                   }}
                 />
+                {loginError && (
+                  <span className={`${styles.errorMessage} text-2xl`}>
+                    {loginError}
+                  </span>
+                )}
               </>
             )}
 

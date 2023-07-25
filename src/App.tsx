@@ -13,7 +13,7 @@ function App() {
           <Route path="/login" element={<LogIn />} />
           <Route path="/signup" element={<SignUp />} />
           <Route element={<ProtectedRoute user={{}} />}>
-            <Route path="/signup" element={<DeckList />} />
+            <Route path="/founder/decks" element={<DeckList />} />
           </Route>
           <Route path="*" element={<NotFound />} />
         </Routes>

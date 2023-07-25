@@ -26,9 +26,28 @@ export const useAuth = () => {
     }
   };
 
+  const signup = async ({
+    email,
+    password,
+    cfpassword,
+  }): Promise<boolean | unknown> => {
+    try {
+      await loginService.registerUser({
+        email,
+        password,
+        cfpassword,
+      });
+      console.log('User Registrated Success');
+      return true;
+    } catch (error) {
+      console.error('useAuth Error: ', error);
+      return error;
+    }
+  };
+
   const logout = () => {
     removeUser();
   };
 
-  return { user, login, logout };
+  return { user, login, signup, logout };
 };

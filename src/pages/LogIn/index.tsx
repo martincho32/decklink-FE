@@ -54,11 +54,12 @@ function LogIn() {
     if (!enteredEmailIsValid || !enteredPasswordIsValid) {
       return;
     }
+
     // Call login service and handle response
     const response = await login({ email, password });
     console.log('isLogin: ', response);
     if (typeof response === 'boolean') {
-      navigate('/mydecks');
+      navigate('/founder/decks');
     } else {
       const errorMessage =
         response.response.status === 401
