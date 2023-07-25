@@ -1,0 +1,161 @@
+.deckBlock {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  border-radius: 0.5rem;
+  box-shadow: 3px 3px 10px 0px rgba(0, 0, 0, 0.2);
+}
+
+.deckBlock:hover {
+  box-shadow: 3px 3px 10px 0px #f1501b9d;
+  transform: scale(1.01);
+}
+
+.deckMainContentWrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 1rem;
+  gap: 1rem;
+  align-items: flex-start;
+}
+
+.deckFirstRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  align-content: center;
+  align-self: stretch;
+}
+
+.deckTitleWrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.deckTitle {
+  color: var(--organge, #f1511b);
+  font-family: 'PowerGroteskTrial';
+  font-size: 1.5rem;
+  font-style: normal;
+  font-weight: 700;
+  line-height: normal;
+}
+
+.subtitle {
+  color: var(--black, #161a20);
+  font-family: 'PowerGroteskTrial';
+  font-size: 0.625rem;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+}
+
+.deckMainInfo {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.25rem;
+  align-self: stretch;
+}
+
+.deckMainInfoItem {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  align-content: center;
+  gap: 0.5rem;
+}
+
+.deckTitleAndIcon {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.deckMainInfoItemDataIcon {
+  width: 1.875rem;
+  height: 1.875rem;
+}
+
+.deckMainInfoItemTitle {
+  color: var(--black, #161a20);
+  font-family: 'NeuePlak';
+  font-size: 1rem;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+}
+
+.deckMainInfoItemData {
+  color: var(--organge, #f1511b);
+  font-family: 'NeuePlak';
+  font-size: 1rem;
+  font-style: normal;
+  font-weight: 600;
+  line-height: normal;
+}
+
+.dashedLine {
+  margin-top: 4px;
+  display: inline-block;
+  height: 1px;
+  width: 100%;
+  background: repeating-linear-gradient(
+    90deg,
+    transparent,
+    transparent 5px,
+    black 5px,
+    black 10px
+  );
+}
+
+.buttons {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.secondaryButtonsWrapper {
+  justify-content: space-between;
+  width: 100%;
+  display: flex;
+  gap: 0.5rem;
+}
+
+.secondaryButtonsWrapper > :first-child {
+  flex: 1;
+}
+
+
+
+
+
+@media (max-width: 1536px) {
+
+}
+
+@media (max-width: 1280px) {
+
+}
+
+@media (max-width: 1024px) {
+
+}
+
+@media (max-width: 768px) {
+
+}
+
+@media (max-width: 576px) {
+
+}
+
+@media (max-width: 320px) {
+
+}
