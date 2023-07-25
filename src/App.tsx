@@ -12,7 +12,7 @@ function App() {
           <Route path="/landing" element={<Landing />} />
           <Route path="/login" element={<LogIn />} />
           <Route path="/signup" element={<SignUp />} />
-          <Route element={<ProtectedRoute user={{}} />}>
+          <Route element={<ProtectedRoute />}>
             <Route path="/founder/decks" element={<MyDesks />} />
           </Route>
           <Route path="*" element={<NotFound />} />

@@ -1,15 +1,13 @@
-import { useContext, useState } from 'react';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Logo, Wordmark } from '../icons';
 import HamburguerMenu from '../HamburguerMenu';
 import NavLinks from '../HamburguerMenu/NavLinks';
 import AuthActions from './AuthActions';
 import { useAuth } from '../../hooks/useAuth';
-import { AuthContext } from '../../context/AuthContext';
 
 function Navbar() {
-  const { logout } = useAuth();
-  const { user } = useContext(AuthContext);
+  const { logout, user } = useAuth();
   const navigate = useNavigate();
   const [isOpen, setIsOpen] = useState(false);
 

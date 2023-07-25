@@ -1,13 +1,15 @@
 import { Navigate, Outlet } from 'react-router-dom';
+import { useAuth } from '../../hooks/useAuth';
 
 export interface Props {
-  user: unknown;
   children?: React.ReactNode | null;
   redirectTo?: string;
 }
 
-function ProtectedRoute({ user, children, redirectTo = '/' }: Props) {
-  if (!user) {
+function ProtectedRoute({ children, redirectTo = '/' }: Props) {
+  const { user } = useAuth();
+
+  if (!user?.authToken) {
     return <Navigate to={redirectTo} />;
   }
 
