@@ -11,6 +11,7 @@ export interface InputProps {
   id: string;
   label: string;
   value?: string;
+  disabled?: boolean;
   onChange?: (value: any) => void;
   onBlur?: (event: React.FocusEvent<HTMLInputElement>) => void;
   inputIsInvalid?: boolean;
@@ -24,6 +25,7 @@ function Input({
   id,
   label,
   value,
+  disabled,
   onChange,
   onBlur,
   inputIsInvalid,
@@ -82,6 +84,7 @@ function Input({
           <label htmlFor={id}>{label}</label>
           <div className={styles.defaultInputContainer}>
             <input
+              disabled={disabled}
               id={id}
               type={showPassword ? 'text' : 'password'}
               placeholder={placeholder}
@@ -116,6 +119,7 @@ function Input({
             }`}
           >
             <input
+              disabled={disabled}
               id={id}
               type="checkbox"
               value={value}
@@ -136,9 +140,10 @@ function Input({
           <label htmlFor={id}>{label}</label>
           <div className={styles.UploadFileInputWrapper}>
             <label htmlFor={id} className={styles.fileInput}>
-              Upload Deck File <img src={uploadFileIcon} alt="" />
+              {label} <img src={uploadFileIcon} alt="" />
               <div className={styles.uploadInput}>
                 <input
+                  disabled={disabled}
                   id={id}
                   type="file"
                   value={value}
@@ -158,6 +163,7 @@ function Input({
         <div className={styles.InputWrapper}>
           <label htmlFor={id}>{label}</label>
           <input
+            disabled={disabled}
             type={type}
             id={id}
             placeholder={placeholder}
@@ -179,6 +185,7 @@ function Input({
         <div className={styles.InputWrapper}>
           <label htmlFor={id}>{label}</label>
           <input
+            disabled={disabled}
             type={type}
             id={id}
             placeholder={placeholder}

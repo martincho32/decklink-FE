@@ -19,9 +19,9 @@ function App() {
           <Route path="/landing" element={<Landing />} />
           <Route path="/login" element={<LogIn />} />
           <Route path="/signup" element={<SignUp />} />
+          <Route path="/founder/deck" element={<DeckCreation />} />
           <Route element={<ProtectedRoute />}>
             <Route path="/founder/decks" element={<MyDecks />} />
-            <Route path="/founder/deck" element={<DeckCreation />} />
           </Route>
           <Route path="*" element={<NotFound />} />
         </Routes>

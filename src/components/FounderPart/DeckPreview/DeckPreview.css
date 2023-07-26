@@ -1,0 +1,107 @@
+.document {
+  display: flex !important;
+  flex-flow: column !important;
+  height: 100% !important;
+  z-index: 1;
+}
+
+.buttonClose {
+  z-index: 2;
+}
+
+.pageWrapper {
+  display: flex !important;
+  justify-content: center !important;
+  background-color: transparent !important;
+}
+
+.pageWrapper canvas {
+  display: flex !important;
+  cursor: default !important;
+  height: 60vh !important;
+  width: auto !important;
+  border-radius: 0.5rem !important;
+}
+
+.pageWrapper .react-pdf__Page__textContent {
+  cursor: default !important;
+  height: 60vh !important;
+  width: auto !important;
+}
+
+.pageWrapper .react-pdf__Page__annotations {
+  cursor: default !important;
+  height: 60vh !important;
+  width: auto !important;
+}
+
+.previewPagesWrapper {
+  height: 100% !important;
+  margin-top: 1rem !important;
+  overflow-x: auto !important;
+  display: flex !important;
+  gap: 1rem !important;
+  background-color: transparent !important;
+}
+
+.previewPageWrapper .react-pdf__Thumbnail__page {
+  display: flex !important;
+  height: 100% !important;
+  width: auto !important;
+  background-color: transparent !important;
+}
+
+.previewPageWrapper canvas {
+  display: flex !important;
+  height: 100% !important;
+  width: auto !important;
+  border-radius: 0.5rem !important;
+}
+
+@media (max-width: 1536px) {
+}
+
+@media (max-width: 1280px) {
+}
+
+@media (max-width: 1024px) {
+}
+
+@media (max-width: 768px) {
+  .pageWrapper {
+    display: none !important;
+  }
+
+  .previewPagesWrapper {
+    height: 100vh !important;
+    overflow-y: auto !important;
+    margin-top: 0rem!important;
+    display: flex !important;
+    flex-flow: column !important;
+    gap: 1rem !important;
+    background-color: transparent !important;
+  }
+
+  .previewPageWrapper .react-pdf__Thumbnail__page {
+    display: flex !important;
+    width: 100% !important;
+    background-color: transparent !important;
+  }
+
+  .previewPageWrapper canvas {
+    display: flex !important;
+    width: 100% !important;
+    border-radius: 0.5rem !important;
+  }
+
+  .buttonCloseIcon{
+    width: 0.5rem!important;
+    height: 0.5rem!important;
+  }
+}
+
+@media (max-width: 576px) {
+}
+
+@media (max-width: 320px) {
+}

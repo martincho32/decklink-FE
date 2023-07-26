@@ -1,11 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import {
-  pdfjs,
-  Document,
-  Thumbnail,
-  Page,
-} from 'react-pdf'; /** File library */
+import { pdfjs, Document, Thumbnail } from 'react-pdf'; /** File library */
 import type { PDFDocumentProxy } from 'pdfjs-dist'; /** File library */
 import styles from './DeckCreation.module.css';
 import { Logo } from '../../../components/icons';
@@ -31,12 +26,19 @@ function DeckCreation() {
   const [file, setFile] = useState<PDFFile>(null);
   const [numPages, setNumPages] = useState<number>();
   const [pageNumber, setPageNumber] = useState(1);
+  const [previewPickDeckSlide, setPreviewPickDeckSlide] = useState(false);
+  const [uploadInputFileLabel, setUploadInputFileLabel] =
+    useState('Upload File');
+
+  const handleOnClosePitchDeckSlidePreview = () =>
+    setPreviewPickDeckSlide(false);
 
   const onFileChange = (target): void => {
     const { files } = target;
 
     if (files && files[0]) {
       setFile(files[0] || null);
+      setUploadInputFileLabel('Change File');
     }
   };
   const onDocumentLoadSuccess = ({
@@ -58,13 +60,13 @@ function DeckCreation() {
   const [password, setPassword] = useState<string>('');
   const [enteredPasswordTouched, setEnteredPasswordTouched] =
     useState<boolean>(false);
-  const enteredPasswordIsValid = password.length >= 6 && password.length <= 35;
-  const passwordInputIsInvalid =
-    !enteredPasswordIsValid && enteredPasswordTouched;
 
+  const enteredPasswordIsValid = password.length >= 6 && password.length <= 35;
   const enteredDeckNameIsValid = deckName.trim() !== '' && deckName.length >= 3;
   const enteredDeckLinkIsValid = deckLink.trim() !== '' && deckLink.length >= 3;
 
+  const passwordInputIsInvalid =
+    !enteredPasswordIsValid && enteredPasswordTouched;
   const deckNameInputIsInvalid =
     !enteredDeckNameIsValid && enteredDeckNameTouched;
   const deckLinkInputIsInvalid =
@@ -122,21 +124,13 @@ function DeckCreation() {
           <span className="self-center text-xl leading-normal">Go Back</span>
         </div>
         <h1 className="text-2xl leading-normal">Create new Deck</h1>
-        <div className="flex gap-4 col-span-1 md:col-span-2 xl:col-span-1">
+        <div className="flex">
           <Button
             icon={<Logo color="white" />}
             type="button"
             className="bg-persimmon text-white py-4 px-5 grow"
             onClick={onClickCreate}
             text="Create"
-          />
-          <Button
-            icon={<Logo />}
-            type="button"
-            borderColor="#F1511B"
-            className="text-persimmon py-4 px-5 grow"
-            onClick={onClickCreate}
-            text="Save as a Draft"
           />
         </div>
       </div>
@@ -145,16 +139,15 @@ function DeckCreation() {
           <Input
             style="default"
             type="text"
-            placeholder="example@gmail.com"
+            placeholder="Pitch Deck"
             label="Name of Deck"
             id="deck-name"
             value={deckName}
+            inputIsInvalid={deckNameInputIsInvalid}
+            errorMessage="Enter valid deck name"
             onChange={handleDeckNameChange}
             onBlur={deckNameBlur}
           />
-          {deckNameInputIsInvalid && (
-            <p className="text-red-600">Enter valid deck name</p>
-          )}
         </div>
         <div className="">
           <Input
@@ -164,12 +157,11 @@ function DeckCreation() {
             label="Custom Link"
             id="deck-link"
             value={deckLink}
+            inputIsInvalid={deckLinkInputIsInvalid}
+            errorMessage="Enter valid deck link"
             onChange={handleDeckLinkChange}
             onBlur={deckLinkBlur}
           />
-          {deckLinkInputIsInvalid && (
-            <p className="text-red-500">Enter valid deck link</p>
-          )}
         </div>
       </div>
       <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 pt-12 gap-7 max-h-fit">
@@ -189,19 +181,17 @@ function DeckCreation() {
         </div>
         <div className={passToogleChecked ? '' : 'hidden'}>
           <Input
+            disabled={!passToogleChecked}
             style="password"
             placeholder="******"
             label="Password"
             id="passwod"
             value={password}
+            inputIsInvalid={passwordInputIsInvalid}
+            errorMessage="Password must be 6-35 characters long"
             onChange={handlePasswordChange}
             onBlur={passwordInputBlur}
           />
-          {passwordInputIsInvalid && (
-            <p className="text-red-500">
-              Password must be 6-35 characters long
-            </p>
-          )}
         </div>
       </div>
 
@@ -211,8 +201,10 @@ function DeckCreation() {
         <Input
           style="upload"
           placeholder="upload"
-          label=""
+          label={uploadInputFileLabel}
           id="deck-upload"
+          inputIsInvalid={passwordInputIsInvalid}
+          errorMessage="Password must be 6-35 characters long"
           onChange={onFileChange}
         />
       </div>
@@ -228,12 +220,12 @@ function DeckCreation() {
               {/* {Array.from(new Array(numPages), (el, index) => (
                 <Page key={`page_${index + 1}`} pageNumber={index + 1} />
               ))} */}
-              {/* <Page pageNumber={pageNumber} /> */}
 
               <div className="flex gap-3 overflow-auto my-6">
                 {Array.from(new Array(numPages), (el, index) => (
                   <Thumbnail
                     onItemClick={(args) => {
+                      setPreviewPickDeckSlide(true);
                       console.log('args: ', args);
                       setPageNumber(index + 1);
                     }}
@@ -247,7 +239,17 @@ function DeckCreation() {
           </div>
         </div>
       </div>
-      <DeckPreview />
+      <DeckPreview
+        onClose={handleOnClosePitchDeckSlidePreview}
+        visible={previewPickDeckSlide}
+        pageNumber={pageNumber}
+        file={file}
+        onDocumentLoadSuccess={onDocumentLoadSuccess}
+        options={options}
+        numPages={numPages}
+        setPreviewPickDeckSlide={setPreviewPickDeckSlide}
+        setPageNumber={setPageNumber}
+      />
     </MainLayout>
   );
 }
