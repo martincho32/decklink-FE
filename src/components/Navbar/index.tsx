@@ -4,10 +4,10 @@ import { Logo, Wordmark } from '../icons';
 import HamburguerMenu from '../HamburguerMenu';
 import NavLinks from '../HamburguerMenu/NavLinks';
 import AuthActions from './AuthActions';
-import { useAuth } from '../../hooks/useAuth';
+
+// TODO fix this file
 
 function Navbar() {
-  const { logout, user } = useAuth();
   const navigate = useNavigate();
   const [isOpen, setIsOpen] = useState(false);
 
@@ -23,7 +23,7 @@ function Navbar() {
       navigate('/signup');
     },
     handleButtonLogout: (): void => {
-      logout();
+      console.log('logout');
     },
   };
 
@@ -33,21 +33,16 @@ function Navbar() {
         <Logo />
         <Wordmark />
       </div>
-      <div
-        className={user?.authToken ? 'self-center hidden md:block' : 'hidden'}
-      >
+      <div className={true ? 'self-center hidden md:block' : 'hidden'}>
         <NavLinks />
       </div>
       <div className="hidden md:block">
-        <AuthActions
-          handleActions={handleActions}
-          isUserLogged={!!user?.authToken}
-        />
+        <AuthActions handleActions={handleActions} isUserLogged />
       </div>
       <HamburguerMenu
         handleActions={handleActions}
         onClickHamburguer={onClickHamburguer}
-        isUserLogged={!!user?.authToken}
+        isUserLogged
         isOpen={isOpen}
       />
     </nav>
