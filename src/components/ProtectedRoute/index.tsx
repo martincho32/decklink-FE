@@ -14,10 +14,6 @@ function ProtectedRoute({ children, redirectTo = '/' }: Props) {
   const { validateToken } = useContext(AuthContext);
   const [isUserLogged, setIsUserLogged] = useState(true);
 
-  // const checkIsLogged = async () => {
-  //   await
-  // }
-  // eslint-disable-next-line consistent-return
   useEffect(() => {
     validateToken().then((isOkey) => setIsUserLogged(isOkey));
     if (!isUserLogged) {
