@@ -33,7 +33,7 @@ function HamburguerMenu({
           flexDirection: 'column',
           width: '100vw',
           background: 'white',
-          height: '100vh',
+          height: '100vmax',
           zIndex: '2',
         }}
         className={isOpen ? 'flex' : 'hidden'}

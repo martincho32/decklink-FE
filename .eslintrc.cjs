@@ -38,6 +38,8 @@ module.exports = {
     'jsx-a11y/no-noninteractive-element-interactions': 0,
     'no-lone-blocks': 0,
     '@typescript-eslint/no-explicit-any': 0,
+    'import/no-cycle': 0,
+    'react-hooks/exhaustive-deps': 0,
     'prettier/prettier': [
       'error',
       {

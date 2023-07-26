@@ -1,24 +1,27 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { SnackbarProvider } from 'notistack';
 import { Landing, LogIn, NotFound, SignUp, MyDesks, DeckDetail } from './pages';
 import ProtectedRoute from './components/ProtectedRoute';
-import { AuthProvider } from './context/AuthContext';
+import { AuthProvider } from './context';
 
 function App() {
   return (
     <AuthProvider>
-      <BrowserRouter>
-        <Routes>
-          <Route index element={<Landing />} />
-          <Route path="/landing" element={<Landing />} />
-          <Route path="/login" element={<LogIn />} />
-          <Route path="/signup" element={<SignUp />} />
-          <Route element={<ProtectedRoute />}>
-            <Route path="/founder/decks" element={<MyDesks />} />
-          </Route>
-          <Route path="/deck/:id" element={<DeckDetail />} />
-          <Route path="*" element={<NotFound />} />
-        </Routes>
-      </BrowserRouter>
+      <SnackbarProvider maxSnack={3} preventDuplicate>
+        <BrowserRouter>
+          <Routes>
+            <Route index element={<Landing />} />
+            <Route path="/landing" element={<Landing />} />
+            <Route path="/login" element={<LogIn />} />
+            <Route path="/signup" element={<SignUp />} />
+            <Route element={<ProtectedRoute />}>
+              <Route path="/founder/decks" element={<MyDesks />} />
+              <Route path="/deck/:id" element={<DeckDetail />} />
+            </Route>
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+        </BrowserRouter>
+      </SnackbarProvider>
     </AuthProvider>
   );
 }

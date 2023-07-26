@@ -1,5 +1,6 @@
-import { useState } from 'react';
+import { useState, useContext } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { useSnackbar } from 'notistack';
 import whiteTopRightArrow from '../../assets/images/ArrowTopRight.svg';
 import styles from './SignUp.module.css';
 import graphImageFlying from '../../assets/images/graph-image-flying.png';
@@ -9,16 +10,16 @@ import SignUpFormData from '../../models/signup';
 import RequiredSignUpInfo from './RequiredSignUpInfo';
 import NotRequiredSignUpInfo from './NotRequiredSignUpInfo';
 import OrangeIconBottomLeft from '../../assets/images/OrangeArrowBottomLeft.svg';
-import { useAuth } from '../../hooks/useAuth';
+import { AuthContext } from '../../context';
 
 function SignUp() {
-  const { signup } = useAuth();
+  const { registerUser } = useContext(AuthContext);
+  const { enqueueSnackbar } = useSnackbar();
   const navigate = useNavigate();
 
   const [page, setPage] = useState<number>(0);
 
-  const [loginError, setLoginError] = useState<string | null>(null);
-
+  const [loginError, setSignUpError] = useState<string | null>(null);
   const [enteredEmailTouched, setEnteredEmailTouched] =
     useState<boolean>(false);
   const [enteredPasswordTouched, setEnteredPasswordTouched] =
@@ -80,23 +81,24 @@ function SignUp() {
     ) {
       return;
     }
-
-    const response = await signup({
-      email: formData.email,
-      password: formData.password,
-      cfpassword: formData.password,
-    });
-    console.log('isSignup: ', response);
-    if (typeof response === 'boolean') {
-      navigate('/login', { state: { isSignedUp: response } });
-    } else {
-      const errorMessage =
-        response.response.status === 401
-          ? 'Whoops! Incorrect email or password.'
-          : 'Whoops! Looks like something went wrong, please contact support.';
-      setLoginError(errorMessage);
+    const { hasError, message } = await registerUser(
+      formData.email,
+      formData.password,
+      formData.confirmPassword
+    );
+    if (hasError) {
+      setSignUpError(message!);
+      return;
     }
-
+    navigate('/login', { state: { isSignedUp: true } });
+    enqueueSnackbar('Registration succesful!!!', {
+      variant: 'success',
+      autoHideDuration: 2000,
+      anchorOrigin: {
+        vertical: 'top',
+        horizontal: 'right',
+      },
+    });
     formData.email = '';
     setEnteredEmailTouched(false);
     formData.password = '';
