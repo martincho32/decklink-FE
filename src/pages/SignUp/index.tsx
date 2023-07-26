@@ -1,5 +1,6 @@
 import { useState, useContext } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { useSnackbar } from 'notistack';
 import whiteTopRightArrow from '../../assets/images/ArrowTopRight.svg';
 import styles from './SignUp.module.css';
 import graphImageFlying from '../../assets/images/graph-image-flying.png';
@@ -13,7 +14,7 @@ import { AuthContext } from '../../context';
 
 function SignUp() {
   const { registerUser } = useContext(AuthContext);
-
+  const { enqueueSnackbar } = useSnackbar();
   const navigate = useNavigate();
 
   const [page, setPage] = useState<number>(0);
@@ -90,7 +91,14 @@ function SignUp() {
       return;
     }
     navigate('/login', { state: { isSignedUp: true } });
-
+    enqueueSnackbar('Registration succesful!!!', {
+      variant: 'success',
+      autoHideDuration: 2000,
+      anchorOrigin: {
+        vertical: 'top',
+        horizontal: 'right',
+      },
+    });
     formData.email = '';
     setEnteredEmailTouched(false);
     formData.password = '';

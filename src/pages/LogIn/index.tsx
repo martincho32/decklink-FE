@@ -1,14 +1,14 @@
-import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useState, useContext } from 'react';
 import whiteTopRightArrow from '../../assets/images/ArrowTopRight.svg';
 import styles from './LogIn.module.css';
 import graphImageFlying from '../../assets/images/graph-image-flying.png';
 import graphImageStanding from '../../assets/images/graph-image-standing.png';
-import { MainLayout, Input, Button, SuccessBanner } from '../../components';
+import { MainLayout, Input, Button } from '../../components';
 import { AuthContext } from '../../context';
 
 function LogIn() {
-  const location = useLocation();
+  // const location = useLocation();
   const { loginUser } = useContext(AuthContext);
 
   const navigate = useNavigate();
@@ -85,9 +85,9 @@ function LogIn() {
 
   return (
     <MainLayout>
-      {location?.state?.isSignedUp && (
+      {/* {location?.state?.isSignedUp && (
         <SuccessBanner message="You succesfully signed up! Now you just need to log in" />
-      )}
+      )} */}
       <div className={styles.blockContainer}>
         <img
           className={styles.imgTopRight}
