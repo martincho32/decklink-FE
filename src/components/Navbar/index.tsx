@@ -1,13 +1,15 @@
-import { useState } from 'react';
+import { useState, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Logo, Wordmark } from '../icons';
 import HamburguerMenu from '../HamburguerMenu';
 import NavLinks from '../HamburguerMenu/NavLinks';
 import AuthActions from './AuthActions';
-import { useAuth } from '../../hooks/useAuth';
+import { AuthContext } from '../../context';
+
+// TODO fix this file
 
 function Navbar() {
-  const { logout, user } = useAuth();
+  const { isLoggedIn, logoutUser } = useContext(AuthContext);
   const navigate = useNavigate();
   const [isOpen, setIsOpen] = useState(false);
 
@@ -23,7 +25,8 @@ function Navbar() {
       navigate('/signup');
     },
     handleButtonLogout: (): void => {
-      logout();
+      logoutUser();
+      navigate('/');
     },
   };
 
@@ -33,21 +36,16 @@ function Navbar() {
         <Logo />
         <Wordmark />
       </div>
-      <div
-        className={user?.authToken ? 'self-center hidden md:block' : 'hidden'}
-      >
+      <div className={isLoggedIn ? 'self-center hidden md:block' : 'hidden'}>
         <NavLinks />
       </div>
       <div className="hidden md:block">
-        <AuthActions
-          handleActions={handleActions}
-          isUserLogged={!!user?.authToken}
-        />
+        <AuthActions handleActions={handleActions} isUserLogged={isLoggedIn} />
       </div>
       <HamburguerMenu
         handleActions={handleActions}
         onClickHamburguer={onClickHamburguer}
-        isUserLogged={!!user?.authToken}
+        isUserLogged={isLoggedIn}
         isOpen={isOpen}
       />
     </nav>

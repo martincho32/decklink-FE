@@ -1,16 +1,16 @@
-import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import { useState, useContext } from 'react';
 import whiteTopRightArrow from '../../assets/images/ArrowTopRight.svg';
 import styles from './LogIn.module.css';
 import graphImageFlying from '../../assets/images/graph-image-flying.png';
 import graphImageStanding from '../../assets/images/graph-image-standing.png';
-import { MainLayout, Input, Button, SuccessBanner } from '../../components';
-import { useAuth } from '../../hooks/useAuth';
+import { MainLayout, Input, Button } from '../../components';
+import { AuthContext } from '../../context';
 
 function LogIn() {
-  const location = useLocation();
+  // const location = useLocation();
+  const { loginUser } = useContext(AuthContext);
 
-  const { login } = useAuth();
   const navigate = useNavigate();
 
   const [email, setEmail] = useState<string>('');
@@ -57,20 +57,18 @@ function LogIn() {
       return;
     }
 
-    const response: boolean | { response: { status: number } } = await login({
-      email,
-      password,
-    });
-    console.log('isLogin: ', response);
-    if (typeof response === 'boolean') {
-      navigate('/founder/decks', { state: { isLoggedIn: response } });
-    } else {
-      const errorMessage =
-        response.response.status === 401
-          ? 'Whoops! Incorrect email or password.'
-          : 'Whoops! Looks like something went wrong, please contact support.';
-      setLoginError(errorMessage);
+    const isvalidLogin = await loginUser(email, password);
+    if (!isvalidLogin) {
+      setLoginError(
+        'Whoops! Looks like something went wrong, please contact support.'
+      );
+      return;
     }
+    navigate('/founder/decks', {
+      state: { isLoggedIn: isvalidLogin },
+      replace: true,
+    });
+
     setEmail('');
     setEnteredEmailTouched(false);
     setPassword('');
@@ -87,9 +85,9 @@ function LogIn() {
 
   return (
     <MainLayout>
-      {location?.state?.isSignedUp && (
+      {/* {location?.state?.isSignedUp && (
         <SuccessBanner message="You succesfully signed up! Now you just need to log in" />
-      )}
+      )} */}
       <div className={styles.blockContainer}>
         <img
           className={styles.imgTopRight}
