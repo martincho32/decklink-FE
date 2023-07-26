@@ -1,4 +1,4 @@
-import { Button } from '..';
+import Button from '../UI/Button';
 import { Logo } from '../icons';
 
 interface Props {
@@ -25,7 +25,7 @@ function AuthActions({ isUserLogged, handleActions }: Props) {
           />
           <Button
             type="button"
-            text="Sign In"
+            text="Sign Up"
             icon={<Logo color="#FFFFFF" width="10" height="11" />}
             backgroundColor="#F1511B"
             textColor="#FFF"
