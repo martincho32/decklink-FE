@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { pdfjs, Document, Thumbnail } from 'react-pdf'; /** File library */
 import type { PDFDocumentProxy } from 'pdfjs-dist'; /** File library */
-import styles from './DeckCreation.module.css';
+// import styles from './DeckCreation.module.css';
 import { Logo } from '../../../components/icons';
 import { MainLayout, Button, Input, DeckPreview } from '../../../components';
 /** File library */
