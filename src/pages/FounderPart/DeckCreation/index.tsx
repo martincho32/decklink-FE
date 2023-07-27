@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { pdfjs, Document, Thumbnail } from 'react-pdf'; /** File library */
 import type { PDFDocumentProxy } from 'pdfjs-dist'; /** File library */
+import { useSnackbar } from 'notistack';
 import './DeckCreation.css';
 import { Logo } from '../../../components/icons';
 import { MainLayout, Button, Input, DeckPreview } from '../../../components';
@@ -9,7 +10,7 @@ import { MainLayout, Button, Input, DeckPreview } from '../../../components';
 import 'react-pdf/dist/esm/Page/AnnotationLayer.css';
 import 'react-pdf/dist/esm/Page/TextLayer.css';
 import EmptyDeckPreview from '../../../components/FounderPart/DeckPreview/EmptyDeckPreview';
-import { createDeck } from '../../../services/deck';
+import { deckService } from '../../../services';
 
 pdfjs.GlobalWorkerOptions.workerSrc = new URL(
   'pdfjs-dist/build/pdf.worker.min.js',
@@ -22,6 +23,15 @@ const options = {
 };
 
 type PDFFile = string | File | null;
+
+type DeckData = {
+  name: string;
+  customDeckLink: string;
+  requestEmail: boolean;
+  requestPassword: boolean;
+  password?: string;
+  file: PDFFile;
+};
 
 function DeckCreation() {
   /** File Library */
@@ -50,6 +60,8 @@ function DeckCreation() {
   };
   /** File Library */
   const navigate = useNavigate();
+  const { enqueueSnackbar } = useSnackbar();
+
   const [deckName, setDeckName] = useState<string>('');
   const [enteredDeckNameTouched, setEnteredDeckNameTouched] =
     useState<boolean>(false);
@@ -110,74 +122,49 @@ function DeckCreation() {
     setEnteredPasswordTouched(true);
   };
 
-  type DeckData = {
-    name: string;
-    customDeckLink: string;
-    requestEmail: boolean;
-    requestPassword: boolean;
-    password?: string;
-    file: PDFFile;
-  };
-
-  const createDeckApi = async ({
+  const createDeckBody = ({
     name,
     customDeckLink,
     requestEmail,
     requestPassword,
     password,
     file,
-  }: DeckData): Promise<boolean | { response: { status: number } }> => {
-    try {
-      const { data } = await createDeck({
-        deck: {
-          name,
-          customDeckLink,
-          requestEmail,
-          requestPassword,
-          password,
-        },
-        file: {
-          file,
-        },
-      });
-      console.log(data);
-      return true;
-    } catch (error: any) {
-      console.error('Error:', error);
-      return error;
-    }
+  }: DeckData): FormData => {
+    const fd = new FormData();
+    fd.append('file', file as Blob);
+    fd.append('customDeckLink', customDeckLink);
+    fd.append('requestEmail', `${requestEmail}`);
+    fd.append('requestPassword', `${requestPassword}`);
+    fd.append('name', name);
+    if (passToogleChecked) fd.append('password', `${password}`);
+    return fd;
   };
 
   const submitHandler = async (event: React.FormEvent) => {
     event.preventDefault();
     setDeckLink('decklink.com/'.concat(' ', deckLink));
-    if (passToogleChecked === true) {
-      createDeckApi({
-        name: deckName,
-        customDeckLink: deckLink,
-        requestEmail: emailToogleChecked,
-        requestPassword: passToogleChecked,
-        password: deckPassword,
-        file: deckFile,
-      });
-    } else {
-      createDeckApi({
+    try {
+      const body = createDeckBody({
         name: deckName,
         customDeckLink: deckLink,
         requestEmail: emailToogleChecked,
         requestPassword: passToogleChecked,
         file: deckFile,
       });
+      const { data } = await deckService.createDeck(body);
+      enqueueSnackbar('Deck successfully created!!', {
+        variant: 'success',
+        autoHideDuration: 2000,
+        anchorOrigin: {
+          vertical: 'top',
+          horizontal: 'right',
+        },
+      });
+      navigate('/founder/decks');
+      console.log('data: ', data);
+    } catch (error: any) {
+      console.error('Error:', error);
     }
-    console.log(
-      deckName,
-      deckLink,
-      emailToogleChecked,
-      passToogleChecked,
-      deckPassword,
-      deckFile
-    );
-    console.log('Test');
   };
 
   return (
@@ -290,16 +277,11 @@ function DeckCreation() {
               options={options}
               noData={<EmptyDeckPreview />}
             >
-              {/* {Array.from(new Array(numPages), (el, index) => (
-                <Page key={`page_${index + 1}`} pageNumber={index + 1} />
-              ))} */}
-
               <div className="flex gap-3 overflow-x-auto my-6 p-2">
                 {Array.from(new Array(numPages), (el, index) => (
                   <Thumbnail
-                    onItemClick={(args) => {
+                    onItemClick={() => {
                       setPreviewPickDeckSlide(true);
-                      console.log('args: ', args);
                       setPageNumber(index + 1);
                     }}
                     key={`page_${index + 1}`}
