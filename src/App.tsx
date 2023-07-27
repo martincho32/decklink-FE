@@ -8,7 +8,7 @@ import {
   DeckCreation,
 } from './pages';
 import ProtectedRoute from './components/ProtectedRoute';
-import { AuthProvider } from './context/AuthContext';
+import { AuthProvider } from './context';
 
 function App() {
   return (
