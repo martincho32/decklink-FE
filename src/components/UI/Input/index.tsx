@@ -1,3 +1,4 @@
+/* eslint-disable jsx-a11y/label-has-associated-control */
 import React, { useState } from 'react';
 import styles from './Input.module.css';
 import hideInputText from '../../../assets/images/HideInput.png';
@@ -6,7 +7,7 @@ import uploadFileIcon from '../../../assets/images/ArrowTopRight.svg';
 
 export interface InputProps {
   type?: string;
-  style: 'password' | 'toggle' | 'upload' | 'default';
+  style: 'password' | 'toggle' | 'upload' | 'default' | 'prefilled';
   placeholder?: string;
   id: string;
   label: string;
@@ -174,6 +175,33 @@ function Input({
             }
             onBlur={onBlur}
           />
+          {inputIsInvalid && (
+            <p className={styles.errorMessage}>{errorMessage}</p>
+          )}
+        </div>
+      );
+      break;
+    case 'prefilled':
+      inputElement = (
+        <div className={styles.InputWrapper}>
+          <label htmlFor={id}>{label}</label>
+          <div className={styles.prefilledInputWrapper}>
+            <label className={styles.placeholder} htmlFor={id}>
+              decklink.com/
+            </label>
+            <input
+              disabled={disabled}
+              type={type}
+              id={id}
+              value={value}
+              onChange={onDefaultInputEntered}
+              placeholder="minds"
+              className={
+                value ? styles.prefilledInputWithValue : styles.prefilledInput
+              }
+              onBlur={onBlur}
+            />
+          </div>
           {inputIsInvalid && (
             <p className={styles.errorMessage}>{errorMessage}</p>
           )}
