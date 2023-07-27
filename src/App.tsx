@@ -16,7 +16,7 @@ function App() {
             <Route path="/signup" element={<SignUp />} />
             <Route element={<ProtectedRoute />}>
               <Route path="/founder/decks" element={<MyDesks />} />
-              <Route path="/deck/:id" element={<DeckDetail />} />
+              <Route path="/founder/deck/:id" element={<DeckDetail />} />
             </Route>
             <Route path="*" element={<NotFound />} />
           </Routes>
