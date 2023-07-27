@@ -1,6 +1,6 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { SnackbarProvider } from 'notistack';
-import { Landing, LogIn, NotFound, SignUp, MyDesks } from './pages';
+import { Landing, LogIn, NotFound, SignUp, MyDecks } from './pages';
 import ProtectedRoute from './components/ProtectedRoute';
 import { AuthProvider } from './context';
 
@@ -15,7 +15,7 @@ function App() {
             <Route path="/login" element={<LogIn />} />
             <Route path="/signup" element={<SignUp />} />
             <Route element={<ProtectedRoute />}>
-              <Route path="/founder/decks" element={<MyDesks />} />
+              <Route path="/founder/decks" element={<MyDecks />} />
             </Route>
             <Route path="*" element={<NotFound />} />
           </Routes>
