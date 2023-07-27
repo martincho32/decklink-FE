@@ -29,7 +29,7 @@ type DeckData = {
   customDeckLink: string;
   requestEmail: boolean;
   requestPassword: boolean;
-  password?: string;
+  password: string;
   file: PDFFile;
 };
 
@@ -150,6 +150,7 @@ function DeckCreation() {
         requestEmail: emailToogleChecked,
         requestPassword: passToogleChecked,
         file: deckFile,
+        password: deckPassword,
       });
       const { data } = await deckService.createDeck(body);
       enqueueSnackbar('Deck successfully created!!', {
