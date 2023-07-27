@@ -1,5 +1,5 @@
 import { Outlet, useNavigate } from 'react-router-dom';
-// import Cookies from 'js-cookie';
+import Cookies from 'js-cookie';
 import { useContext, useEffect, useState } from 'react';
 import { AuthContext } from '../../context';
 
@@ -12,7 +12,7 @@ function ProtectedRoute({ children, redirectTo = '/' }: Props) {
   const navigate = useNavigate();
 
   const { validateToken } = useContext(AuthContext);
-  const [isUserLogged, setIsUserLogged] = useState(true);
+  const [isUserLogged, setIsUserLogged] = useState(!!Cookies.get('token'));
 
   useEffect(() => {
     validateToken().then((isOkey) => setIsUserLogged(isOkey));
