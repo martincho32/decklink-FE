@@ -1,0 +1,121 @@
+.errorWrapper {
+  padding: 4rem 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+}
+
+.fourSpanNumberLeft {
+  color: var(--organge, #f1511b);
+  text-align: center;
+  text-shadow: 6px 6px 16px rgba(0, 0, 0, 0.4);
+  font-family: 'PowerGroteskTrial';
+  font-size: 25rem;
+  font-style: normal;
+  font-weight: 900;
+  line-height: normal;
+}
+
+.fourSpanNumberRight {
+  color: var(--organge, #f1511b);
+  text-align: center;
+  text-shadow: 6px 6px 16px rgba(0, 0, 0, 0.4);
+  font-family: 'PowerGroteskTrial';
+  font-size: 25rem;
+  font-style: normal;
+  font-weight: 900;
+  line-height: normal;
+  margin-top: -5rem;
+  margin-left: -8rem;
+}
+
+.errorImg {
+  width: 60%;
+  height: auto;
+}
+
+.errorTextWrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.25rem;
+}
+
+.errorTitle {
+  width: 32rem;
+
+  color: var(--organge, #f1511b);
+  text-align: center;
+  font-family: 'PowerGroteskTrial';
+  font-size: 2.25rem;
+  font-style: normal;
+  font-weight: 800;
+  line-height: normal;
+}
+
+.errorSubtitle {
+  width: 26rem;
+  color: var(--black, #161a20);
+  text-align: center;
+  font-family: 'PowerGroteskTrial';
+  font-size: 1.25rem;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+}
+
+.button:hover {
+  text-decoration: none;
+  border-bottom: 1px solid var(--organge, #f1511b);
+}
+
+.errorTextAndButtonWrapper{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3rem;
+}
+
+
+@media (max-width: 1536px) {
+
+}
+
+@media (max-width: 1280px) {
+
+}
+
+@media (max-width: 1024px) {
+
+}
+
+@media (max-width: 768px) {
+  .errorTitle{
+    width: auto;
+    font-size: 1.5rem;
+  }
+
+  .errorSubtitle{
+    width: auto;
+    font-size: 1rem;
+  }
+
+  .errorTextWrapper{
+    gap: 1rem;
+  }
+
+  .errorTextAndButtonWrapper{
+    gap: 2rem;
+  }
+}
+
+@media (max-width: 576px) {
+  .errorImg{
+    width: 100%;
+  }
+}
+
+@media (max-width: 320px) {
+
+}

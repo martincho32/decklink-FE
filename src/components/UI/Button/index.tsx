@@ -10,6 +10,7 @@ export interface ButtonProps {
   borderColor?: string;
   textColor?: string;
   onClick?: React.MouseEventHandler<HTMLButtonElement>;
+  className?: string;
 }
 
 function Button({
@@ -20,6 +21,7 @@ function Button({
   borderColor,
   textColor,
   onClick,
+  className,
 }: ButtonProps) {
   let buttonStyles = styles.button;
 
@@ -38,7 +40,7 @@ function Button({
   return (
     <button
       type={type}
-      className={buttonStyles}
+      className={`${buttonStyles} ${className}`}
       style={{ backgroundColor, borderColor, color: textColor }}
       onClick={onClick || undefined}
     >

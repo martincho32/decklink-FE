@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom';
 import { Button } from '../..';
 import whiteTopRightArrow from '../../../assets/images/ArrowTopRight.svg';
 import styles from './Card.module.css';
@@ -7,15 +8,20 @@ import viewIcon from '../../../assets/images/views.png';
 import AverageTimeIcon from '../../../assets/images/AverageTime.png';
 import orangeTopRightArrow from '../../../assets/images/OrangeArrowTopRight.svg';
 import deleteIcon from '../../../assets/images/Delete.png';
+import { Deck } from '../../../types';
 
-function Card() {
+interface Props {
+  deck: Deck;
+}
+
+function Card({ deck }: Props) {
   return (
     <div className={styles.deckBlock}>
       <img src={image} alt="test" />
       <div className={styles.deckMainContentWrapper}>
         <div className={styles.deckFirstRow}>
           <div className={styles.deckTitleWrapper}>
-            <h3 className={styles.deckTitle}>Minds</h3>
+            <h3 className={styles.deckTitle}>{deck.name}</h3>
             <p className={styles.subtitle}>Published</p>
           </div>
           <Button
@@ -62,13 +68,15 @@ function Card() {
             textColor="#FFF"
           />
           <div className={styles.secondaryButtonsWrapper}>
-            <Button
-              type="button"
-              text="Edit"
-              icon={<img src={orangeTopRightArrow} alt="Arrow" />}
-              borderColor="#F1511B"
-              textColor="#F1511B"
-            />
+            <Link to={`/founder/deck/edit/${deck._id}`}>
+              <Button
+                type="button"
+                text="Edit"
+                icon={<img src={orangeTopRightArrow} alt="Arrow" />}
+                borderColor="#F1511B"
+                textColor="#F1511B"
+              />
+            </Link>
             <Button
               type="button"
               icon={<img src={deleteIcon} alt="delete" />}

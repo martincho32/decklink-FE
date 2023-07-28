@@ -32,7 +32,6 @@ function LogIn() {
 
   const handleEmailChange = (value: string) => {
     setEmail(value);
-    setLoginError(null);
   };
 
   const emailInputBlur = () => {
@@ -115,12 +114,11 @@ function LogIn() {
                 label="Your Email"
                 id="email"
                 value={email}
+                inputIsInvalid={emailInputIsInvalid}
+                errorMessage="Enter valid email"
                 onChange={handleEmailChange}
                 onBlur={emailInputBlur}
               />
-              {emailInputIsInvalid && (
-                <p className={styles.errorMessage}>Enter valid email</p>
-              )}
             </div>
             <div className={passwordInputClasses}>
               <Input
@@ -129,14 +127,11 @@ function LogIn() {
                 label="Password"
                 id="passwod"
                 value={password}
+                inputIsInvalid={passwordInputIsInvalid}
+                errorMessage="Password must be 6-35 characters long"
                 onChange={handlePasswordChange}
                 onBlur={passwordInputBlur}
               />
-              {passwordInputIsInvalid && (
-                <p className={styles.errorMessage}>
-                  Password must be 6-35 characters long
-                </p>
-              )}
             </div>
             {loginError && (
               <span className={`${styles.errorMessage} text-2xl`}>

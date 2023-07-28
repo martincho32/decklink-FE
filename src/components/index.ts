@@ -5,3 +5,4 @@ export { default as Button } from './UI/Button';
 export { default as Input } from './UI/Input';
 export { default as SuccessBanner } from './SuccessBanner';
 export { default as LineChart } from './LineChart';
+export { default as DeckPreview } from './FounderPart/DeckPreview';
