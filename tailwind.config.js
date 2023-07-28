@@ -8,6 +8,7 @@ export default {
       },
       colors: {
         persimmon: '#F1511B',
+        mirage: '#161A20',
       },
       maxWidth: {
         '8xl': '90rem',

@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+/* eslint-disable jsx-a11y/label-has-associated-control */
+import React, { useEffect, useState } from 'react';
 import styles from './Input.module.css';
 import hideInputText from '../../../assets/images/HideInput.png';
 import showInputText from '../../../assets/images/ShowInput.png';
@@ -6,13 +7,17 @@ import uploadFileIcon from '../../../assets/images/ArrowTopRight.svg';
 
 export interface InputProps {
   type?: string;
-  style: 'password' | 'toggle' | 'upload' | 'default';
+  style: 'password' | 'toggle' | 'upload' | 'default' | 'prefilled';
   placeholder?: string;
   id: string;
   label: string;
   value?: string;
-  onChange?: (value: string) => void;
+  disabled?: boolean;
+  onChange?: (value: any) => void;
   onBlur?: (event: React.FocusEvent<HTMLInputElement>) => void;
+  inputIsInvalid?: boolean;
+  errorMessage?: string;
+  checked?: boolean;
 }
 
 function Input({
@@ -22,8 +27,12 @@ function Input({
   id,
   label,
   value,
+  disabled,
   onChange,
   onBlur,
+  inputIsInvalid,
+  errorMessage,
+  checked,
 }: InputProps) {
   let inputElement: JSX.Element;
 
@@ -45,7 +54,7 @@ function Input({
 
   const onFileInputEntered = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (onChange) {
-      onChange(event.target.value);
+      onChange(event.target);
     }
   };
 
@@ -78,6 +87,7 @@ function Input({
           <label htmlFor={id}>{label}</label>
           <div className={styles.defaultInputContainer}>
             <input
+              disabled={disabled}
               id={id}
               type={showPassword ? 'text' : 'password'}
               placeholder={placeholder}
@@ -95,6 +105,9 @@ function Input({
               onClick={togglePasswordVisibility}
             />
           </div>
+          {inputIsInvalid && (
+            <p className={styles.errorMessage}>{errorMessage}</p>
+          )}
         </div>
       );
       break;
@@ -109,6 +122,7 @@ function Input({
             }`}
           >
             <input
+              disabled={disabled}
               id={id}
               type="checkbox"
               value={value}
@@ -117,6 +131,9 @@ function Input({
             />
             <span className={styles.toggleSlider} />
           </label>
+          {inputIsInvalid && (
+            <p className={styles.errorMessage}>{errorMessage}</p>
+          )}
         </div>
       );
       break;
@@ -126,9 +143,10 @@ function Input({
           <label htmlFor={id}>{label}</label>
           <div className={styles.UploadFileInputWrapper}>
             <label htmlFor={id} className={styles.fileInput}>
-              Upload Deck File <img src={uploadFileIcon} alt="" />
+              {label} <img src={uploadFileIcon} alt="" />
               <div className={styles.uploadInput}>
                 <input
+                  disabled={disabled}
                   id={id}
                   type="file"
                   value={value}
@@ -137,6 +155,9 @@ function Input({
               </div>
             </label>
           </div>
+          {inputIsInvalid && (
+            <p className={styles.errorMessage}>{errorMessage}</p>
+          )}
         </div>
       );
       break;
@@ -145,6 +166,7 @@ function Input({
         <div className={styles.InputWrapper}>
           <label htmlFor={id}>{label}</label>
           <input
+            disabled={disabled}
             type={type}
             id={id}
             placeholder={placeholder}
@@ -155,6 +177,36 @@ function Input({
             }
             onBlur={onBlur}
           />
+          {inputIsInvalid && (
+            <p className={styles.errorMessage}>{errorMessage}</p>
+          )}
+        </div>
+      );
+      break;
+    case 'prefilled':
+      inputElement = (
+        <div className={styles.InputWrapper}>
+          <label htmlFor={id}>{label}</label>
+          <div className={styles.prefilledInputWrapper}>
+            <label className={styles.placeholder} htmlFor={id}>
+              decklink.com/
+            </label>
+            <input
+              disabled={disabled}
+              type={type}
+              id={id}
+              value={value}
+              onChange={onDefaultInputEntered}
+              placeholder="minds"
+              className={
+                value ? styles.prefilledInputWithValue : styles.prefilledInput
+              }
+              onBlur={onBlur}
+            />
+          </div>
+          {inputIsInvalid && (
+            <p className={styles.errorMessage}>{errorMessage}</p>
+          )}
         </div>
       );
       break;
@@ -163,6 +215,7 @@ function Input({
         <div className={styles.InputWrapper}>
           <label htmlFor={id}>{label}</label>
           <input
+            disabled={disabled}
             type={type}
             id={id}
             placeholder={placeholder}
@@ -173,10 +226,17 @@ function Input({
             }
             onBlur={onBlur}
           />
+          {inputIsInvalid && (
+            <p className={styles.errorMessage}>{errorMessage}</p>
+          )}
         </div>
       );
       break;
   }
+
+  useEffect(() => {
+    setIsChecked(!!checked);
+  }, [checked]);
 
   return <div className={styles.inputContainer}>{inputElement}</div>;
 }

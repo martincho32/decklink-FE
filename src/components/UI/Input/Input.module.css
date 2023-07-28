@@ -1,145 +1,191 @@
 /* Input.module.css */
 
 .InputWrapper {
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-    width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  width: 100%;
 }
 
-.defaultInputContainer{
-    position: relative;
-    width: 100%;
+.placeholder {
+  color: var(--black-color);
 }
 
-.hideInputText{
-    position: absolute;
-    top: 50%;
-    right: 0.5rem;
-    transform: translateY(-50%);
-    cursor: pointer;
+.defaultInputContainer {
+  position: relative;
+  width: 100%;
+}
+
+.hideInputText {
+  position: absolute;
+  top: 50%;
+  right: 0.5rem;
+  transform: translateY(-50%);
+  cursor: pointer;
 }
 
 .inputContainer {
-    display: flex;
-    align-items: center;
-    width: 100%;
+  display: flex;
+  align-items: center;
+  width: 100%;
 }
 
 .defaultInput {
-    padding: 0.75rem 1rem;
-    border: 1px solid var(--black-color);
-    border-radius: 5px;
-    font-size: 1rem;
-    width: 100%;
-    min-width: 15rem;
+  padding: 0.75rem 1rem;
+  border: 1px solid var(--black-color);
+  border-radius: 5px;
+  font-size: 1rem;
+  width: 100%;
+  min-width: 15rem;
 }
 
-.defaultInputWithValue{
-    padding: 0.75rem 1rem;
-    border-radius: 5px;
-    font-size: 1rem;
-    width: 100%;
-    /* width: 20rem; */
-    color: var(--primary-color);
-    border: none;
-    outline: 1px solid var(--primary-color);
+.prefilledInputWrapper {
+  display: flex;
+  padding: 0.75rem 1rem;
+  border: 1px solid var(--black-color);
+  border-radius: 5px;
+  font-size: 1rem;
+  width: 100%;
+  min-width: 15rem;
+  align-items: center;
 }
-  
+
+.prefilledInput {
+  padding: 1rem 1rem;
+  border: 1px solid var(--black-color);
+  border-radius: 5px;
+  font-size: 1rem;
+  width: 100%;
+  min-width: 15rem;
+  padding: 0;
+  background-color: transparent;
+  border: none;
+  outline: none;
+}
+
+.defaultInputWithValue {
+  padding: 0.75rem 1rem;
+  border-radius: 5px;
+  font-size: 1rem;
+  width: 100%;
+  /* width: 20rem; */
+  color: var(--primary-color);
+  border: none;
+  outline: 1px solid var(--primary-color);
+}
+
+.prefilledInputWithValue {
+  padding: 0.75rem 1rem;
+  border-radius: 5px;
+  font-size: 1rem;
+  width: 100%;
+  /* width: 20rem; */
+  color: var(--primary-color);
+  border: none;
+  outline: 1px solid var(--primary-color);
+  padding: 0;
+  background-color: transparent;
+  border: none;
+  outline: none;
+}
 .defaultInput:focus {
-    color: var(--primary-color);
-    border: none;
-    outline: 1px solid var(--primary-color);
+  color: var(--primary-color);
+  border: none;
+  outline: 1px solid var(--primary-color);
 }
 
 .toggleSwitch {
-    position: relative;
-    display: inline-block;
-    width: 4rem;
-    height: 2rem;
+  position: relative;
+  display: inline-block;
+  width: 4rem;
+  height: 2rem;
 }
 
 .toggleSwitch input {
-    opacity: 0;
-    width: 0;
-    height: 0;
+  opacity: 0;
+  width: 0;
+  height: 0;
 }
 
 .toggleSlider {
-    position: absolute;
-    cursor: pointer;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: transparent;
-    border-radius: 0.25rem;
-    transition: 0.4s;
-    outline: 1px solid #f1511b45;
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: transparent;
+  border-radius: 0.25rem;
+  transition: 0.4s;
+  outline: 1px solid #f1511b45;
 }
 
 .toggleSlider:before {
-    position: absolute;
-    content: "";
-    height: 2rem;
-    width: 2rem;
-    border-radius: 0.25rem;
-    background-color: var(--white-color);
-    background-image: url('../assets/images/OrangeArrowBottomLeft.svg');
-    background-repeat: no-repeat;
-    background-position: center;
-    background-size: 40%;
-    transition: 0.4s;
-    filter: drop-shadow(3px 0px 4px rgba(0, 0, 0, 0.25));
-
+  position: absolute;
+  content: '';
+  height: 2rem;
+  width: 2rem;
+  border-radius: 0.25rem;
+  background-color: var(--white-color);
+  background-image: url('../assets/images/OrangeArrowBottomLeft.svg');
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 40%;
+  transition: 0.4s;
+  filter: drop-shadow(3px 0px 4px rgba(0, 0, 0, 0.25));
 }
 
 .toggleSwitch input:checked + .toggleSlider:before {
-    background-color: var(--primary-color);
+  background-color: var(--primary-color);
 }
 
-.checked .toggleSlider{
-    outline: 1px solid var(--primary-color);
+.checked .toggleSlider {
+  outline: 1px solid var(--primary-color);
 }
-  
+
 .checked .toggleSlider:before {
-    transform: translateX(2rem);
-    background-image: url('../assets/images/ArrowTopRight.svg');
-    filter: drop-shadow(-3px 0px 4px rgba(0, 0, 0, 0.25));
+  transform: translateX(2rem);
+  background-image: url('../assets/images/ArrowTopRight.svg');
+  filter: drop-shadow(-3px 0px 4px rgba(0, 0, 0, 0.25));
 }
 
-input[type="file"] {
-    display: none;
+input[type='file'] {
+  display: none;
 }
 
 .fileInput {
-    font-family: "PowerGroteskTrial";
-    font-weight: 600;
-    font-size: 1rem;
-    display: flex;
-    padding: 1.25rem 1rem;
-    align-items: center;
-    gap: 0.5rem;
-    cursor: pointer;
-    justify-content: center;
-    border-radius: 0.25rem;
-    background: var(--primary-color);
-    color: var(--white-color);
+  font-family: 'PowerGroteskTrial';
+  font-weight: 600;
+  font-size: 1rem;
+  display: flex;
+  padding: 1.25rem 1rem;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+  justify-content: center;
+  border-radius: 0.25rem;
+  background: var(--primary-color);
+  color: var(--white-color);
 }
 
-.fileInput:hover{
-    filter: drop-shadow(0px 0px 23px rgba(241, 81, 27, 0.24));
-    transition: 1s;
+.fileInput:hover {
+  filter: drop-shadow(0px 0px 23px rgba(241, 81, 27, 0.24));
+  transition: 1s;
 }
 
-.fileInput:focus{
-    border: 3px solid #b93d14;
-    transition: 0.7s;
+.fileInput:focus {
+  border: 3px solid #b93d14;
+  transition: 0.7s;
 }
 
-.fileInput:active{
-    transform: scale(0.95);
-    transition: 0.2s;
+.fileInput:active {
+  transform: scale(0.95);
+  transition: 0.2s;
 }
 
-
+.errorMessage {
+  color: rgb(226, 85, 85);
+  font-size: 0.75rem;
+  font-weight: 300;
+  text-align: left;
+}

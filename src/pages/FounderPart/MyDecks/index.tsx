@@ -1,9 +1,12 @@
+import { useNavigate } from 'react-router-dom';
 import { MainLayout, Button } from '../../../components';
 import whiteTopRightArrow from '../../../assets/images/ArrowTopRight.svg';
-import styles from './MyDesks.module.css';
+import styles from './MyDecks.module.css';
 import Card from '../../../components/FounderPart/MyDecks/Card';
 
-function MyDesks() {
+function MyDecks() {
+  const navigate = useNavigate();
+
   return (
     <MainLayout>
       <div className={styles.myDesksWrapper}>
@@ -17,6 +20,7 @@ function MyDesks() {
             icon={<img src={whiteTopRightArrow} alt="Arrow" />}
             backgroundColor="#F1511B"
             textColor="#FFF"
+            onClick={() => navigate('/founder/deck/create')}
           />
         </div>
         <div className={styles.decksBlock}>
@@ -30,4 +34,4 @@ function MyDesks() {
   );
 }
 
-export default MyDesks;
+export default MyDecks;
