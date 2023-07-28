@@ -206,7 +206,6 @@ function Deck({ title = 'Create', deckId }: Props) {
   };
 
   useEffect(() => {
-    console.log('page: ', emailToogleChecked);
     if (deckId) {
       deckService
         .getDeckById(deckId)
