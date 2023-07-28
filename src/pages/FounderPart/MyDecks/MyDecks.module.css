@@ -111,6 +111,11 @@
 }
 
 @media (max-width: 576px) {
+  .link{
+    display: flex;
+    justify-content: center;
+  }
+
   .decksBlock {
     display: grid;
     grid-template-columns: repeat(1, 1fr); /* Four elements per row */

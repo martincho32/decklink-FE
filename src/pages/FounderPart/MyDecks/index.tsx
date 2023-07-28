@@ -30,9 +30,7 @@ function MyDecks() {
       {!!deckList.length ? (
         <div className={styles.myDesksWrapper}>
           <div className={styles.pageNavigation}>
-            <h2 className={styles.title}>
-              <span>Hi Ben!</span> Here is your created decks
-            </h2>
+            <h2 className={styles.title}>Hi! Here is your created decks</h2>
             <Link
               className={`${styles.link} hover:no-underline`}
               to="/founder/deck/create"
