@@ -1,0 +1,66 @@
+.showMenu {
+  display: flex;
+  position: fixed;
+  inset: 0;
+  flex-direction: column;
+  width: 100vw;
+  background-color: white;
+  height: 100vh;
+  z-index: 2;
+  justify-content: top;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.logoWrapper{
+  display: flex;
+  align-items: center;
+}
+
+.hideMenu {
+  visibility: hidden;
+  position: fixed;
+  inset: 0;
+  flex-direction: column;
+  width: 100vw;
+  background-color: white;
+  height: 100vh;
+  z-index: 2;
+}
+
+.authButtonsWrapper{
+  display: flex;
+  gap: 1rem;
+}
+
+@media (max-width: 1536px) {
+}
+
+@media (max-width: 1280px) {
+
+}
+
+@media (max-width: 1024px) {
+
+}
+
+@media (max-width: 768px) {
+  .showMenu {
+    display: flex;
+    position: fixed;
+    inset: 0;
+    flex-direction: column;
+    width: 100vw;
+    background-color: white;
+    height: 100vh;
+    z-index: 2;
+    padding: 1.5rem 1rem;
+  }
+}
+
+@media (max-width: 576px) {
+
+}
+
+@media (max-width: 320px) {
+}

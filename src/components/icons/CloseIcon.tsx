@@ -6,8 +6,8 @@ export interface IconProps {
 
 export function CloseIcon({
   color = '#F1511B',
-  width = '45',
-  height = '45',
+  width = '44',
+  height = '44',
 }: IconProps) {
   return (
     <svg
