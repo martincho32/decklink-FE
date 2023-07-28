@@ -354,6 +354,7 @@ function Deck({ title = 'Create', deckId }: Props) {
         </div>
       </div>
       <DeckPreview
+        type="deckUserPreview"
         onClose={handleOnClosePitchDeckSlidePreview}
         visible={previewPickDeckSlide}
         pageNumber={pageNumber}
