@@ -64,7 +64,7 @@ function DeckCreation() {
     useState<boolean>(false);
 
   const enteredPasswordIsValid =
-    deckPassword.length >= 6 && deckPassword.length <= 35;
+    deckPassword?.length >= 6 && deckPassword?.length <= 35;
   const enteredDeckNameIsValid = deckName.trim() !== '' && deckName.length >= 3;
   const enteredDeckLinkIsValid = deckLink.trim() !== '' && deckLink.length >= 3;
 
