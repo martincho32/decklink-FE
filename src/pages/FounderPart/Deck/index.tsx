@@ -25,15 +25,6 @@ const options = {
 
 type PDFFile = string | File | null;
 
-type DeckData = {
-  name: string;
-  customDeckLink: string;
-  requestEmail: boolean;
-  requestPassword: boolean;
-  password: string;
-  file: PDFFile;
-};
-
 export interface Props {
   title: string;
   deckId?: string;
