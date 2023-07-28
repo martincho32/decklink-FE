@@ -18,7 +18,7 @@ export default function ErrorPage() {
               exist.
             </h2>
           </div>
-          <Link className={styles.button} to="/">
+          <Link className={styles.button} to="/founder/decks">
             <Button
               type="button"
               text="Get yourself home"

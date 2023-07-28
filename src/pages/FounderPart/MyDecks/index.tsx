@@ -1,4 +1,5 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 import { MainLayout, Button } from '../../../components';
 import whiteTopRightArrow from '../../../assets/images/ArrowTopRight.svg';
 import styles from './MyDecks.module.css';
@@ -8,6 +9,11 @@ import EmptyState from '../../../components/ItemEmptyState';
 function MyDecks() {
   const [dataIsLoaded, setDataIsLoaded] = useState<boolean>(false);
 
+  useEffect(() => {
+    // TODO Fetch data from API here
+    // Pass data as props to cards
+  }, []);
+
   return (
     <MainLayout>
       {dataIsLoaded ? (
@@ -16,13 +22,18 @@ function MyDecks() {
             <h2 className={styles.title}>
               <span>Hi Ben!</span> Here is your created decks
             </h2>
-            <Button
-              type="button"
-              text="Create New Deck"
-              icon={<img src={whiteTopRightArrow} alt="Arrow" />}
-              backgroundColor="#F1511B"
-              textColor="#FFF"
-            />
+            <Link
+              className={`${styles.link} hover:no-underline`}
+              to="/founder/deck/create"
+            >
+              <Button
+                type="button"
+                text="Create New Deck"
+                icon={<img src={whiteTopRightArrow} alt="Arrow" />}
+                backgroundColor="#F1511B"
+                textColor="#FFF"
+              />
+            </Link>
           </div>
           <div className={styles.decksBlock}>
             <Card />
@@ -36,13 +47,18 @@ function MyDecks() {
           title="Zero pitchdecks at the moment."
           subtitle="Why not be the first to create one and kickstart the fun?"
           button={
-            <Button
-              type="button"
-              text="Create New Deck"
-              icon={<img src={whiteTopRightArrow} alt="Arrow" />}
-              backgroundColor="#F1511B"
-              textColor="#FFF"
-            />
+            <Link
+              className={`${styles.link} hover:no-underline`}
+              to="/founder/deck/create"
+            >
+              <Button
+                type="button"
+                text="Create New Deck"
+                icon={<img src={whiteTopRightArrow} alt="Arrow" />}
+                backgroundColor="#F1511B"
+                textColor="#FFF"
+              />
+            </Link>
           }
         />
       )}
