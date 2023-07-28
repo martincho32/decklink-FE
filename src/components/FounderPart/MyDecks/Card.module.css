@@ -12,20 +12,29 @@
 }
 
 .deckMainContentWrapper {
+  height: 100%;
   display: flex;
   flex-direction: column;
-  align-items: center;
   padding: 1rem;
   gap: 1rem;
   align-items: flex-start;
+  justify-content: space-between;
+}
+
+.deckMainInfoAndButtons{
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
 }
 
 .deckFirstRow {
+  width: 100%;
   display: flex;
+  flex-direction: column;
   justify-content: space-between;
-  align-items: center;
-  align-content: center;
-  align-self: stretch;
+  align-items: flex-start;
+  gap: 0.75rem;
 }
 
 .deckTitleWrapper {
@@ -35,12 +44,15 @@
 }
 
 .deckTitle {
+  max-width: 13.5625rem;
   color: var(--organge, #f1511b);
   font-family: 'PowerGroteskTrial';
   font-size: 1.5rem;
   font-style: normal;
   font-weight: 700;
   line-height: normal;
+  white-space: normal; 
+  word-wrap: break-word; 
 }
 
 .subtitle {
@@ -129,7 +141,16 @@
 }
 
 .secondaryButtonsWrapper > :first-child {
-  flex: 1;
+  display: flex;
+  flex-grow: 1;
+}
+
+.editButton:hover{
+  text-decoration: none;
+}
+
+.editButton > :first-child{
+  flex-grow: 1;
 }
 
 
