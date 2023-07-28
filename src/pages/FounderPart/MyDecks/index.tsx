@@ -1,3 +1,4 @@
+/* eslint-disable no-extra-boolean-cast */
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { MainLayout, Button } from '../../../components';
@@ -5,18 +6,28 @@ import whiteTopRightArrow from '../../../assets/images/ArrowTopRight.svg';
 import styles from './MyDecks.module.css';
 import Card from '../../../components/FounderPart/MyDecks/Card';
 import EmptyState from '../../../components/ItemEmptyState';
+import { deckService } from '../../../services';
+import { Deck } from '../../../types';
 
 function MyDecks() {
-  const [dataIsLoaded, setDataIsLoaded] = useState<boolean>(false);
+  // const [dataIsLoaded, setDataIsLoaded] = useState<boolean>(false);
+  const [deckList, setDeckList] = useState<Deck[]>([]);
 
   useEffect(() => {
-    // TODO Fetch data from API here
-    // Pass data as props to cards
+    deckService
+      .getDecksByUserId()
+      .then(({ data }) => {
+        setDeckList(data);
+      })
+      .catch((error) => {
+        console.error('Error getting decks: ', error);
+        // TODO handle error;
+      });
   }, []);
 
   return (
     <MainLayout>
-      {dataIsLoaded ? (
+      {!!deckList.length ? (
         <div className={styles.myDesksWrapper}>
           <div className={styles.pageNavigation}>
             <h2 className={styles.title}>
@@ -36,10 +47,9 @@ function MyDecks() {
             </Link>
           </div>
           <div className={styles.decksBlock}>
-            <Card />
-            <Card />
-            <Card />
-            <Card />
+            {deckList.map((deck) => {
+              return <Card key={deck._id} deck={deck} />;
+            })}
           </div>
         </div>
       ) : (
