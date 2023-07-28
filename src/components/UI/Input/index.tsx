@@ -1,5 +1,5 @@
 /* eslint-disable jsx-a11y/label-has-associated-control */
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import styles from './Input.module.css';
 import hideInputText from '../../../assets/images/HideInput.png';
 import showInputText from '../../../assets/images/ShowInput.png';
@@ -17,6 +17,7 @@ export interface InputProps {
   onBlur?: (event: React.FocusEvent<HTMLInputElement>) => void;
   inputIsInvalid?: boolean;
   errorMessage?: string;
+  checked?: boolean;
 }
 
 function Input({
@@ -31,6 +32,7 @@ function Input({
   onBlur,
   inputIsInvalid,
   errorMessage,
+  checked,
 }: InputProps) {
   let inputElement: JSX.Element;
 
@@ -231,6 +233,10 @@ function Input({
       );
       break;
   }
+
+  useEffect(() => {
+    setIsChecked(!!checked);
+  }, [checked]);
 
   return <div className={styles.inputContainer}>{inputElement}</div>;
 }
