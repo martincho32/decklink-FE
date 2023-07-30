@@ -41,8 +41,10 @@ function Deck({ title = 'Create', deckId }: Props) {
   // const [progress, setProgress] = useState({ started: false, pc: 0 });
   // const [msg, setMsg] = useState<string | null>(null);
 
-  const handleOnClosePitchDeckSlidePreview = () =>
+  const handleOnClosePitchDeckSlidePreview = () => {
+    document.body.style.overflow = 'auto';
     setPreviewPickDeckSlide(false);
+  };
 
   const onFileChange = (target): void => {
     const { files } = target;
@@ -352,6 +354,7 @@ function Deck({ title = 'Create', deckId }: Props) {
                 {Array.from(new Array(numPages), (el, index) => (
                   <Thumbnail
                     onItemClick={() => {
+                      document.body.style.overflow = 'hidden';
                       setPreviewPickDeckSlide(true);
                       setPageNumber(index + 1);
                     }}

@@ -37,7 +37,7 @@ function DeckPreview({
       role="button"
       tabIndex={0}
       onClick={handleOnClose}
-      className="fixed overflow-y-scroll h-screen inset-0 bg-black bg-opacity-80 backdrop-blur-sm p-4"
+      className="fixed h-screen inset-0 bg-black bg-opacity-80 backdrop-blur-sm p-4"
     >
       <Document
         file={file}
