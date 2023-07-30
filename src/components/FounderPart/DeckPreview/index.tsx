@@ -65,11 +65,11 @@ function DeckPreview({
       </Document>
 
       <button
-        className="buttonClose fixed top-12 right-12 p-2 bg-persimmon rounded-md"
+        className="buttonClose text-white fixed top-12 right-12 p-2 bg-persimmon rounded-md"
         onClick={onClose}
         type="button"
       >
-        <img className="buttonCloseIcon w-4 h-4" src={iconTopRight} alt="" />
+        X
       </button>
     </div>
   );

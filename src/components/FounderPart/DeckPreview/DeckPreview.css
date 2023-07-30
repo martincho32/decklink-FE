@@ -5,8 +5,9 @@
   z-index: 1;
 }
 
-.buttonClose {
+.buttonClose{
   z-index: 2;
+  color: white !important;
 }
 
 .pageWrapper {
@@ -93,11 +94,6 @@
     display: flex !important;
     width: 100% !important;
     border-radius: 0.5rem !important;
-  }
-
-  .buttonCloseIcon{
-    width: 0.5rem!important;
-    height: 0.5rem!important;
   }
 }
 
