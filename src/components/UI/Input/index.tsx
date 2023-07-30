@@ -197,7 +197,7 @@ function Input({
               id={id}
               value={value}
               onChange={onDefaultInputEntered}
-              placeholder="minds"
+              placeholder="example"
               className={
                 value ? styles.prefilledInputWithValue : styles.prefilledInput
               }

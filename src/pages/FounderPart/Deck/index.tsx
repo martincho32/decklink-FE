@@ -271,7 +271,7 @@ function Deck({ title = 'Create', deckId }: Props) {
             <Input
               style="prefilled"
               type="text"
-              placeholder="decklink/minds/decklink.com"
+              placeholder="decklink/example/decklink.com"
               label="Custom Link"
               id="deck-link"
               value={deckLink}
