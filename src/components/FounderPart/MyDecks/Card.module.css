@@ -6,6 +6,19 @@
   box-shadow: 3px 3px 10px 0px rgba(0, 0, 0, 0.2);
 }
 
+.previewImage canvas{
+  width: 20rem!important;
+  height: auto!important;
+}
+
+.previewImage .textLayer{
+  visibility: hidden!important;
+}
+
+.previewImage .annotationLayer{
+  visibility: hidden!important;
+}
+
 .deckBlock:hover {
   box-shadow: 3px 3px 10px 0px #f1501b9d;
   transform: scale(1.01);

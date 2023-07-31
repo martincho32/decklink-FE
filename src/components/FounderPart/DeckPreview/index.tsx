@@ -55,7 +55,12 @@ function DeckPreview({
           noData={<h4 className="">No file selected</h4>}
           className="document h-screen p-4 bg-mirage rounded-lg"
         >
-          <Page className="pageWrapper" pageNumber={pageNumber} />
+          <Page
+            renderTextLayer={false}
+            renderAnnotationLayer={false}
+            className="pageWrapper"
+            pageNumber={pageNumber}
+          />
           {/* Thumbnails */}
           <div className="previewPagesWrapper">
             {Array.from(new Array(numPages), (el, index) => (

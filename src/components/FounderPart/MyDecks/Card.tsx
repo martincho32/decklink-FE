@@ -1,8 +1,8 @@
+import { Page, Document } from 'react-pdf'; /** File library */
 import { Link } from 'react-router-dom';
 import { Button } from '../..';
 import whiteTopRightArrow from '../../../assets/images/ArrowTopRight.svg';
 import styles from './Card.module.css';
-import image from '../../../assets/images/Rectangle 1.png';
 import { Logo } from '../../icons';
 import viewIcon from '../../../assets/images/views.png';
 import AverageTimeIcon from '../../../assets/images/AverageTime.png';
@@ -18,7 +18,20 @@ function Card({ deck }: Props) {
   console.log(deck);
   return (
     <div className={styles.deckBlock}>
-      <img src={image} alt="test" />
+      <Document
+        file={deck.deckUrl}
+        // onLoadSuccess={onDocumentLoadSuccess}
+        // options={options}
+        // noData={<h4 className="">No file selected</h4>}
+        // className=""
+      >
+        <Page
+          renderTextLayer={false}
+          renderAnnotationLayer={false}
+          className={styles.previewImage}
+          pageNumber={1}
+        />
+      </Document>
       <div className={styles.deckMainContentWrapper}>
         <div className={styles.deckFirstRow}>
           <div className={styles.deckTitleWrapper}>
