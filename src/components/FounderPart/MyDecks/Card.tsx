@@ -8,13 +8,14 @@ import viewIcon from '../../../assets/images/views.png';
 import AverageTimeIcon from '../../../assets/images/AverageTime.png';
 import orangeTopRightArrow from '../../../assets/images/OrangeArrowTopRight.svg';
 import deleteIcon from '../../../assets/images/Delete.png';
-import { Deck } from '../../../types';
+import { IDeck } from '../../../types';
 
 interface Props {
-  deck: Deck;
+  deck: IDeck;
+  handleClickDelete: (id: string) => Promise<void>;
 }
 
-function Card({ deck }: Props) {
+function Card({ deck, handleClickDelete }: Props) {
   return (
     <div className={styles.deckBlock}>
       <img src={image} alt="test" />
@@ -60,15 +61,20 @@ function Card({ deck }: Props) {
           </div>
         </div>
         <div className={styles.buttons}>
-          <Button
-            type="button"
-            text="See Detailed Info"
-            icon={<img src={whiteTopRightArrow} alt="Arrow" />}
-            backgroundColor="#F1511B"
-            textColor="#FFF"
-          />
+          <Link className="hover:no-underline" to={`/founder/deck/${deck._id}`}>
+            <Button
+              type="button"
+              text="See Detailed Info"
+              icon={<img src={whiteTopRightArrow} alt="Arrow" />}
+              backgroundColor="#F1511B"
+              textColor="#FFF"
+            />
+          </Link>
           <div className={styles.secondaryButtonsWrapper}>
-            <Link to={`/founder/deck/edit/${deck._id}`}>
+            <Link
+              className="hover:no-underline"
+              to={`/founder/deck/edit/${deck._id}`}
+            >
               <Button
                 type="button"
                 text="Edit"
@@ -81,6 +87,7 @@ function Card({ deck }: Props) {
               type="button"
               icon={<img src={deleteIcon} alt="delete" />}
               backgroundColor="#161A20"
+              onClick={() => handleClickDelete(deck._id)}
             />
           </div>
         </div>
