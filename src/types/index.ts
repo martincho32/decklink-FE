@@ -1,14 +1,14 @@
-export interface User {
+export interface IUser {
   email?: string;
   authToken?: string;
   role?: string;
 }
 export interface IAuthContext {
-  user: User | null;
-  setUser: React.Dispatch<React.SetStateAction<User>>;
+  user: IUser | null;
+  setUser: React.Dispatch<React.SetStateAction<IUser>>;
 }
 
-export interface Deck {
+export interface IDeck {
   _id: string;
   name: string;
   deckUrl: string;
@@ -20,4 +20,15 @@ export interface Deck {
   userId: string;
   createdAt?: string;
   updatedAt?: string;
+}
+
+export interface IDeckView {
+  _id: string;
+  deckId: string;
+  // totalViewTime: number
+  deckSlidesStats: Array<{
+    slideNumber: number;
+    viewingTime: number;
+  }>;
+  viewerEmail: string | null | undefined;
 }

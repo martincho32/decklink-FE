@@ -1,25 +1,17 @@
 import { AxiosRequestConfig } from 'axios';
 import { api } from '../adapters/api';
-import { Deck } from '../types';
+import { IDeck } from '../types';
 
 const resource = 'deck';
 
 export const getDecksByUserId = (): Promise<{
-  data: Deck[];
+  data: IDeck[];
 }> => api.get(resource).then((data) => data);
 
 export const getDeckById = (
   id: string
 ): Promise<{
-  data: {
-    customDeckLink: string;
-    deckUrl: string;
-    name: string;
-    password: string;
-    requestEmail: boolean;
-    requestPassword: boolean;
-    slides: number;
-  };
+  data: IDeck;
 }> => api.get(`${resource}/${id}`).then((data) => data);
 
 export const createDeck = (
