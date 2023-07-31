@@ -1,17 +1,41 @@
 /* eslint-disable no-extra-boolean-cast */
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
+import { useSnackbar } from 'notistack';
 import { MainLayout, Button } from '../../../components';
 import whiteTopRightArrow from '../../../assets/images/ArrowTopRight.svg';
 import styles from './MyDecks.module.css';
 import Card from '../../../components/FounderPart/MyDecks/Card';
 import EmptyState from '../../../components/ItemEmptyState';
 import { deckService } from '../../../services';
-import { Deck } from '../../../types';
+import { IDeck } from '../../../types';
 
 function MyDecks() {
-  // const [dataIsLoaded, setDataIsLoaded] = useState<boolean>(false);
-  const [deckList, setDeckList] = useState<Deck[]>([]);
+  const { enqueueSnackbar } = useSnackbar();
+
+  const [deckList, setDeckList] = useState<IDeck[]>([]);
+  const [refresh, setRefresh] = useState(true);
+
+  const handleClickDelete = async (id) => {
+    try {
+      const { data } = await deckService.deleteDeck(id);
+      if (data) {
+        setRefresh(!refresh);
+      } else {
+        throw new Error('Deck not found! Please contact support.');
+      }
+    } catch (error: any) {
+      console.error('Error deleting deck: ', error);
+      enqueueSnackbar(`Error deleting deck: Error: ${error.message}`, {
+        variant: 'error',
+        autoHideDuration: 10000,
+        anchorOrigin: {
+          vertical: 'top',
+          horizontal: 'right',
+        },
+      });
+    }
+  };
 
   useEffect(() => {
     deckService
@@ -23,7 +47,7 @@ function MyDecks() {
         console.error('Error getting decks: ', error);
         // TODO handle error;
       });
-  }, []);
+  }, [refresh]);
 
   return (
     <MainLayout>
@@ -48,7 +72,13 @@ function MyDecks() {
           </div>
           <div className={styles.decksBlock}>
             {deckList.map((deck) => {
-              return <Card key={deck._id} deck={deck} />;
+              return (
+                <Card
+                  handleClickDelete={() => handleClickDelete(deck._id)}
+                  key={deck._id}
+                  deck={deck}
+                />
+              );
             })}
           </div>
         </div>
