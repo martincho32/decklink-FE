@@ -22,13 +22,14 @@ export interface IDeck {
   updatedAt?: string;
 }
 
+export interface IDeckSlidesStats {
+  slideNumber: number;
+  viewingTime: number;
+}
+
 export interface IDeckView {
   _id: string;
   deckId: string;
-  // totalViewTime: number
-  deckSlidesStats: Array<{
-    slideNumber: number;
-    viewingTime: number;
-  }>;
+  deckSlidesStats: Array<IDeckSlidesStats>;
   viewerEmail: string | null | undefined;
 }
