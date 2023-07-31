@@ -13,6 +13,13 @@
   border-top-right-radius: 5px !important;
 }
 
+.dummyPreviewImage{
+  width: 100%!important;
+  height: auto!important;
+  border-top-left-radius: 5px !important;
+  border-top-right-radius: 5px !important;
+}
+
 .previewImage .textLayer{
   visibility: hidden!important;
 }
