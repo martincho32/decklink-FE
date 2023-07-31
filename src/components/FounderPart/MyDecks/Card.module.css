@@ -7,8 +7,10 @@
 }
 
 .previewImage canvas{
-  width: 20rem!important;
+  width: 100%!important;
   height: auto!important;
+  border-top-left-radius: 5px !important;
+  border-top-right-radius: 5px !important;
 }
 
 .previewImage .textLayer{

@@ -160,6 +160,7 @@ function SignUp() {
                   icon={<img src={whiteTopRightArrow} alt="Arrow" />}
                   backgroundColor="#F1511B"
                   textColor="#FFF"
+                  className="w-full"
                   onClick={continueHandler}
                 />
               </>
@@ -174,7 +175,8 @@ function SignUp() {
                   text="Sign up"
                   icon={<img src={whiteTopRightArrow} alt="Arrow" />}
                   backgroundColor="#F1511B"
-                  textColor="#FFF"
+                    textColor="#FFF"
+                    className="w-full"
                   onClick={submitHandler}
                 />
 
