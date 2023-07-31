@@ -166,6 +166,8 @@ function Deck({ title = 'Create', deckId }: Props) {
     event.preventDefault();
     // setDeckLink();
     try {
+      // TODO integrate this, for having dile upload progress bar
+
       // setMsg('Uploading...');
       // setProgress((prevState) => ({
       //   ...prevState,

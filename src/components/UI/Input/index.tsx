@@ -63,8 +63,6 @@ function Input({
     if (event.target.value.length > 0) {
       setPrefilledInputHasValue(!!event.target.value);
     }
-
-    console.log(event.target.value.length);
   };
 
   const onFileInputEntered = (event: React.ChangeEvent<HTMLInputElement>) => {
