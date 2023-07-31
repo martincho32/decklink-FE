@@ -1,5 +1,5 @@
 import { useState, useContext } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { Logo, Wordmark } from '../icons';
 import HamburguerMenu from '../HamburguerMenu';
 import NavLinks from '../HamburguerMenu/NavLinks';
@@ -32,10 +32,12 @@ function Navbar() {
 
   return (
     <nav className="flex justify-between border border-persimmon rounded p-2 md:py-2 md:px-5">
-      <div className="self-center flex gap-0.7">
-        <Logo />
-        <Wordmark />
-      </div>
+      <Link to="/founder/decks" className="flex justify-center">
+        <div className="self-center flex gap-0.7">
+          <Logo />
+          <Wordmark />
+        </div>
+      </Link>
       <div className={isLoggedIn ? 'self-center hidden md:block' : 'hidden'}>
         <NavLinks />
       </div>

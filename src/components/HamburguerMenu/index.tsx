@@ -1,6 +1,8 @@
+import { Link } from 'react-router-dom';
 import Button from '../UI/Button';
-import { Hamburguer, Logo, CloseIcon } from '../icons';
+import { Hamburguer, Logo, CloseIcon, Wordmark } from '../icons';
 import NavLinks from './NavLinks';
+import styles from './HanburguerMenu.module.css';
 
 interface Props {
   onClickHamburguer: () => void;
@@ -20,34 +22,27 @@ function HamburguerMenu({
   handleActions,
 }: Props) {
   return (
-    <div className="block md:hidden">
+    <div className="block md:hidden w-11 h-11">
       {!isOpen ? (
         <button type="button" onClick={onClickHamburguer}>
           <Hamburguer />
         </button>
       ) : null}
-      <div
-        style={{
-          position: 'absolute',
-          inset: '0',
-          flexDirection: 'column',
-          width: '100vw',
-          background: 'white',
-          height: '100vmax',
-          zIndex: '2',
-        }}
-        className={isOpen ? 'flex' : 'hidden'}
-      >
-        <button
-          className="ml-auto mt-1 mr-2"
-          type="button"
-          onClick={onClickHamburguer}
-        >
-          <CloseIcon />
-        </button>
+      <div className={isOpen ? styles.showMenu : styles.hideMenu}>
+        <nav className="flex justify-between border border-persimmon rounded p-2 md:py-2 md:px-5 w-full">
+          <Link className={styles.logoWrapper} to="/">
+            <div className="self-center flex gap-0.7">
+              <Logo />
+              <Wordmark />
+            </div>
+          </Link>
+          <button type="button" onClick={onClickHamburguer}>
+            <CloseIcon />
+          </button>
+        </nav>
         <NavLinks />
         {!isUserLogged ? (
-          <div className="flex flex-col gap-1 p-1 mt-auto">
+          <div className={styles.authButtonsWrapper}>
             <Button
               type="button"
               text="Log In"
@@ -66,7 +61,7 @@ function HamburguerMenu({
             />
           </div>
         ) : (
-          <div className="mt-auto mx-auto w-full">
+          <div className="">
             <Button
               type="button"
               text="Log Out"
