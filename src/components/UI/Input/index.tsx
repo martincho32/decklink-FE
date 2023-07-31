@@ -38,6 +38,7 @@ function Input({
 
   const [isChecked, setIsChecked] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+  const [prefilledInputHasValue, setPrefilledInputHasValue] = useState(!!value);
 
   // const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
   //   if (onChange) {
@@ -49,6 +50,18 @@ function Input({
   ) => {
     if (onChange) {
       onChange(event.target.value);
+    }
+  };
+
+  const onPrefilledInputEntered = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    if (onChange) {
+      onChange(event.target.value);
+    }
+
+    if (event.target.value.length > 0) {
+      setPrefilledInputHasValue(!!event.target.value);
     }
   };
 
@@ -150,6 +163,7 @@ function Input({
                   id={id}
                   type="file"
                   value={value}
+                  accept=".pdf"
                   onChange={onFileInputEntered}
                 />
               </div>
@@ -187,7 +201,13 @@ function Input({
       inputElement = (
         <div className={styles.InputWrapper}>
           <label htmlFor={id}>{label}</label>
-          <div className={styles.prefilledInputWrapper}>
+          <div
+            className={
+              prefilledInputHasValue
+                ? styles.prefilledInputWrapperWithValue
+                : styles.prefilledInputWrapper
+            }
+          >
             <label className={styles.placeholder} htmlFor={id}>
               decklink.com/
             </label>
@@ -196,11 +216,9 @@ function Input({
               type={type}
               id={id}
               value={value}
-              onChange={onDefaultInputEntered}
-              placeholder="minds"
-              className={
-                value ? styles.prefilledInputWithValue : styles.prefilledInput
-              }
+              onChange={onPrefilledInputEntered}
+              placeholder="example"
+              className={styles.prefilledInput}
               onBlur={onBlur}
             />
           </div>
@@ -236,7 +254,8 @@ function Input({
 
   useEffect(() => {
     setIsChecked(!!checked);
-  }, [checked]);
+    setPrefilledInputHasValue(value!!);
+  }, [checked, value]);
 
   return <div className={styles.inputContainer}>{inputElement}</div>;
 }

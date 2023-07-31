@@ -37,19 +37,29 @@ function Deck({ title = 'Create', deckId }: Props) {
   const [pageNumber, setPageNumber] = useState(1);
   const [previewPickDeckSlide, setPreviewPickDeckSlide] = useState(false);
   const [uploadInputFileLabel, setUploadInputFileLabel] =
-    useState('Upload File');
+    useState('Upload File (.pdf)');
   // const [progress, setProgress] = useState({ started: false, pc: 0 });
   // const [msg, setMsg] = useState<string | null>(null);
 
-  const handleOnClosePitchDeckSlidePreview = () =>
+  const handleOnClosePitchDeckSlidePreview = () => {
+    document.body.style.overflow = 'auto';
     setPreviewPickDeckSlide(false);
+  };
 
   const onFileChange = (target): void => {
     const { files } = target;
 
     if (files && files[0]) {
-      setDeckFile(files[0] || null);
-      setUploadInputFileLabel('Change File');
+      const allowedTypes = ['application/pdf'];
+      const selectedFile = files[0];
+
+      if (!allowedTypes.includes(selectedFile.type)) {
+        setDeckFile(null); // Reset the selected file
+        setUploadInputFileLabel('Upload File (.pdf)'); // Reset the label to the default state
+      } else {
+        setDeckFile(selectedFile);
+        setUploadInputFileLabel('Change File (.pdf)');
+      }
     }
   };
   const onDocumentLoadSuccess = ({
@@ -79,6 +89,7 @@ function Deck({ title = 'Create', deckId }: Props) {
     deckPassword?.length >= 6 && deckPassword?.length <= 35;
   const enteredDeckNameIsValid = deckName.trim() !== '' && deckName.length >= 3;
   const enteredDeckLinkIsValid = deckLink.trim() !== '' && deckLink.length >= 3;
+  // const enteredDeckFileIsValid = deckLink.trim() !== '' && deckLink.length >= 3;
 
   const passwordInputIsInvalid =
     !enteredPasswordIsValid && enteredPasswordTouched;
@@ -86,6 +97,8 @@ function Deck({ title = 'Create', deckId }: Props) {
     !enteredDeckNameIsValid && enteredDeckNameTouched;
   const deckLinkInputIsInvalid =
     !enteredDeckLinkIsValid && enteredDeckLinkTouched;
+  // const deckFileInputIsInvalid =
+  //   !enteredDeckFileIsValid && enteredDeckLinkTouched;
 
   const onClickGoBack = () => {
     navigate('/founder/decks');
@@ -155,6 +168,8 @@ function Deck({ title = 'Create', deckId }: Props) {
     event.preventDefault();
     // setDeckLink();
     try {
+      // TODO integrate this, for having dile upload progress bar
+
       // setMsg('Uploading...');
       // setProgress((prevState) => ({
       //   ...prevState,
@@ -271,7 +286,7 @@ function Deck({ title = 'Create', deckId }: Props) {
             <Input
               style="prefilled"
               type="text"
-              placeholder="decklink/minds/decklink.com"
+              placeholder="decklink/example/decklink.com"
               label="Custom Link"
               id="deck-link"
               value={deckLink}
@@ -341,6 +356,7 @@ function Deck({ title = 'Create', deckId }: Props) {
                 {Array.from(new Array(numPages), (el, index) => (
                   <Thumbnail
                     onItemClick={() => {
+                      document.body.style.overflow = 'hidden';
                       setPreviewPickDeckSlide(true);
                       setPageNumber(index + 1);
                     }}

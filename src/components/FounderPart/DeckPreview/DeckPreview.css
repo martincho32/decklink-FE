@@ -6,8 +6,9 @@
   overflow-y: auto!important;
 }
 
-.buttonClose {
+.buttonClose{
   z-index: 2;
+  color: white !important;
 }
   
 .bigSizePreivew {
@@ -51,6 +52,7 @@
   height: 100% !important;
   margin-top: 1rem !important;
   overflow-x: auto !important;
+  overflow-y: hidden !important;
   display: flex !important;
   gap: 1rem !important;
   background-color: transparent !important;
@@ -123,11 +125,6 @@
     display: flex !important;
     width: 100% !important;
     border-radius: 0.5rem !important;
-  }
-
-  .buttonCloseIcon {
-    width: 0.5rem !important;
-    height: 0.5rem !important;
   }
 }
 

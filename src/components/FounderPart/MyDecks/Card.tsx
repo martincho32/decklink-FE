@@ -15,6 +15,7 @@ interface Props {
 }
 
 function Card({ deck }: Props) {
+  console.log(deck);
   return (
     <div className={styles.deckBlock}>
       <img src={image} alt="test" />
