@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/dot-notation */
 /* eslint-disable prefer-const */
 /* eslint-disable prefer-template */
 /* eslint-disable object-shorthand */
@@ -12,16 +11,9 @@ import {
   Title,
   Tooltip,
   Legend,
-  // CoreChartOptions,
-  // ElementChartOptions,
-  // PluginChartOptions,
-  // DatasetChartOptions,
-  // ScaleChartOptions,
-  // LineControllerChartOptions,
-  // TooltipModel,
 } from 'chart.js';
 import { Line } from 'react-chartjs-2';
-import { IDeck, IDeckView } from '../../types';
+import { IDeck } from '../../types';
 
 ChartJS.register(
   CategoryScale,
@@ -33,123 +25,13 @@ ChartJS.register(
   Legend
 );
 
-// const options: Partial<
-//   CoreChartOptions<'line'> &
-//     ElementChartOptions<'line'> &
-//     PluginChartOptions<'line'> &
-//     DatasetChartOptions<'line'> &
-//     ScaleChartOptions &
-//     LineControllerChartOptions
-// > = {
-//   responsive: true,
-//   plugins: {
-//     legend: {
-//       position: 'top' as const,
-//     },
-//     title: {
-//       display: true,
-//       text: 'Chart.js Line Chart',
-//     },
-//     scales: {
-//       y: {
-//         min: 0,
-//       },
-//       x: {
-//         ticks: {
-//           color: 'blue',
-//         },
-//       },
-//     },
-//   },
-//   onHover: (event, elements) => {
-//     console.log('hover!!');
-//     console.log(event);
-//     console.log(elements);
-//     // const canvas = event.target;
-//     // if (elements.length > 0) {
-//     //   // Cambiar la imagen cuando se hace hover sobre un punto
-//     //   canvas.style.cursor = 'pointer';
-//     //   canvas.src = image; // Reemplaza 'imagen-hover.png' con la ruta de la imagen que deseas mostrar en hover
-//     // } else {
-//     //   // Restaurar la imagen cuando no se hace hover sobre un punto
-//     //   canvas.style.cursor = 'default';
-//     //   canvas.src = image; // Reemplaza 'imagen-normal.png' con la ruta de la imagen original del gráfico
-//     // }
-//   },
-// };
-
-// const data = {
-//   labels,
-//   datasets: [
-//     {
-//       label: 'Dataset 1',
-//       data: mockedData,
-//       tension: 0.5,
-//       borderColor: 'rgb(255, 99, 132)',
-//       backgroundColor: 'rgba(255, 99, 132, 0.5)',
-//       pointRadius: 5,
-//       pointBorderColor: 'rgba(255, 99, 132)',
-//       pointBackgroundColor: 'rgba(255, 99, 132)',
-//     },
-//   ],
-// };
-
 interface Props {
   deck: Partial<IDeck> | null;
-  deckViews: IDeckView[] | null;
+  labels: string[] | undefined;
+  mockedData: number[] | undefined;
 }
 
-export default function LineChart({ deck, deckViews }: Props) {
-  // const labels = [
-  //   'Slide1',
-  //   'Slide2',
-  //   'Slide3',
-  //   'Slide4',
-  //   'Slide5',
-  //   'Slide6',
-  //   'Slide7',
-  //   'Slide8',
-  //   'Slide9',
-  //   'Slide10',
-  //   'Slide11',
-  //   'Slide12',
-  //   'Slide13',
-  //   'Slide14',
-  //   'Slide15',
-  //   'Slide16',
-  // ];
-  // TODO maybe use Array.from here?
-  const labels =
-    deckViews &&
-    deckViews[0].deckSlidesStats.map((slide) => {
-      return `Slide ${slide.slideNumber}`;
-    });
-
-  const data =
-    deckViews &&
-    deckViews.reduce((accumulator, currentValue, currentIndex) => {
-      return {
-        ...accumulator,
-        [currentIndex]: currentValue.deckSlidesStats,
-      };
-    }, {});
-
-  // const mockedData = [2, 4, 5, 6, 8, 1, 6, 6, 7, 1, 10, 4, 6, 1, 5, 20]; // this will be the view time in seconds of each slide
-  let auxMockedData: number[] = [];
-  labels?.forEach((_slideName, index) => {
-    Object.values(data!).forEach((slide) => {
-      if (auxMockedData[index]) {
-        auxMockedData[index] += (slide as [])[index]['viewingTime'];
-      } else {
-        auxMockedData[index] = (slide as [])[index]['viewingTime'];
-      }
-    });
-  });
-  const mockedData = auxMockedData.map(
-    (totalMiliseconds) => totalMiliseconds / 1000 / Object.values(data!).length
-  );
-  // TODO maybe do this but in the last iteration of labels.forEach
-  console.log('mockedData: ', mockedData);
+export default function LineChart({ deck, labels, mockedData }: Props) {
   return (
     <div>
       <Line
@@ -159,12 +41,12 @@ export default function LineChart({ deck, deckViews }: Props) {
             legend: {
               position: 'top' as const,
             },
-            title: {
-              display: true,
-              text: 'Chart.js Line Chart',
-            },
+            // title: {
+            //   display: true,
+            //   text: 'Chart.js Line Chart',
+            // },
             tooltip: {
-              enabled: false,
+              enabled: true,
               // external(args) {
               //   console.log(args);
               // },
@@ -270,7 +152,7 @@ export default function LineChart({ deck, deckViews }: Props) {
           // },
         }}
         data={{
-          labels: labels as any,
+          labels: labels,
           datasets: [
             {
               label: deck?.name ?? 'No name provided',
