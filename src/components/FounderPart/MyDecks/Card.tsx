@@ -104,25 +104,6 @@ function Card({ deck, handleClickDelete }: Props) {
               backgroundColor="#161A20"
               onClick={() => handleClickDelete(deck._id)}
             />
-            <div className={styles.secondaryButtonsWrapper}>
-              <Link
-                className={styles.editButton}
-                to={`/founder/deck/edit/${deck._id}`}
-              >
-                <Button
-                  type="button"
-                  text="Edit"
-                  icon={<img src={orangeTopRightArrow} alt="Arrow" />}
-                  borderColor="#F1511B"
-                  textColor="#F1511B"
-                />
-              </Link>
-              <Button
-                type="button"
-                icon={<img src={deleteIcon} alt="delete" />}
-                backgroundColor="#161A20"
-              />
-            </div>
           </div>
         </div>
       </div>
