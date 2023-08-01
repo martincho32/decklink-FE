@@ -75,11 +75,15 @@ function SignUp() {
     setEnteredEmailTouched(true);
     setEnteredPasswordTouched(true);
     setEnternedRepeatPasswordTouched(true);
+    setEnteredFirstNameTouched(true);
+    setEnteredLastNameTouched(true);
 
     if (
       !enteredEmailIsValid ||
       !enteredPasswordIsValid ||
-      !enteredRepeatPasswordIsValid
+      !enteredRepeatPasswordIsValid ||
+      !enteredFirstNameIsValid ||
+      !enteredLastNameIsValid
     ) {
       return;
     }
@@ -97,13 +101,20 @@ function SignUp() {
     ) {
       return;
     }
-    const { hasError, message } = await registerUser(
+    const { hasError } = await registerUser(
       formData.email,
       formData.password,
       formData.confirmPassword
     );
     if (hasError) {
-      setSignUpError(message!);
+      enqueueSnackbar('Something went wrong. Please contact support.', {
+        variant: 'error',
+        autoHideDuration: 2000,
+        anchorOrigin: {
+          vertical: 'top',
+          horizontal: 'right',
+        },
+      });
       return;
     }
     navigate('/login', { state: { isSignedUp: true } });
@@ -218,11 +229,6 @@ function SignUp() {
                     setPage((currPage) => currPage - 1);
                   }}
                 />
-                {loginError && (
-                  <span className={`${styles.errorMessage} text-2xl`}>
-                    {loginError}
-                  </span>
-                )}
               </>
             )}
 

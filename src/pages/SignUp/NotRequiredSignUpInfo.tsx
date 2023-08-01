@@ -32,6 +32,7 @@ function RequiredSignUpInfo({
   return (
     <>
       <Input
+        required
         style="default"
         type="text"
         placeholder="Apple"
@@ -41,6 +42,7 @@ function RequiredSignUpInfo({
         onChange={handleCompanyNameChange}
       />
       <Input
+        required
         style="default"
         type="text"
         placeholder="apple.com"
@@ -50,6 +52,7 @@ function RequiredSignUpInfo({
         onChange={handleCompanyWebsiteChange}
       />
       <Input
+        required
         style="default"
         type="text"
         placeholder="linkedin.com/apple"

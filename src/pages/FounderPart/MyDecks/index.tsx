@@ -1,5 +1,4 @@
 /* eslint-disable no-extra-boolean-cast */
-import { useSnackbar } from 'notistack';
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { MainLayout, Button } from '../../../components';
@@ -13,7 +12,6 @@ import { Deck } from '../../../types';
 function MyDecks() {
   // const [dataIsLoaded, setDataIsLoaded] = useState<boolean>(false);
   const [deckList, setDeckList] = useState<Deck[]>([]);
-  const { enqueueSnackbar } = useSnackbar();
 
   useEffect(() => {
     deckService

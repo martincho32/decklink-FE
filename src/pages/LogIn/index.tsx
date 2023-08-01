@@ -1,3 +1,4 @@
+import { useSnackbar } from 'notistack';
 import { Link, useNavigate } from 'react-router-dom';
 import { useState, useContext } from 'react';
 import whiteTopRightArrow from '../../assets/images/ArrowTopRight.svg';
@@ -8,14 +9,13 @@ import { MainLayout, Input, Button } from '../../components';
 import { AuthContext } from '../../context';
 
 function LogIn() {
-  // const location = useLocation();
+  const { enqueueSnackbar } = useSnackbar();
   const { loginUser } = useContext(AuthContext);
 
   const navigate = useNavigate();
 
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
-  const [loginError, setLoginError] = useState<string | null>(null);
 
   const [enteredEmailTouched, setEnteredEmailTouched] =
     useState<boolean>(false);
@@ -58,9 +58,14 @@ function LogIn() {
 
     const isvalidLogin = await loginUser(email, password);
     if (!isvalidLogin) {
-      setLoginError(
-        'Whoops! Looks like something went wrong, please contact support.'
-      );
+      enqueueSnackbar('Wrong email or password. Please try again.', {
+        variant: 'error',
+        autoHideDuration: 2000,
+        anchorOrigin: {
+          vertical: 'top',
+          horizontal: 'right',
+        },
+      });
       return;
     }
     navigate('/founder/decks', {
@@ -108,6 +113,7 @@ function LogIn() {
           >
             <div className={emailInputClasses}>
               <Input
+                required
                 style="default"
                 type="email"
                 placeholder="example@gmail.com"
@@ -122,6 +128,7 @@ function LogIn() {
             </div>
             <div className={passwordInputClasses}>
               <Input
+                required
                 style="password"
                 placeholder="******"
                 label="Password"
@@ -133,11 +140,6 @@ function LogIn() {
                 onBlur={passwordInputBlur}
               />
             </div>
-            {loginError && (
-              <span className={`${styles.errorMessage} text-2xl`}>
-                {loginError}
-              </span>
-            )}
             <Button
               type="submit"
               text="Log In"
