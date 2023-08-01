@@ -22,6 +22,10 @@ function SignUp() {
   const [loginError, setSignUpError] = useState<string | null>(null);
   const [enteredEmailTouched, setEnteredEmailTouched] =
     useState<boolean>(false);
+  const [enteredFirstNameTouched, setEnteredFirstNameTouched] =
+    useState<boolean>(false);
+  const [enteredLastNameTouched, setEnteredLastNameTouched] =
+    useState<boolean>(false);
   const [enteredPasswordTouched, setEnteredPasswordTouched] =
     useState<boolean>(false);
   useState<boolean>(false);
@@ -30,6 +34,8 @@ function SignUp() {
 
   const [formData, setFormData] = useState<SignUpFormData>({
     email: '',
+    firstName: '',
+    lastName: '',
     password: '',
     confirmPassword: '',
     companyName: '',
@@ -42,6 +48,16 @@ function SignUp() {
   const enteredEmailIsValid =
     formData.email.trim() !== '' && formData.email.includes('@');
   const emailInputIsInvalid = !enteredEmailIsValid && enteredEmailTouched;
+
+  const enteredFirstNameIsValid =
+    formData.firstName.trim() !== '' && formData.firstName.length >= 1;
+  const firstNameInputIsInvalid =
+    !enteredFirstNameIsValid && enteredFirstNameTouched;
+
+  const enteredLastNameIsValid =
+    formData.lastName.trim() !== '' && formData.lastName.length >= 1;
+  const lastNameInputIsInvalid =
+    !enteredLastNameIsValid && enteredLastNameTouched;
 
   const enteredPasswordIsValid =
     formData.password.length >= 6 && formData.password.length <= 35;
@@ -144,11 +160,17 @@ function SignUp() {
                   setFormData={setFormData}
                   emailInputClasses={emailInputClasses}
                   emailInputIsInvalid={emailInputIsInvalid}
+                  firstNameInputClasses={emailInputClasses}
+                  firstNameInputIsInvalid={firstNameInputIsInvalid}
+                  lastNameInputClasses={emailInputClasses}
+                  lastNameInputIsInvalid={lastNameInputIsInvalid}
                   passwordInputClasses={passwordInputClasses}
                   passwordInputIsInvalid={passwordInputIsInvalid}
                   repeatPasswordInputClasses={repeatPasswordInputClasses}
                   repeatPasswordInputIsInvalid={repeatPasswordInputIsInvalid}
                   setEnteredEmailTouched={setEnteredEmailTouched}
+                  setEnteredFirstNameTouched={setEnteredFirstNameTouched}
+                  setEnteredLastNameTouched={setEnteredLastNameTouched}
                   setEnteredPasswordTouched={setEnteredPasswordTouched}
                   setEnteredRepeatPasswordTouched={
                     setEnternedRepeatPasswordTouched
@@ -160,6 +182,7 @@ function SignUp() {
                   icon={<img src={whiteTopRightArrow} alt="Arrow" />}
                   backgroundColor="#F1511B"
                   textColor="#FFF"
+                  className="w-full"
                   onClick={continueHandler}
                 />
               </>
@@ -175,6 +198,7 @@ function SignUp() {
                   icon={<img src={whiteTopRightArrow} alt="Arrow" />}
                   backgroundColor="#F1511B"
                   textColor="#FFF"
+                  className="w-full"
                   onClick={submitHandler}
                 />
 

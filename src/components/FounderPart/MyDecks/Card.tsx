@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { Page, Document } from 'react-pdf'; /** File library */
 import { Link } from 'react-router-dom';
 import { Button } from '../..';
@@ -9,29 +10,53 @@ import AverageTimeIcon from '../../../assets/images/AverageTime.png';
 import orangeTopRightArrow from '../../../assets/images/OrangeArrowTopRight.svg';
 import deleteIcon from '../../../assets/images/Delete.png';
 import { Deck } from '../../../types';
+import loadingImage from '../../../assets/images/Dummy Slide.svg';
 
 interface Props {
   deck: Deck;
 }
 
 function Card({ deck }: Props) {
-  console.log(deck);
+  const [loading, setLoading] = useState<boolean>(true);
+
+  const onDocumentLoadSuccess = () => {
+    setLoading(false);
+  };
+
+  const handleLoadError = (error: any) => {
+    console.error('Error while loading PDF:', error);
+    setLoading(true);
+  };
+
   return (
     <div className={styles.deckBlock}>
+      {/* Conditionally render the loading image while PDF is loading */}
+      {loading && (
+        <img
+          className={styles.dummyPreviewImage}
+          src={loadingImage}
+          alt="Loading"
+        />
+      )}
+
       <Document
         file={deck.deckUrl}
-        // onLoadSuccess={onDocumentLoadSuccess}
-        // options={options}
-        // noData={<h4 className="">No file selected</h4>}
-        // className=""
+        onLoadSuccess={onDocumentLoadSuccess}
+        onLoadError={handleLoadError}
+        noData={<img src={loadingImage} alt="Loading" />}
+        loading=""
       >
-        <Page
-          renderTextLayer={false}
-          renderAnnotationLayer={false}
-          className={styles.previewImage}
-          pageNumber={1}
-        />
+        {/* Only render the <Page> component when the PDF is loaded */}
+        {!loading && (
+          <Page
+            renderTextLayer={false}
+            renderAnnotationLayer={false}
+            className={styles.previewImage}
+            pageNumber={1}
+          />
+        )}
       </Document>
+
       <div className={styles.deckMainContentWrapper}>
         <div className={styles.deckFirstRow}>
           <div className={styles.deckTitleWrapper}>

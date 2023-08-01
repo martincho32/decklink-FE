@@ -1,8 +1,10 @@
+import { useState } from 'react';
 import { Page, Document, Thumbnail } from 'react-pdf'; /** File library */
 import iconTopRight from '../../../assets/images/ArrowTopRight.svg';
 import './DeckPreview.css';
 import Button from '../../UI/Button';
 import { Logo } from '../..';
+import AskEmailPassword from '../../AskEmailPassword';
 
 function DeckPreview({
   type,
@@ -90,14 +92,45 @@ function DeckPreview({
   }
 
   if (type === 'deckUserPreview') {
+    const [showModal, setShowModal] = useState(true);
+
+    const handleOnCloseFormClose = (event) => {
+      if (event.target.id === 'containerClose') {
+        setShowModal(false);
+      }
+    };
+
+    const handleModalSubmit = (email: string, password?: string) => {
+      console.log('Submitted Email:', email);
+      if (password !== '') {
+        console.log('Submitted Password:', password);
+      }
+      setShowModal(false);
+    };
     return (
       <div
         id="container"
         role="button"
         tabIndex={0}
         onClick={handleOnClose}
-        className="fixed overflow-y-scroll h-screen inset-0 bg-black bg-opacity-80 backdrop-blur-sm p-4"
+        className="fixedContainer fixed overflow-y-scroll h-screen inset-0 bg-black bg-opacity-80 backdrop-blur-sm p-4"
       >
+        <button
+          type="button"
+          className="hidden"
+          onClick={() => {
+            setShowModal(true);
+            document.body.style.overflow = 'hidden';
+          }}
+        >
+          Open Modal
+        </button>
+        <AskEmailPassword
+          show={showModal}
+          onClose={handleOnCloseFormClose}
+          onSubmit={handleModalSubmit}
+          // showPasswordInput // You can change this to false if you only want an email input.
+        />
         <Document
           file={file}
           onLoadSuccess={onDocumentLoadSuccess}

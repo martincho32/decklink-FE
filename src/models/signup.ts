@@ -1,6 +1,10 @@
 class SignUpFormData {
   email: string;
 
+  firstName: string;
+
+  lastName: string;
+
   password: string;
 
   confirmPassword: string;
@@ -13,6 +17,8 @@ class SignUpFormData {
 
   constructor(
     email: string,
+    firstName: string,
+    lastName: string,
     password: string,
     confirmPassword: string,
     comapnyName: string,
@@ -20,6 +26,8 @@ class SignUpFormData {
     conapnyLinkedInUrl: string
   ) {
     this.email = email;
+    this.firstName = firstName;
+    this.lastName = lastName;
     this.password = password;
     this.confirmPassword = confirmPassword;
     this.companyName = comapnyName;

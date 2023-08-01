@@ -4,6 +4,7 @@
   height: 100% !important;
   z-index: 1;
   overflow-y: auto!important;
+  cursor: default!important;
 }
 
 .buttonClose{

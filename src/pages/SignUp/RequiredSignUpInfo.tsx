@@ -5,6 +5,8 @@ export interface RequiredSignUpInfoProps {
   formData: SignUpFormData;
   setFormData: ({
     email,
+    firstName,
+    lastName,
     password,
     confirmPassword,
     companyName,
@@ -13,11 +15,17 @@ export interface RequiredSignUpInfoProps {
   }: SignUpFormData) => void;
   emailInputClasses: string;
   emailInputIsInvalid: boolean;
+  firstNameInputClasses: string;
+  firstNameInputIsInvalid: boolean;
+  lastNameInputClasses: string;
+  lastNameInputIsInvalid: boolean;
   passwordInputClasses: string;
   passwordInputIsInvalid: boolean;
   repeatPasswordInputClasses: string;
   repeatPasswordInputIsInvalid: boolean;
   setEnteredEmailTouched;
+  setEnteredFirstNameTouched;
+  setEnteredLastNameTouched;
   setEnteredPasswordTouched;
   setEnteredRepeatPasswordTouched;
 }
@@ -27,11 +35,17 @@ function RequiredSignUpInfo({
   setFormData,
   emailInputClasses,
   emailInputIsInvalid,
+  firstNameInputClasses,
+  firstNameInputIsInvalid,
+  lastNameInputClasses,
+  lastNameInputIsInvalid,
   passwordInputClasses,
   passwordInputIsInvalid,
   repeatPasswordInputClasses,
   repeatPasswordInputIsInvalid,
   setEnteredEmailTouched,
+  setEnteredFirstNameTouched,
+  setEnteredLastNameTouched,
   setEnteredPasswordTouched,
   setEnteredRepeatPasswordTouched,
 }: RequiredSignUpInfoProps) {
@@ -41,6 +55,22 @@ function RequiredSignUpInfo({
 
   const emailInputBlur = () => {
     setEnteredEmailTouched(true);
+  };
+
+  const handleFirstNameChange = (value: string) => {
+    setFormData({ ...formData, firstName: value });
+  };
+
+  const firstNameInputBlur = () => {
+    setEnteredFirstNameTouched(true);
+  };
+
+  const handleLastNameChange = (value: string) => {
+    setFormData({ ...formData, lastName: value });
+  };
+
+  const lastNameInputBlur = () => {
+    setEnteredLastNameTouched(true);
   };
 
   const handlePasswordChange = (value: string) => {
@@ -73,6 +103,34 @@ function RequiredSignUpInfo({
           errorMessage="Enter valid email address"
           onChange={handleEmailChange}
           onBlur={emailInputBlur}
+        />
+      </div>
+      <div className={firstNameInputClasses}>
+        <Input
+          style="default"
+          type="text"
+          placeholder="Jhon"
+          label="Your First Name"
+          id="firstName"
+          value={formData.firstName}
+          inputIsInvalid={firstNameInputIsInvalid}
+          errorMessage="First name must be at least 1 characters long"
+          onChange={handleFirstNameChange}
+          onBlur={firstNameInputBlur}
+        />
+      </div>
+      <div className={lastNameInputClasses}>
+        <Input
+          style="default"
+          type="text"
+          placeholder="Kullo"
+          label="Your Last Name"
+          id="lastName"
+          value={formData.lastName}
+          inputIsInvalid={lastNameInputIsInvalid}
+          errorMessage="Last name must be at least 1 characters long"
+          onChange={handleLastNameChange}
+          onBlur={lastNameInputBlur}
         />
       </div>
       <div className={passwordInputClasses}>

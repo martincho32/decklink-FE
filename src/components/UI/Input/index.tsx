@@ -6,6 +6,7 @@ import showInputText from '../../../assets/images/ShowInput.png';
 import uploadFileIcon from '../../../assets/images/ArrowTopRight.svg';
 
 export interface InputProps {
+  labelColor?: React.CSSProperties;
   type?: string;
   style: 'password' | 'toggle' | 'upload' | 'default' | 'prefilled';
   placeholder?: string;
@@ -18,9 +19,11 @@ export interface InputProps {
   inputIsInvalid?: boolean;
   errorMessage?: string;
   checked?: boolean;
+  className?: string;
 }
 
 function Input({
+  labelColor,
   style,
   type,
   placeholder,
@@ -33,6 +36,7 @@ function Input({
   inputIsInvalid,
   errorMessage,
   checked,
+  className,
 }: InputProps) {
   let inputElement: JSX.Element;
 
@@ -97,7 +101,9 @@ function Input({
     case 'password':
       inputElement = (
         <div className={styles.InputWrapper}>
-          <label htmlFor={id}>{label}</label>
+          <label style={labelColor} htmlFor={id}>
+            {label}
+          </label>
           <div className={styles.defaultInputContainer}>
             <input
               disabled={disabled}
@@ -106,9 +112,9 @@ function Input({
               placeholder={placeholder}
               value={value}
               onChange={onDefaultInputEntered}
-              className={
+              className={`${
                 value ? styles.defaultInputWithValue : styles.defaultInput
-              }
+              } ${className}`}
               onBlur={onBlur}
             />
             <img
@@ -127,7 +133,9 @@ function Input({
     case 'toggle':
       inputElement = (
         <div className={styles.InputWrapper}>
-          <label htmlFor={id}>{label}</label>
+          <label style={labelColor} htmlFor={id}>
+            {label}
+          </label>
           <label
             htmlFor={id}
             className={`${styles.toggleSwitch} ${
@@ -153,7 +161,9 @@ function Input({
     case 'upload':
       inputElement = (
         <div className={styles.InputWrapper}>
-          <label htmlFor={id}>{label}</label>
+          <label style={labelColor} htmlFor={id}>
+            {label}
+          </label>
           <div className={styles.UploadFileInputWrapper}>
             <label htmlFor={id} className={styles.fileInput}>
               {label} <img src={uploadFileIcon} alt="" />
@@ -178,7 +188,9 @@ function Input({
     case 'default':
       inputElement = (
         <div className={styles.InputWrapper}>
-          <label htmlFor={id}>{label}</label>
+          <label style={labelColor} htmlFor={id}>
+            {label}
+          </label>
           <input
             disabled={disabled}
             type={type}
@@ -186,9 +198,9 @@ function Input({
             placeholder={placeholder}
             value={value}
             onChange={onDefaultInputEntered}
-            className={
+            className={`${
               value ? styles.defaultInputWithValue : styles.defaultInput
-            }
+            } ${className}`}
             onBlur={onBlur}
           />
           {inputIsInvalid && (
@@ -200,7 +212,9 @@ function Input({
     case 'prefilled':
       inputElement = (
         <div className={styles.InputWrapper}>
-          <label htmlFor={id}>{label}</label>
+          <label style={labelColor} htmlFor={id}>
+            {label}
+          </label>
           <div
             className={
               prefilledInputHasValue
@@ -218,7 +232,7 @@ function Input({
               value={value}
               onChange={onPrefilledInputEntered}
               placeholder="example"
-              className={styles.prefilledInput}
+              className={`${styles.prefilledInput} ${className}`}
               onBlur={onBlur}
             />
           </div>
@@ -231,7 +245,9 @@ function Input({
     default:
       inputElement = (
         <div className={styles.InputWrapper}>
-          <label htmlFor={id}>{label}</label>
+          <label style={labelColor} htmlFor={id}>
+            {label}
+          </label>
           <input
             disabled={disabled}
             type={type}
@@ -239,9 +255,9 @@ function Input({
             placeholder={placeholder}
             value={value}
             onChange={onDefaultInputEntered}
-            className={
+            className={`${
               value ? styles.defaultInputWithValue : styles.defaultInput
-            }
+            } ${className}`}
             onBlur={onBlur}
           />
           {inputIsInvalid && (

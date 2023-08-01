@@ -31,7 +31,7 @@ function Navbar() {
   };
 
   return (
-    <nav className="flex justify-between border border-persimmon rounded p-2 md:py-2 md:px-5">
+    <nav className="flex justify-between border border-persimmon h-20 items-center rounded p-2 md:py-2 md:px-5">
       <Link to="/founder/decks" className="flex justify-center">
         <div className="self-center flex gap-0.7">
           <Logo />
