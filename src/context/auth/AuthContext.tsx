@@ -1,9 +1,9 @@
 import { createContext } from 'react';
-import { User } from '../../types';
+import { IUser } from '../../types';
 
 interface ContextProps {
   isLoggedIn: boolean;
-  user?: User;
+  user?: IUser;
 
   loginUser: (_email: string, password: string) => Promise<boolean>;
   registerUser: (

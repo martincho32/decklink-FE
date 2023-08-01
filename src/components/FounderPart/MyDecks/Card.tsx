@@ -10,14 +10,15 @@ import viewIcon from '../../../assets/images/views.png';
 import AverageTimeIcon from '../../../assets/images/AverageTime.png';
 import orangeTopRightArrow from '../../../assets/images/OrangeArrowTopRight.svg';
 import deleteIcon from '../../../assets/images/Delete.png';
-import { Deck } from '../../../types';
+import { IDeck } from '../../../types';
 import loadingImage from '../../../assets/images/Dummy Slide.svg';
 
 interface Props {
-  deck: Deck;
+  deck: IDeck;
+  handleClickDelete: (id: string) => Promise<void>;
 }
 
-function Card({ deck }: Props) {
+function Card({ deck, handleClickDelete }: Props) {
   const { enqueueSnackbar } = useSnackbar();
 
   const [loading, setLoading] = useState<boolean>(true);
@@ -129,7 +130,9 @@ function Card({ deck }: Props) {
               <p className={styles.deckMainInfoItemData}>10</p>
             </div>
           </div>
-          <div className={styles.buttons}>
+        </div>
+        <div className={styles.buttons}>
+          <Link className="hover:no-underline" to={`/founder/deck/${deck._id}`}>
             <Button
               type="button"
               text="See Detailed Info"
@@ -137,25 +140,26 @@ function Card({ deck }: Props) {
               backgroundColor="#F1511B"
               textColor="#FFF"
             />
-            <div className={styles.secondaryButtonsWrapper}>
-              <Link
-                className={styles.editButton}
-                to={`/founder/deck/edit/${deck._id}`}
-              >
-                <Button
-                  type="button"
-                  text="Edit"
-                  icon={<img src={orangeTopRightArrow} alt="Arrow" />}
-                  borderColor="#F1511B"
-                  textColor="#F1511B"
-                />
-              </Link>
+          </Link>
+          <div className={styles.secondaryButtonsWrapper}>
+            <Link
+              className="hover:no-underline"
+              to={`/founder/deck/edit/${deck._id}`}
+            >
               <Button
                 type="button"
-                icon={<img src={deleteIcon} alt="delete" />}
-                backgroundColor="#161A20"
+                text="Edit"
+                icon={<img src={orangeTopRightArrow} alt="Arrow" />}
+                borderColor="#F1511B"
+                textColor="#F1511B"
               />
-            </div>
+            </Link>
+            <Button
+              type="button"
+              icon={<img src={deleteIcon} alt="delete" />}
+              backgroundColor="#161A20"
+              onClick={() => handleClickDelete(deck._id)}
+            />
           </div>
         </div>
       </div>

@@ -1,12 +1,12 @@
 import { PropsWithChildren, useReducer, useMemo, useEffect } from 'react';
 import Cookies from 'js-cookie';
 import { AuthContext, authReducer } from '.';
-import { User } from '../../types';
+import { IUser } from '../../types';
 import { loginService } from '../../services';
 
 export interface AuthState {
   isLoggedIn: boolean;
-  user?: User;
+  user?: IUser;
 }
 
 const AUTH_INITIAL_STATE: AuthState = {

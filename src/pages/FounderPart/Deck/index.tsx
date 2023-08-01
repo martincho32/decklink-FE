@@ -141,8 +141,8 @@ function Deck({ title = 'Create', deckId }: Props) {
     const contactSupportMessage = ' Please contact support.';
     if (axios.isAxiosError(error)) {
       errorMessage +=
-        error.response!.data?.message ??
-        error.response!.data ??
+        error.response?.data?.message ??
+        error.response?.data ??
         'Server error.';
       enqueueSnackbar(errorMessage + contactSupportMessage, {
         variant: 'error',
