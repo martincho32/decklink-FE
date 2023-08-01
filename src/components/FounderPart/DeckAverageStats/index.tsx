@@ -2,6 +2,7 @@
 
 import { LineChart } from '../..';
 import { IDeck, IDeckSlidesStats, IDeckView } from '../../../types';
+import DeckThumbnail from '../DeckThumbnail';
 
 interface Props {
   deck: Partial<IDeck> | null;
@@ -15,7 +16,7 @@ function DeckAverageStats({ deck, deckViews }: Props) {
       return `Slide ${slide.slideNumber}`;
     });
 
-  const data =
+  const rawData =
     deckViews &&
     deckViews.reduce((accumulator, currentValue, currentIndex) => {
       return {
@@ -26,7 +27,7 @@ function DeckAverageStats({ deck, deckViews }: Props) {
 
   const auxMockedData: number[] = [];
   labels?.forEach((_slideName, index) => {
-    (Object.values(data!) as [][]).forEach((slide: IDeckSlidesStats[]) => {
+    (Object.values(rawData!) as [][]).forEach((slide: IDeckSlidesStats[]) => {
       if (auxMockedData[index]) {
         auxMockedData[index] += slide[index].viewingTime;
       } else {
@@ -36,22 +37,23 @@ function DeckAverageStats({ deck, deckViews }: Props) {
   });
   // this will be the view time in seconds of each slide
   // TODO maybe do this but in the last iteration of labels.forEach
-  const mockedData = auxMockedData.map(
-    (totalMiliseconds) => totalMiliseconds / 1000 / Object.values(data!).length
+  const data = auxMockedData.map(
+    (totalMiliseconds) =>
+      totalMiliseconds / 1000 / Object.values(rawData!).length
   );
 
   return (
-    <>
+    <div className="mb-16">
       <span className="text-xl text-mirage">
         Average time spent viewing each slide by all people
       </span>
       <LineChart
         labels={labels as string[] | undefined}
-        mockedData={mockedData}
+        data={data}
         deck={deck}
       />
-      {/* Here put list of deck-view cards for each user that viewed the deck */}
-    </>
+      <DeckThumbnail deck={deck} />
+    </div>
   );
 }
 

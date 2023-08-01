@@ -1,11 +1,16 @@
+/* eslint-disable import/extensions */
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
+import { useSnackbar } from 'notistack';
 import { Button, Logo, MainLayout } from '../../../components';
 import { deckService, deckViewService } from '../../../services';
 import { IDeck, IDeckView } from '../../../types/index';
 import DeckAverageStats from '../../../components/FounderPart/DeckAverageStats';
+import DeckIndividualStats from '@/components/FounderPart/DeckIndividualStats';
 
 function DeclkDetail() {
+  const { enqueueSnackbar } = useSnackbar();
+
   const { id } = useParams();
   const navigate = useNavigate();
 
@@ -41,7 +46,27 @@ function DeclkDetail() {
   };
 
   const onClickCopyDeckLink = () => {
-    console.log('yeaah baby, copy deck link babyyy');
+    navigator.permissions.query({ name: 'clipboard-write' }).then((result) => {
+      if (result.state === 'granted' || result.state === 'prompt') {
+        /* write to the clipboard now */
+        navigator.clipboard.writeText(deck?.deckUrl as string).then(
+          () => {
+            /* Resolved - text copied to clipboard successfully */
+            enqueueSnackbar('Url successfully copied!!', {
+              variant: 'success',
+              autoHideDuration: 2000,
+              anchorOrigin: {
+                vertical: 'top',
+                horizontal: 'right',
+              },
+            });
+          },
+          (error) => {
+            console.error('Failed to copy: ', error);
+          }
+        );
+      }
+    });
   };
 
   return (
@@ -75,15 +100,14 @@ function DeclkDetail() {
       {/* One component for global deck viewing statistics */}
       <DeckAverageStats deckViews={deckViews} deck={deck} />
       {/* One component for individual deck viewing statistics */}
-      {/* <LineChart deckViews={deckViews} deck={deck} /> */}
-      {/* <Accordion type="single" collapsible>
-        <AccordionItem value="item-1">
-          <AccordionTrigger>Is it accessible?</AccordionTrigger>
-          <AccordionContent>
-            Yes. It adheres to the WAI-ARIA design pattern.
-          </AccordionContent>
-        </AccordionItem>
-      </Accordion> */}
+      <div className="flex flex-col items-center">
+        <h3 className="text-2xl leading-normal">
+          <span className="text-persimmon">{deck?.name}</span> Detailed
+          Information
+        </h3>
+        <span className="text-mirage">For each view</span>
+      </div>
+      <DeckIndividualStats deckViews={deckViews} deck={deck} />
     </MainLayout>
   );
 }
