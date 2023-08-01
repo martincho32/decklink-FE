@@ -45,7 +45,7 @@ function DeckAverageStats({ deck, deckViews }: Props) {
   return (
     <div className="mb-16">
       <span className="text-xl text-mirage">
-        Average time spent viewing each slide by all people
+        Average time (in seconds) spent viewing each slide by all people
       </span>
       <LineChart
         labels={labels as string[] | undefined}
