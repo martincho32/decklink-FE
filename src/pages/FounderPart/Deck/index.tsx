@@ -59,6 +59,7 @@ function Deck({ title = 'Create', deckId }: Props) {
         setDeckFile(null); // Reset the selected file
         setUploadInputFileLabel('Upload File (.pdf)'); // Reset the label to the default state
       } else {
+        setEnteredDeckFileTouched(true);
         setDeckFile(selectedFile);
         setUploadInputFileLabel('Change File (.pdf)');
       }
@@ -103,7 +104,7 @@ function Deck({ title = 'Create', deckId }: Props) {
   const deckLinkInputIsInvalid =
     !enteredDeckLinkIsValid && enteredDeckLinkTouched;
   const deckFileInputIsInvalid =
-    !enteredDeckFileIsValid && enteredDeckLinkTouched;
+    !enteredDeckFileIsValid && enteredDeckFileTouched;
 
   const onClickGoBack = () => {
     navigate('/founder/decks');
@@ -128,8 +129,14 @@ function Deck({ title = 'Create', deckId }: Props) {
   const deckNameBlur = () => {
     setEnteredDeckNameTouched(true);
   };
+
   const deckLinkBlur = () => {
     setEnteredDeckLinkTouched(true);
+  };
+
+  const deckFileBlur = () => {
+    console.log('onBlure');
+    setEnteredDeckFileTouched(true);
   };
 
   const handlePasswordChange = (value: string) => {
@@ -177,11 +184,21 @@ function Deck({ title = 'Create', deckId }: Props) {
     setEnteredPasswordTouched(true);
     setEnteredDeckFileTouched(true);
 
+    if (passToogleChecked) {
+      if (
+        !enteredDeckNameIsValid ||
+        !enteredDeckLinkIsValid ||
+        !enteredPasswordIsValid ||
+        !enteredDeckFileIsValid
+      ) {
+        return;
+      }
+    }
+
     if (
       !enteredDeckNameIsValid ||
       !enteredDeckLinkIsValid ||
-      !enteredPasswordIsValid ||
-      !enteredDeckFileTouched
+      !enteredDeckFileIsValid
     ) {
       return;
     }
@@ -368,6 +385,7 @@ function Deck({ title = 'Create', deckId }: Props) {
             inputIsInvalid={deckFileInputIsInvalid}
             errorMessage="You need to add a PDF file"
             onChange={onFileChange}
+            onBlur={deckFileBlur}
           />
         </div>
       </form>

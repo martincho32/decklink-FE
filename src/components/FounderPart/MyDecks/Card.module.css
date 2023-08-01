@@ -9,8 +9,8 @@
 .previewImage canvas{
   width: 100%!important;
   height: auto!important;
-  max-height: 15rem!important;
-  object-fit: fill;
+  max-height: 9.5rem!important;
+  object-fit: contain!important;
   border-top-left-radius: 5px !important;
   border-top-right-radius: 5px !important;
 }
