@@ -270,7 +270,7 @@ function Input({
 
   useEffect(() => {
     setIsChecked(!!checked);
-    setPrefilledInputHasValue(value!!);
+    setPrefilledInputHasValue(!!value);
   }, [checked, value]);
 
   return <div className={styles.inputContainer}>{inputElement}</div>;
