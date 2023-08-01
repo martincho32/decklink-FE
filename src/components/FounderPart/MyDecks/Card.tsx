@@ -88,20 +88,20 @@ function Card({ deck, handleClickDelete }: Props) {
       </Document>
 
       <div className={styles.deckMainContentWrapper}>
-        <div className={styles.deckFirstRow}>
-          <div className={styles.deckTitleWrapper}>
-            <h3 className={styles.deckTitle}>{deck.name}</h3>
-            {/* <p className={styles.subtitle}>Published</p> */}
-          </div>
-          <Button
-            type="button"
-            text="Copy Link"
-            icon={<Logo color="#161A20" />}
-            textColor="#161A20"
-            onClick={handleCopyClick}
-          />
-        </div>
         <div className={styles.deckMainInfoAndButtons}>
+          <div className={styles.deckFirstRow}>
+            <div className={styles.deckTitleWrapper}>
+              <h3 className={styles.deckTitle}>{deck.name}</h3>
+              {/* <p className={styles.subtitle}>Published</p> */}
+            </div>
+            <Button
+              type="button"
+              text="Copy Link"
+              icon={<Logo color="#161A20" />}
+              textColor="#161A20"
+              onClick={handleCopyClick}
+            />
+          </div>
           <div className={styles.deckMainInfo}>
             <div className={styles.deckMainInfoItem}>
               <div className={styles.deckTitleAndIcon}>
@@ -139,6 +139,7 @@ function Card({ deck, handleClickDelete }: Props) {
               icon={<img src={whiteTopRightArrow} alt="Arrow" />}
               backgroundColor="#F1511B"
               textColor="#FFF"
+              className="w-full"
             />
           </Link>
           <div className={styles.secondaryButtonsWrapper}>
@@ -152,6 +153,7 @@ function Card({ deck, handleClickDelete }: Props) {
                 icon={<img src={orangeTopRightArrow} alt="Arrow" />}
                 borderColor="#F1511B"
                 textColor="#F1511B"
+                className="w-full"
               />
             </Link>
             <Button

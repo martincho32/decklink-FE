@@ -91,7 +91,10 @@ function Deck({ title = 'Create', deckId }: Props) {
     deckPassword?.length >= 6 && deckPassword?.length <= 35;
   const enteredDeckNameIsValid = deckName.trim() !== '' && deckName.length >= 3;
   const enteredDeckLinkIsValid = deckLink.trim() !== '' && deckLink.length >= 3;
-  // const enteredDeckFileIsValid = deckLink.trim() !== '' && deckLink.length >= 3;
+  const enteredDeckFileIsValid =
+    deckFile !== null &&
+    typeof deckFile !== 'string' &&
+    deckFile.type === 'application/pdf';
 
   const passwordInputIsInvalid =
     !enteredPasswordIsValid && enteredPasswordTouched;
@@ -99,7 +102,8 @@ function Deck({ title = 'Create', deckId }: Props) {
     !enteredDeckNameIsValid && enteredDeckNameTouched;
   const deckLinkInputIsInvalid =
     !enteredDeckLinkIsValid && enteredDeckLinkTouched;
-  const deckFileInputIsInvalid = enteredDeckLinkTouched;
+  const deckFileInputIsInvalid =
+    !enteredDeckFileIsValid && enteredDeckLinkTouched;
 
   const onClickGoBack = () => {
     navigate('/founder/decks');
@@ -167,8 +171,6 @@ function Deck({ title = 'Create', deckId }: Props) {
 
   const submitHandler = async (event: React.FormEvent) => {
     event.preventDefault();
-
-    console.log(event);
 
     setEnteredDeckNameTouched(true);
     setEnteredDeckLinkTouched(true);
@@ -239,7 +241,6 @@ function Deck({ title = 'Create', deckId }: Props) {
       setDeckPassword('');
       setEnteredPasswordTouched(false);
     } catch (error: any) {
-      // TODO handle error here
       console.error('Error:', error);
       handleError(error);
     }
@@ -286,8 +287,10 @@ function Deck({ title = 'Create', deckId }: Props) {
           <Button
             icon={<Logo color="white" />}
             type="submit"
-            className="bg-persimmon text-white px-5 grow col-start-3 col-end-3 h-auto"
             text={title}
+            backgroundColor="#F1511B"
+            textColor="#ffffff"
+            className="justify-self-end max-w-min"
           />
         </div>
         <div className="w-full grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-7 max-h-fit justify-center">
