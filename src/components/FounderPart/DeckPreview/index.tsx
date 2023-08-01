@@ -1,5 +1,4 @@
 import { Page, Document, Thumbnail } from 'react-pdf'; /** File library */
-import iconTopRight from '../../../assets/images/ArrowTopRight.svg';
 import './DeckPreview.css';
 
 function DeckPreview({
