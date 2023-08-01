@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import { useEffect, useState } from 'react';
 import { Document, Thumbnail, pdfjs } from 'react-pdf';
 import type { PDFDocumentProxy } from 'pdfjs-dist';
@@ -23,7 +24,7 @@ interface Props {
 
 function DeckThumbnail({ deck }: Props) {
   const [deckFile, setDeckFile] = useState<PDFFile | string>(null);
-  const [numPages, setNumPages] = useState<number>();
+  const [numPages, setNumPages] = useState<number>(0);
 
   const onDocumentLoadSuccess = ({
     numPages: nextNumPages,
@@ -36,25 +37,23 @@ function DeckThumbnail({ deck }: Props) {
   }, [deck]);
 
   return (
-    <div className="Example__container__document">
-      <Document
-        file={deckFile}
-        onLoadSuccess={onDocumentLoadSuccess}
-        options={options}
-        noData={<EmptyDeckPreview />}
-      >
-        <div className="flex gap-3 overflow-x-auto my-6 p-2">
-          {Array.from(new Array(numPages), (el, index) => (
-            <Thumbnail
-              onItemClick={() => {
-                document.body.style.overflow = 'hidden';
-              }}
-              key={`page_${index + 1}`}
-              pageNumber={index + 1}
-            />
-          ))}
+    <div className="Example ">
+      <div className="Example__container">
+        <div className="Example__container__document">
+          <Document
+            file={deckFile}
+            onLoadSuccess={onDocumentLoadSuccess}
+            options={options}
+            noData={<EmptyDeckPreview />}
+          >
+            <div className="flex gap-3 overflow-x-auto my-6 p-2">
+              {Array.from(new Array(numPages), (_el, index) => (
+                <Thumbnail key={`page_${index + 1}`} pageNumber={index + 1} />
+              ))}
+            </div>
+          </Document>
         </div>
-      </Document>
+      </div>
     </div>
   );
 }
