@@ -33,6 +33,8 @@ export interface Props {
 function Deck({ title = 'Create', deckId }: Props) {
   /** File Library */
   const [deckFile, setDeckFile] = useState<PDFFile>(null);
+  const [enteredDeckFileTouched, setEnteredDeckFileTouched] =
+    useState<boolean>(false);
   const [numPages, setNumPages] = useState<number>();
   const [pageNumber, setPageNumber] = useState(1);
   const [previewPickDeckSlide, setPreviewPickDeckSlide] = useState(false);
@@ -97,8 +99,7 @@ function Deck({ title = 'Create', deckId }: Props) {
     !enteredDeckNameIsValid && enteredDeckNameTouched;
   const deckLinkInputIsInvalid =
     !enteredDeckLinkIsValid && enteredDeckLinkTouched;
-  // const deckFileInputIsInvalid =
-  //   !enteredDeckFileIsValid && enteredDeckLinkTouched;
+  const deckFileInputIsInvalid = enteredDeckLinkTouched;
 
   const onClickGoBack = () => {
     navigate('/founder/decks');
@@ -166,6 +167,23 @@ function Deck({ title = 'Create', deckId }: Props) {
 
   const submitHandler = async (event: React.FormEvent) => {
     event.preventDefault();
+
+    console.log(event);
+
+    setEnteredDeckNameTouched(true);
+    setEnteredDeckLinkTouched(true);
+    setEnteredPasswordTouched(true);
+    setEnteredDeckFileTouched(true);
+
+    if (
+      !enteredDeckNameIsValid ||
+      !enteredDeckLinkIsValid ||
+      !enteredPasswordIsValid ||
+      !enteredDeckFileTouched
+    ) {
+      return;
+    }
+
     // setDeckLink();
     try {
       // TODO integrate this, for having dile upload progress bar
@@ -213,6 +231,13 @@ function Deck({ title = 'Create', deckId }: Props) {
         },
       });
       navigate('/founder/decks');
+
+      setDeckName('');
+      setEnteredDeckNameTouched(false);
+      setDeckLink('');
+      setEnteredDeckLinkTouched(false);
+      setDeckPassword('');
+      setEnteredPasswordTouched(false);
     } catch (error: any) {
       // TODO handle error here
       console.error('Error:', error);
@@ -268,6 +293,7 @@ function Deck({ title = 'Create', deckId }: Props) {
         <div className="w-full grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-7 max-h-fit justify-center">
           <div className="">
             <Input
+              required
               style="default"
               type="text"
               placeholder="Pitch Deck"
@@ -282,6 +308,7 @@ function Deck({ title = 'Create', deckId }: Props) {
           </div>
           <div className="">
             <Input
+              required
               style="prefilled"
               type="text"
               placeholder="decklink/example/decklink.com"
@@ -314,6 +341,7 @@ function Deck({ title = 'Create', deckId }: Props) {
           </div>
           <div className={passToogleChecked ? '' : 'hidden'}>
             <Input
+              required
               disabled={!passToogleChecked}
               style="password"
               placeholder="******"
@@ -329,12 +357,13 @@ function Deck({ title = 'Create', deckId }: Props) {
         </div>
         <div className="w-full grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-7 max-h-fit justify-center mt-6">
           <Input
+            required
             style="upload"
             placeholder="upload"
             label={uploadInputFileLabel}
             id="deck-upload"
-            inputIsInvalid={passwordInputIsInvalid}
-            errorMessage="Something went wrong with file."
+            inputIsInvalid={deckFileInputIsInvalid}
+            errorMessage="You need to add a PDF file"
             onChange={onFileChange}
           />
         </div>
