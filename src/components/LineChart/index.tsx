@@ -28,10 +28,126 @@ ChartJS.register(
 interface Props {
   deck: Partial<IDeck> | null;
   labels: string[] | undefined;
-  mockedData: number[] | undefined;
+  data: number[] | undefined;
 }
 
-export default function LineChart({ deck, labels, mockedData }: Props) {
+export default function LineChart({ deck, labels, data }: Props) {
+  // const getOrCreateTooltip = (chart, slideTitle: string) => {
+  //   let tooltipEl = chart.canvas.parentNode.querySelector('div');
+
+  //   if (!tooltipEl) {
+  //     tooltipEl = document.createElement('div');
+  //     tooltipEl.style.background = 'rgba(0, 0, 0, 0.7)';
+  //     tooltipEl.style.borderRadius = '3px';
+  //     tooltipEl.style.color = 'white';
+  //     tooltipEl.style.opacity = 1;
+  //     tooltipEl.style.pointerEvents = 'none';
+  //     tooltipEl.style.position = 'absolute';
+  //     tooltipEl.style.transform = 'translate(-50%, 0)';
+  //     tooltipEl.style.transition = 'all .1s ease';
+
+  //     const div = document.createElement('div');
+  //     // div.style.width = '100px';
+  //     // div.style.height = '100px';
+  //     const pageNumber = slideTitle.replace('Slide ', '');
+  //     const component = (
+  //       <DeckPreviewMini
+  //         fileUrl={deck?.deckUrl}
+  //         pageNumber={Number(pageNumber)}
+  //         onDocumentLoadSuccess={onDocumentLoadSuccess}
+  //       />
+  //     );
+  //     const htmlString = ReactDOMServer.renderToString(component);
+  //     console.log(htmlString);
+  //     div.innerHTML = htmlString;
+  //     tooltipEl.appendChild(div);
+  //     chart.canvas.parentNode.appendChild(tooltipEl);
+  //   }
+  //   return tooltipEl;
+  // };
+
+  // const externalTooltipHandler = (context) => {
+  //   // Tooltip Element
+  //   const { chart, tooltip } = context;
+  //   const tooltipEl = getOrCreateTooltip(chart, tooltip.title[0]);
+
+  //   // Hide if no tooltip
+  //   if (tooltip.opacity === 0) {
+  //     tooltipEl.style.opacity = 0;
+  //     return;
+  //   }
+
+  //   // Set Text
+  //   // if (tooltip.body) {
+  //   //   const titleLines = tooltip.title || [];
+  //   //   const bodyLines = tooltip.body.map((b) => b.lines);
+
+  //   //   const tableHead = document.createElement('thead');
+
+  //   //   titleLines.forEach((title) => {
+  //   //     const tr = document.createElement('tr');
+  //   //     tr.style.borderWidth = 0;
+
+  //   //     const th = document.createElement('th');
+  //   //     th.style.borderWidth = 0;
+  //   //     const text = document.createTextNode(title);
+
+  //   //     th.appendChild(text);
+  //   //     tr.appendChild(th);
+  //   //     tableHead.appendChild(tr);
+  //   //   });
+
+  //   //   const tableBody = document.createElement('tbody');
+  //   //   bodyLines.forEach((body, i) => {
+  //   //     const colors = tooltip.labelColors[i];
+
+  //   //     const span = document.createElement('span');
+  //   //     span.style.background = colors.backgroundColor;
+  //   //     span.style.borderColor = colors.borderColor;
+  //   //     span.style.borderWidth = '2px';
+  //   //     span.style.marginRight = '10px';
+  //   //     span.style.height = '10px';
+  //   //     span.style.width = '10px';
+  //   //     span.style.display = 'inline-block';
+
+  //   //     const tr = document.createElement('tr');
+  //   //     tr.style.backgroundColor = 'inherit';
+  //   //     tr.style.borderWidth = 0;
+
+  //   //     const td = document.createElement('td');
+  //   //     td.style.borderWidth = 0;
+
+  //   //     const text = document.createTextNode(body);
+
+  //   //     td.appendChild(span);
+  //   //     td.appendChild(text);
+  //   //     tr.appendChild(td);
+  //   //     tableBody.appendChild(tr);
+  //   //   });
+
+  //   //   const tableRoot = tooltipEl.querySelector('table');
+
+  //   //   // Remove old children
+  //   //   while (tableRoot.firstChild) {
+  //   //     tableRoot.firstChild.remove();
+  //   //   }
+
+  //   //   // Add new children
+  //   //   tableRoot.appendChild(tableHead);
+  //   //   tableRoot.appendChild(tableBody);
+  //   // }
+
+  //   const { offsetLeft: positionX, offsetTop: positionY } = chart.canvas;
+
+  //   // Display, position, and set styles for font
+  //   tooltipEl.style.opacity = 1;
+  //   tooltipEl.style.left = positionX + tooltip.caretX + 'px';
+  //   tooltipEl.style.top = positionY + tooltip.caretY + 'px';
+  //   tooltipEl.style.font = tooltip.options.bodyFont.string;
+  //   tooltipEl.style.padding =
+  //     tooltip.options.padding + 'px ' + tooltip.options.padding + 'px';
+  // };
+
   return (
     <div>
       <Line
@@ -39,124 +155,21 @@ export default function LineChart({ deck, labels, mockedData }: Props) {
           responsive: true,
           plugins: {
             legend: {
-              position: 'top' as const,
+              display: false,
             },
-            // title: {
-            //   display: true,
-            //   text: 'Chart.js Line Chart',
-            // },
             tooltip: {
               enabled: true,
-              // external(args) {
-              //   console.log(args);
-              // },
-              // external: function (context) {
-              //   // console.log('context: ', context);
-              //   // Tooltip Element
-              //   let tooltipEl = document.getElementById('chartjs-tooltip');
-
-              //   // Create element on first render
-              //   if (!tooltipEl) {
-              //     tooltipEl = document.createElement('div');
-              //     tooltipEl.id = 'chartjs-tooltip';
-              //     tooltipEl.innerHTML = '<span>Hello tincho</span>';
-              //     document.body.appendChild(tooltipEl);
-              //   }
-
-              //   // // Hide if no tooltip
-              //   // const tooltipModel: TooltipModel<'line'> = context.tooltip;
-              //   // if (tooltipModel.opacity === 0) {
-              //   //   tooltipEl.style.opacity = '0';
-              //   //   return;
-              //   // }
-
-              //   // // Set caret Position
-              //   // tooltipEl.classList.remove('above', 'below', 'no-transform');
-              //   // if (tooltipModel.yAlign) {
-              //   //   tooltipEl.classList.add(tooltipModel.yAlign);
-              //   // } else {
-              //   //   tooltipEl.classList.add('no-transform');
-              //   // }
-
-              //   // function getBody(bodyItem) {
-              //   //   return bodyItem.lines;
-              //   // }
-
-              //   // // Set Text
-              //   // if (tooltipModel.body) {
-              //   //   const titleLines = tooltipModel.title || [];
-              //   //   const bodyLines = tooltipModel.body.map(getBody);
-
-              //   //   let innerHtml = '<thead>';
-
-              //   //   titleLines.forEach(function (title) {
-              //   //     innerHtml += '<tr><th>' + title + '</th></tr>';
-              //   //   });
-              //   //   innerHtml += '</thead><tbody>';
-
-              //   //   bodyLines.forEach(function (body, i) {
-              //   //     const colors = tooltipModel.labelColors[i];
-              //   //     let style = 'background:' + colors.backgroundColor;
-              //   //     style += '; border-color:' + colors.borderColor;
-              //   //     style += '; border-width: 2px';
-              //   //     const span =
-              //   //       '<span style="' + style + '">' + body + '</span>';
-              //   //     innerHtml += '<tr><td>' + span + '</td></tr>';
-              //   //   });
-              //   //   innerHtml += '</tbody>';
-
-              //   //   let tableRoot = tooltipEl.querySelector('table');
-              //   //   tableRoot!.innerHTML = innerHtml;
-              //   // }
-
-              //   // const position = context.chart.canvas.getBoundingClientRect();
-              //   // // const bodyFont = ChartJS.helpers.toFont(
-              //   // //   tooltipModel.options.bodyFont
-              //   // // );
-
-              //   // // Display, position, and set styles for font
-              //   // tooltipEl.style.opacity = '1';
-              //   // tooltipEl.style.position = 'absolute';
-              //   // tooltipEl.style.left =
-              //   //   position.left +
-              //   //   window.pageXOffset +
-              //   //   tooltipModel.caretX +
-              //   //   'px';
-              //   // tooltipEl.style.top =
-              //   //   position.top +
-              //   //   window.pageYOffset +
-              //   //   tooltipModel.caretY +
-              //   //   'px';
-              //   // // tooltipEl.style.font = bodyFont.string;
-              //   // // tooltipEl.style.padding =
-              //   // //   tooltipModel. + 'px ' + tooltipModel.padding + 'px';
-              //   // tooltipEl.style.pointerEvents = 'none';
-              // },
+              // position: 'nearest',
+              // external: externalTooltipHandler,
             },
           },
-          // onHover: (event, elements) => {
-          //   // console.log('hover!!');
-          //   // console.log('event: ', event);
-          //   // console.log('elements: ', elements);
-          //   // const canvas = event.;
-          //   // if (elements.length > 0) {
-          //   //   // Cambiar la imagen cuando se hace hover sobre un punto
-          //   //   canvas.style.cursor = 'pointer';
-          //   //   canvas.src = image; // Reemplaza 'imagen-hover.png' con la ruta de la imagen que deseas mostrar en hover
-          //   // }
-          //   // else {
-          //   //   // Restaurar la imagen cuando no se hace hover sobre un punto
-          //   //   canvas.style.cursor = 'default';
-          //   //   canvas.src = image; // Reemplaza 'imagen-normal.png' con la ruta de la imagen original del gráfico
-          //   // }
-          // },
         }}
         data={{
           labels: labels,
           datasets: [
             {
               label: deck?.name ?? 'No name provided',
-              data: mockedData,
+              data: data,
               tension: 0.5,
               borderColor: 'rgb(241, 81, 27)',
               backgroundColor: 'rgba(241, 81, 27, 0.5)',
