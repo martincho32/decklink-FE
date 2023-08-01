@@ -240,8 +240,6 @@ function Deck({ title = 'Create', deckId }: Props) {
   }, []);
   return (
     <>
-      {/* {progress.started ? <progress max="100" value={progress.pc} /> : <span />}
-    {msg ? <span>{msg}</span> : <span />} */}
       <form
         onSubmit={submitHandler}
         className="mt-12 max-w-none"
@@ -370,6 +368,7 @@ function Deck({ title = 'Create', deckId }: Props) {
         </div>
       </div>
       <DeckPreview
+        type="deckCreationPreview"
         onClose={handleOnClosePitchDeckSlidePreview}
         visible={previewPickDeckSlide}
         pageNumber={pageNumber}
