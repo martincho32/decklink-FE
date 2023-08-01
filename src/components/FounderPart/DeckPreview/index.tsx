@@ -1,9 +1,8 @@
 import { useState } from 'react';
 import { Page, Document, Thumbnail } from 'react-pdf'; /** File library */
-import iconTopRight from '../../../assets/images/ArrowTopRight.svg';
 import './DeckPreview.css';
 import Button from '../../UI/Button';
-import { Logo } from '../..';
+import { CloseIcon, Logo } from '../..';
 import AskEmailPassword from '../../AskEmailPassword';
 
 function DeckPreview({
@@ -29,6 +28,7 @@ function DeckPreview({
   setPreviewPickDeckSlide;
   setPageNumber;
 }) {
+  const [showModal, setShowModal] = useState(false);
   const handleOnClose = (event) => {
     if (event.target.id === 'container') {
       onClose();
@@ -85,15 +85,14 @@ function DeckPreview({
           onClick={onClose}
           type="button"
         >
-          <img className="buttonCloseIcon w-4 h-4" src={iconTopRight} alt="" />
+          {/* <img className="buttonCloseIcon w-4 h-4" src={iconTopRight} alt="" /> */}
+          <CloseIcon color="#FFFFFF" />
         </button>
       </div>
     );
   }
 
   if (type === 'deckUserPreview') {
-    const [showModal, setShowModal] = useState(true);
-
     const handleOnCloseFormClose = (event) => {
       if (event.target.id === 'containerClose') {
         setShowModal(false);
@@ -177,7 +176,8 @@ function DeckPreview({
           onClick={onClose}
           type="button"
         >
-          <img className="buttonCloseIcon w-4 h-4" src={iconTopRight} alt="" />
+          {/* <img className="buttonCloseIcon w-4 h-4" src={iconTopRight} alt="" /> */}
+          <CloseIcon color="#FFFFFF" />
         </button>
       </div>
     );

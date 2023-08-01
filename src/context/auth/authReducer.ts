@@ -1,8 +1,8 @@
-import { User } from '../../types';
+import { IUser } from '../../types';
 import { AuthState } from '.';
 
 type AuthActionType =
-  | { type: '[Auth] - Login'; payload: User }
+  | { type: '[Auth] - Login'; payload: IUser }
   | { type: '[Auth] - Logout' };
 
 export const authReducer = (
