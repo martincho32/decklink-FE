@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useSnackbar } from 'notistack';
 import { Page, Document } from 'react-pdf'; /** File library */
 import { Link } from 'react-router-dom';
 import { Button } from '../..';
@@ -17,10 +18,38 @@ interface Props {
 }
 
 function Card({ deck }: Props) {
+  const { enqueueSnackbar } = useSnackbar();
+
   const [loading, setLoading] = useState<boolean>(true);
 
   const onDocumentLoadSuccess = () => {
     setLoading(false);
+  };
+
+  const handleCopyClick = () => {
+    // Create a temporary input element
+    const tempInput = document.createElement('input');
+    tempInput.value = 'decklink.com/'.concat(deck.customDeckLink);
+    document.body.appendChild(tempInput);
+
+    // Select the text inside the input element
+    tempInput.select();
+    tempInput.setSelectionRange(0, 99999); // For mobile devices
+
+    // Copy the text to the clipboard
+    document.execCommand('copy');
+
+    // Remove the temporary input element
+    document.body.removeChild(tempInput);
+
+    enqueueSnackbar('You copied link', {
+      variant: 'success',
+      autoHideDuration: 1000,
+      anchorOrigin: {
+        vertical: 'top',
+        horizontal: 'right',
+      },
+    });
   };
 
   const handleLoadError = (error: any) => {
@@ -68,6 +97,7 @@ function Card({ deck }: Props) {
             text="Copy Link"
             icon={<Logo color="#161A20" />}
             textColor="#161A20"
+            onClick={handleCopyClick}
           />
         </div>
         <div className={styles.deckMainInfoAndButtons}>
