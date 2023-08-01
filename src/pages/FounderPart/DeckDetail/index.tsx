@@ -46,27 +46,22 @@ function DeclkDetail() {
   };
 
   const onClickCopyDeckLink = () => {
-    navigator.permissions.query({ name: 'clipboard-write' }).then((result) => {
-      if (result.state === 'granted' || result.state === 'prompt') {
-        /* write to the clipboard now */
-        navigator.clipboard.writeText(deck?.deckUrl as string).then(
-          () => {
-            /* Resolved - text copied to clipboard successfully */
-            enqueueSnackbar('Url successfully copied!!', {
-              variant: 'success',
-              autoHideDuration: 2000,
-              anchorOrigin: {
-                vertical: 'top',
-                horizontal: 'right',
-              },
-            });
+    navigator.clipboard.writeText(deck?.customDeckLink as string).then(
+      () => {
+        /* Resolved - text copied to clipboard successfully */
+        enqueueSnackbar('Url successfully copied!!', {
+          variant: 'success',
+          autoHideDuration: 2000,
+          anchorOrigin: {
+            vertical: 'top',
+            horizontal: 'right',
           },
-          (error) => {
-            console.error('Failed to copy: ', error);
-          }
-        );
+        });
+      },
+      (error) => {
+        console.error('Failed to copy: ', error);
       }
-    });
+    );
   };
 
   return (
