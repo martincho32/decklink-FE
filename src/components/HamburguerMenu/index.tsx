@@ -29,7 +29,7 @@ function HamburguerMenu({
         </button>
       ) : null}
       <div className={isOpen ? styles.showMenu : styles.hideMenu}>
-        <nav className="flex justify-between border border-persimmon rounded p-2 md:py-2 md:px-5 w-full">
+        <nav className="flex justify-between border border-persimmon h-20 rounded p-2 md:py-2 md:px-5 w-full">
           <Link className={styles.logoWrapper} to="/">
             <div className="self-center flex gap-0.7">
               <Logo />

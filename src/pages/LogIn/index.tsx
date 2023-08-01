@@ -144,6 +144,7 @@ function LogIn() {
               icon={<img src={whiteTopRightArrow} alt="Arrow" />}
               backgroundColor="#F1511B"
               textColor="#FFF"
+              className="w-full"
             />
 
             {/* TODO add login process via google and linkedin */}
