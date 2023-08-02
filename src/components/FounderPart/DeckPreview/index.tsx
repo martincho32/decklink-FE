@@ -135,11 +135,7 @@ function DeckPreview({
           onLoadSuccess={onDocumentLoadSuccess}
           options={options}
           noData={<h4 className="">No file selected</h4>}
-<<<<<<< Updated upstream
-          className="document h-screen p-4 bg-mirage rounded-lg"
-=======
           className="document h-screen p-4 bg-mirage md:rounded-none"
->>>>>>> Stashed changes
         >
           <div className="flex w-full h-auto gap-4 justify-center">
             {pageNumber === 1 ? (
