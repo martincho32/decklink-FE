@@ -41,6 +41,9 @@ module.exports = {
     'import/no-cycle': 0,
     'react-hooks/exhaustive-deps': 0,
     'no-underscore-dangle': 0,
+    'import/extensions': 0,
+    'react/prop-types': 0,
+    'react/jsx-props-no-spreading': 0,
     'prettier/prettier': [
       'error',
       {

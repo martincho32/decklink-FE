@@ -351,7 +351,7 @@ function Deck({ title = 'Create', deckId }: Props) {
               noData={<EmptyDeckPreview />}
             >
               <div className="flex gap-3 overflow-x-auto my-6 p-2">
-                {Array.from(new Array(numPages), (el, index) => (
+                {Array.from(new Array(numPages), (_el, index) => (
                   <Thumbnail
                     onItemClick={() => {
                       document.body.style.overflow = 'hidden';

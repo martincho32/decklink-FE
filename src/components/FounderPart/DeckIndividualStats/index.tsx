@@ -1,4 +1,3 @@
-/* eslint-disable import/extensions */
 import { AccordionTopContent, LineChart } from '../..';
 import { IDeck, IDeckSlidesStats, IDeckView } from '../../../types';
 import {
@@ -43,8 +42,7 @@ function DeckIndividualStats({ deck, deckViews }: Props) {
                 value="item-1"
                 className="border-solid rounded border-mirage p-5"
               >
-                <AccordionTrigger className="md:flex-row gap-6">
-                  {/* Here place the component with data from the viewing user */}
+                <AccordionTrigger className="md:flex-row gap-6 justify-center lg:justify-end border-t border-t-persimmon border-solid mt-4 pt-4 lg:mt-0 lg:pt-0 lg:border-none">
                   <AccordionTopContent
                     email={view.viewerEmail!}
                     date={view.createdAt}
@@ -52,7 +50,6 @@ function DeckIndividualStats({ deck, deckViews }: Props) {
                   />
                 </AccordionTrigger>
                 <AccordionContent>
-                  {/* Here place the LineChart component */}
                   <LineChart
                     labels={labels as string[] | undefined}
                     data={view.deckSlidesStats.map(

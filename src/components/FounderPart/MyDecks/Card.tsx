@@ -11,6 +11,17 @@ import orangeTopRightArrow from '../../../assets/images/OrangeArrowTopRight.svg'
 import deleteIcon from '../../../assets/images/Delete.png';
 import { IDeck } from '../../../types';
 import loadingImage from '../../../assets/images/Dummy Slide.svg';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from '../../UI/AlertDialog';
 
 interface Props {
   deck: IDeck;
@@ -124,12 +135,29 @@ function Card({ deck, handleClickDelete }: Props) {
                 textColor="#F1511B"
               />
             </Link>
-            <Button
-              type="button"
-              icon={<img src={deleteIcon} alt="delete" />}
-              backgroundColor="#161A20"
-              onClick={() => handleClickDelete(deck._id)}
-            />
+            <AlertDialog>
+              <AlertDialogTrigger className="bg-mirage w-14 rounded">
+                <img className="m-auto" src={deleteIcon} alt="delete" />
+              </AlertDialogTrigger>
+              <AlertDialogContent>
+                <AlertDialogHeader>
+                  <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+                  <AlertDialogDescription>
+                    This action cannot be undone. This will permanently delete
+                    your deck and remove the data from our servers.
+                  </AlertDialogDescription>
+                </AlertDialogHeader>
+                <AlertDialogFooter>
+                  <AlertDialogCancel>Cancel</AlertDialogCancel>
+                  <AlertDialogAction
+                    onClick={() => handleClickDelete(deck._id)}
+                    className="bg-persimmon"
+                  >
+                    Continue
+                  </AlertDialogAction>
+                </AlertDialogFooter>
+              </AlertDialogContent>
+            </AlertDialog>
           </div>
         </div>
       </div>

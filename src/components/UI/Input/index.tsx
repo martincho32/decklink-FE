@@ -161,9 +161,9 @@ function Input({
     case 'upload':
       inputElement = (
         <div className={styles.InputWrapper}>
-          <label style={labelColor} htmlFor={id}>
+          {/* <label style={labelColor} htmlFor={id}>
             {label}
-          </label>
+          </label> */}
           <div className={styles.UploadFileInputWrapper}>
             <label htmlFor={id} className={styles.fileInput}>
               {label} <img src={uploadFileIcon} alt="" />
@@ -270,7 +270,7 @@ function Input({
 
   useEffect(() => {
     setIsChecked(!!checked);
-    setPrefilledInputHasValue(value!!);
+    setPrefilledInputHasValue(!!value);
   }, [checked, value]);
 
   return <div className={styles.inputContainer}>{inputElement}</div>;

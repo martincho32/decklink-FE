@@ -11,7 +11,7 @@ import { AuthContext } from '../../context';
 function Landing() {
   const navigate = useNavigate();
 
-  const { isLoggedIn, logoutUser } = useContext(AuthContext);
+  const { isLoggedIn } = useContext(AuthContext);
 
   const handleButtonLogInToFounderAccount = () => {
     navigate('/login');

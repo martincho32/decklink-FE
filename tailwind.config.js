@@ -17,6 +17,10 @@ export const theme = {
     },
   },
   extend: {
+    flexGrow: {
+      2: '2',
+      2.5: '2.5',
+    },
     spacing: {
       5.5: '1.5rem',
     },
