@@ -1,6 +1,3 @@
-/* eslint-disable import/extensions */
-/* eslint-disable react/jsx-props-no-spreading */
-/* eslint-disable react/prop-types */
 import * as React from 'react';
 import * as AccordionPrimitive from '@radix-ui/react-accordion';
 // import { ChevronDown } from 'lucide-react';
@@ -26,7 +23,8 @@ const AccordionTrigger = React.forwardRef<
   React.ElementRef<typeof AccordionPrimitive.Trigger>,
   React.ComponentPropsWithoutRef<typeof AccordionPrimitive.Trigger>
 >(({ className, children, ...props }, ref) => (
-  <AccordionPrimitive.Header className="flex">
+  <AccordionPrimitive.Header className="flex flex-col lg:flex-row">
+    {children}
     <AccordionPrimitive.Trigger
       ref={ref}
       className={cn(
@@ -35,12 +33,8 @@ const AccordionTrigger = React.forwardRef<
       )}
       {...props}
     >
-      {children}
-      <div
-        style={{ borderLeft: '1px solid' }}
-        className="text-persimmon flex flex-col justify-center h-full border-mirage pl-6"
-      >
-        <span className="flex gap-3">
+      <div className="text-persimmon flex flex-col justify-center h-full lg:pl-6 lg:border-l border-l-persimmon border-solid">
+        <span className="flex gap-3 lg:whitespace-nowrap font-bold">
           Show Detailed Schedule of Viewing Time
           <Logo />
         </span>

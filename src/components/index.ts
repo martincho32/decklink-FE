@@ -8,8 +8,20 @@ export { default as LineChart } from './LineChart';
 export { default as DeckPreview } from './FounderPart/DeckPreview';
 export { default as AccordionTopContent } from './AccordionTopContent';
 export {
+  AlertDialog,
+  AlertDialogTrigger,
+  AlertDialogContent,
+  AlertDialogHeader,
+  AlertDialogFooter,
+  AlertDialogTitle,
+  AlertDialogDescription,
+  AlertDialogAction,
+  AlertDialogCancel,
+} from './UI/AlertDialog';
+export {
   Accordion,
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
 } from './UI/Accordion';
+export { buttonVariants } from './UI/ShadcnButton';
