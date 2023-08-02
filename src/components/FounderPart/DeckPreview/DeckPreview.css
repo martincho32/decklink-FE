@@ -2,9 +2,11 @@
   display: flex !important;
   flex-flow: column !important;
   height: 100% !important;
+  width: 100% !important;
   z-index: 1;
   overflow-y: auto!important;
   cursor: default!important;
+  justify-content: center !important;
 }
 
 .buttonClose{
@@ -29,6 +31,12 @@
   background-color: transparent !important;
 }
 
+.pageWrapperFullScreen {
+  display: flex !important;
+  justify-content: center !important;
+  background-color: transparent !important;
+}
+
 .pageWrapper canvas {
   display: flex !important;
   cursor: default !important;
@@ -37,16 +45,12 @@
   border-radius: 0.5rem !important;
 }
 
-.pageWrapper .react-pdf__Page__textContent {
+.pageWrapperFullScreen canvas {
+  display: flex !important;
   cursor: default !important;
-  height: 60vh !important;
-  width: auto !important;
-}
-
-.pageWrapper .react-pdf__Page__annotations {
-  cursor: default !important;
-  height: 60vh !important;
-  width: auto !important;
+  width: 75vw !important;
+  height: auto !important;
+  border-radius: 0.5rem !important;
 }
 
 .previewPagesWrapper {

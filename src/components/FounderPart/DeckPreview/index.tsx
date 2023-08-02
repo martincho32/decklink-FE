@@ -135,22 +135,49 @@ function DeckPreview({
           onLoadSuccess={onDocumentLoadSuccess}
           options={options}
           noData={<h4 className="">No file selected</h4>}
+<<<<<<< Updated upstream
           className="document h-screen p-4 bg-mirage rounded-lg"
+=======
+          className="document h-screen p-4 bg-mirage md:rounded-none"
+>>>>>>> Stashed changes
         >
-          {/* Thumbnails */}
-          <div className="bigSizePreivew">
-            {Array.from(new Array(numPages), (el, index) => (
-              <Thumbnail
-                onItemClick={(args) => {
-                  setPreviewPickDeckSlide(true);
-                  console.log('args: ', args);
-                  setPageNumber(index + 1);
-                }}
-                key={`page_${index + 1}`}
-                pageNumber={index + 1}
-                className="previewPageWrapper"
+          <div className="flex w-full h-auto gap-4 justify-center">
+            {pageNumber === 1 ? (
+              <Button
+                type="button"
+                icon={<Logo color="#f1511b2e" topLeft />}
+                onClick={onPrev}
               />
-            ))}
+            ) : (
+              <Button
+                type="button"
+                icon={<Logo color="#F1511B" topLeft />}
+                onClick={onPrev}
+              />
+            )}
+
+            <Page
+              renderTextLayer={false}
+              renderAnnotationLayer={false}
+              className="pageWrapperFullScreen"
+              pageNumber={pageNumber}
+            />
+
+            {pageNumber === numPages ? (
+              <Button
+                type="button"
+                icon={<Logo color="#f1511b2e" />}
+                className="max-h-min"
+                onClick={onNext}
+              />
+            ) : (
+              <Button
+                type="button"
+                icon={<Logo color="#F1511B" />}
+                className="max-h-min"
+                onClick={onNext}
+              />
+            )}
           </div>
         </Document>
 
