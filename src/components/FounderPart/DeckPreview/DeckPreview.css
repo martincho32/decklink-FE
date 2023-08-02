@@ -52,6 +52,7 @@
 .previewPagesWrapper {
   height: 100% !important;
   margin-top: 1rem !important;
+  padding-bottom: 0.5rem!important;
   overflow-x: auto !important;
   overflow-y: hidden !important;
   display: flex !important;

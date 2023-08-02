@@ -94,8 +94,7 @@ function Deck({ title = 'Create', deckId }: Props) {
   const enteredDeckLinkIsValid = deckLink.trim() !== '' && deckLink.length >= 3;
   const enteredDeckFileIsValid =
     deckFile !== null &&
-    typeof deckFile !== 'string' &&
-    deckFile.type === 'application/pdf';
+    (typeof deckFile === 'string' || deckFile.type === 'application/pdf');
 
   const passwordInputIsInvalid =
     !enteredPasswordIsValid && enteredPasswordTouched;
@@ -177,6 +176,10 @@ function Deck({ title = 'Create', deckId }: Props) {
   };
 
   const submitHandler = async (event: React.FormEvent) => {
+    console.log(deckFile);
+    console.log(enteredDeckFileIsValid);
+    console.log(enteredDeckFileTouched);
+
     event.preventDefault();
 
     setEnteredDeckNameTouched(true);
@@ -240,8 +243,11 @@ function Deck({ title = 'Create', deckId }: Props) {
           headers: { 'Content-Type': 'multipart/form-data' },
         });
       }
-      // setMsg('Deck successfully created!!');
-      enqueueSnackbar('Deck successfully created!!', {
+      let msg = 'Deck successfully created';
+      if (deckId) {
+        msg = 'Deck successfully updated';
+      }
+      enqueueSnackbar(msg, {
         variant: 'success',
         autoHideDuration: 3000,
         anchorOrigin: {
@@ -288,7 +294,7 @@ function Deck({ title = 'Create', deckId }: Props) {
         className="mt-12 max-w-none"
         action="submit"
       >
-        <div className="w-full my-12 grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-7 max-h-fit justify-center">
+        <div className="w-full my-12 grid grid-cols-1 md:flex md:justify-between md:content-center xl:grid-cols-3 gap-7 max-h-fit justify-center">
           <div className="flex justify-center md:justify-start gap-6">
             <Button
               icon={<Logo color="white" />}
@@ -307,7 +313,7 @@ function Deck({ title = 'Create', deckId }: Props) {
             text={title}
             backgroundColor="#F1511B"
             textColor="#ffffff"
-            className="justify-self-end max-w-min"
+            className="xl:justify-self-end justify-self-center max-w-min"
           />
         </div>
         <div className="w-full grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-7 max-h-fit justify-center">
@@ -377,7 +383,6 @@ function Deck({ title = 'Create', deckId }: Props) {
         </div>
         <div className="w-full grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-7 max-h-fit justify-center mt-6">
           <Input
-            required
             style="upload"
             placeholder="upload"
             label={uploadInputFileLabel}
@@ -418,7 +423,7 @@ function Deck({ title = 'Create', deckId }: Props) {
         </div>
       </div>
       <DeckPreview
-        type="deckUserPreview"
+        type="deckCreationPreview"
         onClose={handleOnClosePitchDeckSlidePreview}
         visible={previewPickDeckSlide}
         pageNumber={pageNumber}

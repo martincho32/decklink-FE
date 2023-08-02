@@ -101,8 +101,6 @@
   border-radius: 12px;
 }
 
-
-
 :root {
   --primary-color: #f1511b;
   --white-color: #ffffff;
@@ -296,6 +294,27 @@ form {
 }
 
 @media (max-width: 768px) {
+  /* Main background color of the scrollbar */
+  ::-webkit-scrollbar {
+    width: 0.25rem; /* Width of the scrollbar */
+    height: 0.25rem; /* Width of the scrollbar */
+  }
+
+  /* Main front rectangle with color F1511B */
+  ::-webkit-scrollbar-thumb {
+    width: 0.25rem; /* Width of the scrollbar */
+    height: 0.25rem; /* Width of the scrollbar */
+    background-color: #f1511b;
+    border-radius: 12px; /* Height of the front rectangle */
+  }
+
+  /* Track (the area behind the scrollbar thumb) */
+  ::-webkit-scrollbar-track {
+    width: 0.25rem; /* Width of the scrollbar */
+    height: 0.25rem; /* Width of the scrollbar */
+    background-color: rgba(22, 26, 32, 0.2);
+    border-radius: 6px;
+  }
 }
 
 @media (max-width: 576px) {
