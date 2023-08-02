@@ -33,6 +33,8 @@ export interface Props {
 function Deck({ title = 'Create', deckId }: Props) {
   /** File Library */
   const [deckFile, setDeckFile] = useState<PDFFile>(null);
+  const [enteredDeckFileTouched, setEnteredDeckFileTouched] =
+    useState<boolean>(false);
   const [numPages, setNumPages] = useState<number>();
   const [pageNumber, setPageNumber] = useState(1);
   const [previewPickDeckSlide, setPreviewPickDeckSlide] = useState(false);
@@ -57,6 +59,7 @@ function Deck({ title = 'Create', deckId }: Props) {
         setDeckFile(null); // Reset the selected file
         setUploadInputFileLabel('Upload File (.pdf)'); // Reset the label to the default state
       } else {
+        setEnteredDeckFileTouched(true);
         setDeckFile(selectedFile);
         setUploadInputFileLabel('Change File (.pdf)');
       }
@@ -89,7 +92,9 @@ function Deck({ title = 'Create', deckId }: Props) {
     deckPassword?.length >= 6 && deckPassword?.length <= 35;
   const enteredDeckNameIsValid = deckName.trim() !== '' && deckName.length >= 3;
   const enteredDeckLinkIsValid = deckLink.trim() !== '' && deckLink.length >= 3;
-  // const enteredDeckFileIsValid = deckLink.trim() !== '' && deckLink.length >= 3;
+  const enteredDeckFileIsValid =
+    deckFile !== null &&
+    (typeof deckFile === 'string' || deckFile.type === 'application/pdf');
 
   const passwordInputIsInvalid =
     !enteredPasswordIsValid && enteredPasswordTouched;
@@ -97,8 +102,8 @@ function Deck({ title = 'Create', deckId }: Props) {
     !enteredDeckNameIsValid && enteredDeckNameTouched;
   const deckLinkInputIsInvalid =
     !enteredDeckLinkIsValid && enteredDeckLinkTouched;
-  // const deckFileInputIsInvalid =
-  //   !enteredDeckFileIsValid && enteredDeckLinkTouched;
+  const deckFileInputIsInvalid =
+    !enteredDeckFileIsValid && enteredDeckFileTouched;
 
   const onClickGoBack = () => {
     navigate('/founder/decks');
@@ -123,8 +128,14 @@ function Deck({ title = 'Create', deckId }: Props) {
   const deckNameBlur = () => {
     setEnteredDeckNameTouched(true);
   };
+
   const deckLinkBlur = () => {
     setEnteredDeckLinkTouched(true);
+  };
+
+  const deckFileBlur = () => {
+    console.log('onBlure');
+    setEnteredDeckFileTouched(true);
   };
 
   const handlePasswordChange = (value: string) => {
@@ -165,7 +176,36 @@ function Deck({ title = 'Create', deckId }: Props) {
   };
 
   const submitHandler = async (event: React.FormEvent) => {
+    console.log(deckFile);
+    console.log(enteredDeckFileIsValid);
+    console.log(enteredDeckFileTouched);
+
     event.preventDefault();
+
+    setEnteredDeckNameTouched(true);
+    setEnteredDeckLinkTouched(true);
+    setEnteredPasswordTouched(true);
+    setEnteredDeckFileTouched(true);
+
+    if (passToogleChecked) {
+      if (
+        !enteredDeckNameIsValid ||
+        !enteredDeckLinkIsValid ||
+        !enteredPasswordIsValid ||
+        !enteredDeckFileIsValid
+      ) {
+        return;
+      }
+    }
+
+    if (
+      !enteredDeckNameIsValid ||
+      !enteredDeckLinkIsValid ||
+      !enteredDeckFileIsValid
+    ) {
+      return;
+    }
+
     // setDeckLink();
     try {
       // TODO integrate this, for having dile upload progress bar
@@ -203,8 +243,11 @@ function Deck({ title = 'Create', deckId }: Props) {
           headers: { 'Content-Type': 'multipart/form-data' },
         });
       }
-      // setMsg('Deck successfully created!!');
-      enqueueSnackbar('Deck successfully created!!', {
+      let msg = 'Deck successfully created';
+      if (deckId) {
+        msg = 'Deck successfully updated';
+      }
+      enqueueSnackbar(msg, {
         variant: 'success',
         autoHideDuration: 3000,
         anchorOrigin: {
@@ -213,8 +256,14 @@ function Deck({ title = 'Create', deckId }: Props) {
         },
       });
       navigate('/founder/decks');
+
+      setDeckName('');
+      setEnteredDeckNameTouched(false);
+      setDeckLink('');
+      setEnteredDeckLinkTouched(false);
+      setDeckPassword('');
+      setEnteredPasswordTouched(false);
     } catch (error: any) {
-      // TODO handle error here
       console.error('Error:', error);
       handleError(error);
     }
@@ -245,7 +294,7 @@ function Deck({ title = 'Create', deckId }: Props) {
         className="mt-12 max-w-none"
         action="submit"
       >
-        <div className="w-full my-12 grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-7 max-h-fit justify-center">
+        <div className="w-full my-12 grid grid-cols-1 md:flex md:justify-between md:content-center xl:grid-cols-3 gap-7 max-h-fit justify-center">
           <div className="flex justify-center md:justify-start gap-6">
             <Button
               icon={<Logo color="white" />}
@@ -261,13 +310,16 @@ function Deck({ title = 'Create', deckId }: Props) {
           <Button
             icon={<Logo color="white" />}
             type="submit"
-            className="bg-persimmon text-white px-5 grow col-start-3 col-end-3 h-auto"
             text={title}
+            backgroundColor="#F1511B"
+            textColor="#ffffff"
+            className="xl:justify-self-end justify-self-center max-w-min"
           />
         </div>
         <div className="w-full grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-7 max-h-fit justify-center">
           <div className="">
             <Input
+              required
               style="default"
               type="text"
               placeholder="Pitch Deck"
@@ -282,6 +334,7 @@ function Deck({ title = 'Create', deckId }: Props) {
           </div>
           <div className="">
             <Input
+              required
               style="prefilled"
               type="text"
               placeholder="decklink/example/decklink.com"
@@ -314,6 +367,7 @@ function Deck({ title = 'Create', deckId }: Props) {
           </div>
           <div className={passToogleChecked ? '' : 'hidden'}>
             <Input
+              required
               disabled={!passToogleChecked}
               style="password"
               placeholder="******"
@@ -333,9 +387,10 @@ function Deck({ title = 'Create', deckId }: Props) {
             placeholder="upload"
             label={uploadInputFileLabel}
             id="deck-upload"
-            inputIsInvalid={passwordInputIsInvalid}
-            errorMessage="Something went wrong with file."
+            inputIsInvalid={deckFileInputIsInvalid}
+            errorMessage="You need to add a PDF file"
             onChange={onFileChange}
+            onBlur={deckFileBlur}
           />
         </div>
       </form>
@@ -368,7 +423,7 @@ function Deck({ title = 'Create', deckId }: Props) {
         </div>
       </div>
       <DeckPreview
-        type="deckUserPreview"
+        type="deckCreationPreview"
         onClose={handleOnClosePitchDeckSlidePreview}
         visible={previewPickDeckSlide}
         pageNumber={pageNumber}

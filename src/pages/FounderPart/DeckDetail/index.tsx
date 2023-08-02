@@ -62,7 +62,7 @@ function DeclkDetail() {
     <MainLayout>
       {/* Here put the top page actions new component (not yet created) */}
 
-      <div className="w-full my-12 grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-7 max-h-fit justify-center">
+      <div className="w-full my-12 grid grid-cols-1 md:flex md:justify-between md:content-center xl:grid-cols-3 gap-7 max-h-fit justify-center">
         <div className="flex justify-center md:justify-start gap-6">
           <Button
             icon={<Logo color="white" />}

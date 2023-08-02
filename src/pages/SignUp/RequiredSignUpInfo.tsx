@@ -93,6 +93,7 @@ function RequiredSignUpInfo({
     <>
       <div className={emailInputClasses}>
         <Input
+          required
           style="default"
           type="email"
           placeholder="example@gmail.com"
@@ -107,6 +108,7 @@ function RequiredSignUpInfo({
       </div>
       <div className={firstNameInputClasses}>
         <Input
+          required
           style="default"
           type="text"
           placeholder="Jhon"
@@ -121,6 +123,7 @@ function RequiredSignUpInfo({
       </div>
       <div className={lastNameInputClasses}>
         <Input
+          required
           style="default"
           type="text"
           placeholder="Kullo"
@@ -135,6 +138,7 @@ function RequiredSignUpInfo({
       </div>
       <div className={passwordInputClasses}>
         <Input
+          required
           style="password"
           placeholder="******"
           label="Password"
@@ -148,6 +152,7 @@ function RequiredSignUpInfo({
       </div>
       <div className={repeatPasswordInputClasses}>
         <Input
+          required
           style="password"
           placeholder="******"
           label="Repeat Your Password"

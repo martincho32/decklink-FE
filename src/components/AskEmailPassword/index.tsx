@@ -108,6 +108,7 @@ function AskEmailPassword({
 
             <div className={emailInputClasses}>
               <Input
+                required
                 labelColor={{ color: '#fff' }}
                 style="default"
                 type="email"
@@ -125,6 +126,7 @@ function AskEmailPassword({
             {showPasswordInput ? (
               <div className={passwordInputClasses}>
                 <Input
+                  required
                   labelColor={{ color: '#fff' }}
                   style="password"
                   placeholder="******"

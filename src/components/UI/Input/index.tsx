@@ -6,6 +6,7 @@ import showInputText from '../../../assets/images/ShowInput.png';
 import uploadFileIcon from '../../../assets/images/ArrowTopRight.svg';
 
 export interface InputProps {
+  required?: boolean;
   labelColor?: React.CSSProperties;
   type?: string;
   style: 'password' | 'toggle' | 'upload' | 'default' | 'prefilled';
@@ -23,6 +24,7 @@ export interface InputProps {
 }
 
 function Input({
+  required = false,
   labelColor,
   style,
   type,
@@ -106,6 +108,7 @@ function Input({
           </label>
           <div className={styles.defaultInputContainer}>
             <input
+              required={required}
               disabled={disabled}
               id={id}
               type={showPassword ? 'text' : 'password'}
@@ -143,6 +146,7 @@ function Input({
             }`}
           >
             <input
+              required={required}
               disabled={disabled}
               id={id}
               type="checkbox"
@@ -169,6 +173,7 @@ function Input({
               {label} <img src={uploadFileIcon} alt="" />
               <div className={styles.uploadInput}>
                 <input
+                  required={required}
                   disabled={disabled}
                   id={id}
                   type="file"
@@ -192,6 +197,7 @@ function Input({
             {label}
           </label>
           <input
+            required={required}
             disabled={disabled}
             type={type}
             id={id}
@@ -226,6 +232,7 @@ function Input({
               decklink.com/
             </label>
             <input
+              required={required}
               disabled={disabled}
               type={type}
               id={id}
@@ -249,6 +256,7 @@ function Input({
             {label}
           </label>
           <input
+            required={required}
             disabled={disabled}
             type={type}
             id={id}

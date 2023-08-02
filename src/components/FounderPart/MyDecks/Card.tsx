@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useSnackbar } from 'notistack';
 import { Page, Document } from 'react-pdf'; /** File library */
 import { Link } from 'react-router-dom';
 import { Button } from '../..';
@@ -29,10 +30,38 @@ interface Props {
 }
 
 function Card({ deck, handleClickDelete }: Props) {
+  const { enqueueSnackbar } = useSnackbar();
+
   const [loading, setLoading] = useState<boolean>(true);
 
   const onDocumentLoadSuccess = () => {
     setLoading(false);
+  };
+
+  const handleCopyClick = () => {
+    // Create a temporary input element
+    const tempInput = document.createElement('input');
+    tempInput.value = 'decklink.com/'.concat(deck.customDeckLink);
+    document.body.appendChild(tempInput);
+
+    // Select the text inside the input element
+    tempInput.select();
+    tempInput.setSelectionRange(0, 99999); // For mobile devices
+
+    // Copy the text to the clipboard
+    document.execCommand('copy');
+
+    // Remove the temporary input element
+    document.body.removeChild(tempInput);
+
+    enqueueSnackbar('You copied link', {
+      variant: 'success',
+      autoHideDuration: 1000,
+      anchorOrigin: {
+        vertical: 'top',
+        horizontal: 'right',
+      },
+    });
   };
 
   const handleLoadError = (error: any) => {
@@ -43,19 +72,25 @@ function Card({ deck, handleClickDelete }: Props) {
   return (
     <div className={styles.deckBlock}>
       {/* Conditionally render the loading image while PDF is loading */}
-      {loading && (
+      {/* {loading && (
         <img
           className={styles.dummyPreviewImage}
           src={loadingImage}
           alt="Loading"
         />
-      )}
+      )} */}
 
       <Document
         file={deck.deckUrl}
         onLoadSuccess={onDocumentLoadSuccess}
         onLoadError={handleLoadError}
-        noData={<img src={loadingImage} alt="Loading" />}
+        noData={
+          <img
+            className={styles.dummyPreviewImage}
+            src={loadingImage}
+            alt="Loading"
+          />
+        }
         loading=""
       >
         {/* Only render the <Page> component when the PDF is loaded */}
@@ -70,19 +105,20 @@ function Card({ deck, handleClickDelete }: Props) {
       </Document>
 
       <div className={styles.deckMainContentWrapper}>
-        <div className={styles.deckFirstRow}>
-          <div className={styles.deckTitleWrapper}>
-            <h3 className={styles.deckTitle}>{deck.name}</h3>
-            {/* <p className={styles.subtitle}>Published</p> */}
-          </div>
-          <Button
-            type="button"
-            text="Copy Link"
-            icon={<Logo color="#161A20" />}
-            textColor="#161A20"
-          />
-        </div>
         <div className={styles.deckMainInfoAndButtons}>
+          <div className={styles.deckFirstRow}>
+            <div className={styles.deckTitleWrapper}>
+              <h3 className={styles.deckTitle}>{deck.name}</h3>
+              {/* <p className={styles.subtitle}>Published</p> */}
+            </div>
+            <Button
+              type="button"
+              text="Copy Link"
+              icon={<Logo color="#161A20" />}
+              textColor="#161A20"
+              onClick={handleCopyClick}
+            />
+          </div>
           <div className={styles.deckMainInfo}>
             <div className={styles.deckMainInfoItem}>
               <div className={styles.deckTitleAndIcon}>
@@ -120,6 +156,7 @@ function Card({ deck, handleClickDelete }: Props) {
               icon={<img src={whiteTopRightArrow} alt="Arrow" />}
               backgroundColor="#F1511B"
               textColor="#FFF"
+              className="w-full"
             />
           </Link>
           <div className={styles.secondaryButtonsWrapper}>
@@ -133,6 +170,7 @@ function Card({ deck, handleClickDelete }: Props) {
                 icon={<img src={orangeTopRightArrow} alt="Arrow" />}
                 borderColor="#F1511B"
                 textColor="#F1511B"
+                className="w-full"
               />
             </Link>
             <AlertDialog>
