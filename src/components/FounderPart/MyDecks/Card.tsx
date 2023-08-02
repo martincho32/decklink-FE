@@ -61,19 +61,25 @@ function Card({ deck, handleClickDelete }: Props) {
   return (
     <div className={styles.deckBlock}>
       {/* Conditionally render the loading image while PDF is loading */}
-      {loading && (
+      {/* {loading && (
         <img
           className={styles.dummyPreviewImage}
           src={loadingImage}
           alt="Loading"
         />
-      )}
+      )} */}
 
       <Document
         file={deck.deckUrl}
         onLoadSuccess={onDocumentLoadSuccess}
         onLoadError={handleLoadError}
-        noData={<img src={loadingImage} alt="Loading" />}
+        noData={
+          <img
+            className={styles.dummyPreviewImage}
+            src={loadingImage}
+            alt="Loading"
+          />
+        }
         loading=""
       >
         {/* Only render the <Page> component when the PDF is loaded */}

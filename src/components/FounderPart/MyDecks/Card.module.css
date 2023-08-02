@@ -10,7 +10,7 @@
   width: 100%!important;
   height: auto!important;
   max-height: 9.5rem!important;
-  object-fit: contain!important;
+  object-fit: cover!important;
   border-top-left-radius: 5px !important;
   border-top-right-radius: 5px !important;
 }

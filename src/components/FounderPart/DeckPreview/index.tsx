@@ -39,6 +39,20 @@ function DeckPreview({
     console.log('testing save');
   };
 
+  const onPrev = () => {
+    if (pageNumber === 1) {
+      return;
+    }
+    setPageNumber(pageNumber - 1);
+  };
+
+  const onNext = () => {
+    if (pageNumber === numPages) {
+      return;
+    }
+    setPageNumber(pageNumber + 1);
+  };
+
   if (!visible) return null;
 
   if (type === 'deckCreationPreview') {
@@ -57,12 +71,44 @@ function DeckPreview({
           noData={<h4 className="">No file selected</h4>}
           className="document h-screen p-4 bg-mirage rounded-lg"
         >
-          <Page
-            renderTextLayer={false}
-            renderAnnotationLayer={false}
-            className="pageWrapper"
-            pageNumber={pageNumber}
-          />
+          <div className="flex gap-4 justify-center">
+            {pageNumber === 1 ? (
+              <Button
+                type="button"
+                icon={<Logo color="#f1511b2e" topLeft />}
+                onClick={onPrev}
+              />
+            ) : (
+              <Button
+                type="button"
+                icon={<Logo color="#F1511B" topLeft />}
+                onClick={onPrev}
+              />
+            )}
+
+            <Page
+              renderTextLayer={false}
+              renderAnnotationLayer={false}
+              className="pageWrapper"
+              pageNumber={pageNumber}
+            />
+
+            {pageNumber === numPages ? (
+              <Button
+                type="button"
+                icon={<Logo color="#f1511b2e" />}
+                className="max-h-min"
+                onClick={onNext}
+              />
+            ) : (
+              <Button
+                type="button"
+                icon={<Logo color="#F1511B" />}
+                className="max-h-min"
+                onClick={onNext}
+              />
+            )}
+          </div>
           {/* Thumbnails */}
           <div className="previewPagesWrapper">
             {Array.from(new Array(numPages), (el, index) => (
@@ -81,12 +127,12 @@ function DeckPreview({
         </Document>
 
         <button
-          className="buttonClose fixed top-12 right-12 p-2 bg-persimmon rounded-md"
+          className="buttonClose w-8 h-8 fixed top-8 right-8 p-2 bg-persimmon rounded-md"
           onClick={onClose}
           type="button"
         >
           {/* <img className="buttonCloseIcon w-4 h-4" src={iconTopRight} alt="" /> */}
-          <CloseIcon color="#FFFFFF" />
+          <CloseIcon width="16" height="16" color="#FFFFFF" />
         </button>
       </div>
     );
@@ -112,7 +158,7 @@ function DeckPreview({
         role="button"
         tabIndex={0}
         onClick={handleOnClose}
-        className="fixedContainer fixed overflow-y-scroll h-screen inset-0 bg-black bg-opacity-80 backdrop-blur-sm p-4"
+        className="fixedContainer fixed overflow-y-scroll h-screen inset-0 bg-black bg-opacity-80 backdrop-blur-sm"
       >
         <button
           type="button"
@@ -177,30 +223,23 @@ function DeckPreview({
           </div>
         </Document>
 
-        {/* <Button
-          icon={<Logo color="white" />}
-          type="submit"
-          className="bg-persimmon text-white h-auto fixed bottom-12 right-auto left-auto"
-          text="Save This Deck"
-        /> */}
-
         <Button
           type="button"
           text="Save This Deck"
           icon={<Logo color="white" />}
-          className="bg-persimmon text-white fixed bottom-12 left-1/2 -translate-x-1/2"
+          className="bg-persimmon text-white fixed bottom-4 left-1/2 -translate-x-1/2"
           backgroundColor="#F1511B"
           textColor="#FFF"
           onClick={onSaveDeck}
         />
 
         <button
-          className="buttonClose fixed top-12 right-12 p-2 bg-persimmon rounded-md"
+          className="buttonClose fixed w-8 h-8 top-8 right-8 p-2 bg-persimmon rounded-md"
           onClick={onClose}
           type="button"
         >
           {/* <img className="buttonCloseIcon w-4 h-4" src={iconTopRight} alt="" /> */}
-          <CloseIcon color="#FFFFFF" />
+          <CloseIcon width="16" height="16" color="#FFFFFF" />
         </button>
       </div>
     );
