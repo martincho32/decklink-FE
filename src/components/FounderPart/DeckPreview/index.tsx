@@ -114,7 +114,7 @@ function DeckPreview({
       tabIndex={0}
       onClick={handleOnClose}
       className={`fixedContainer fixed overflow-y-scroll h-screen inset-0 bg-black bg-opacity-80 backdrop-blur-sm ${
-        type === 'deckUserPreview' ? 'p-4' : ''
+        type === 'deckUserPreview' ? 'p-2' : ''
       }`}
     >
       <AskEmailPassword onSubmit={handleModalSubmit} />
@@ -131,7 +131,9 @@ function DeckPreview({
         >
           <div
             className={`flex gap-4 justify-center${
-              type === 'deckUserPreview' ? ' w-full h-auto' : ''
+              type === 'deckUserPreview'
+                ? ' max-w-full max-h-full w-auto h-auto'
+                : ''
             }`}
           >
             <Button
