@@ -39,29 +39,6 @@ function Card({ deck, handleClickDelete }: Props) {
   };
 
   const handleCopyClick = () => {
-    // // Create a temporary input element
-    // const tempInput = document.createElement('input');
-    // tempInput.value = 'decklink.com/'.concat(deck.customDeckLink);
-    // document.body.appendChild(tempInput);
-
-    // // Select the text inside the input element
-    // tempInput.select();
-    // tempInput.setSelectionRange(0, 99999); // For mobile devices
-
-    // // Copy the text to the clipboard
-    // document.execCommand('copy');
-
-    // // Remove the temporary input element
-    // document.body.removeChild(tempInput);
-
-    // enqueueSnackbar('You copied link', {
-    //   variant: 'success',
-    //   autoHideDuration: 1000,
-    //   anchorOrigin: {
-    //     vertical: 'top',
-    //     horizontal: 'right',
-    //   },
-    // });
     navigator.clipboard.writeText(`decklink.com/${deck?.customDeckLink}`).then(
       () => {
         /* Resolved - text copied to clipboard successfully */
