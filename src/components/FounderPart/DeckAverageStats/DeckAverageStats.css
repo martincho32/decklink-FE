@@ -1,0 +1,33 @@
+.averageStatsPreview {
+  width: 100%!important;
+}
+
+.averageStatsPreview canvas {
+  width: 15rem!important;
+  height: auto!important;
+}
+
+@media (max-width: 1536px) {
+}
+
+@media (max-width: 1280px) {
+
+}
+
+@media (max-width: 1024px) {
+
+}
+
+@media (max-width: 768px) {
+
+}
+
+@media (max-width: 576px) {
+  .averageStatsPreview canvas {
+    width: 10rem!important;
+    height: auto!important;
+  }
+}
+
+@media (max-width: 320px) {
+}

@@ -1,4 +1,3 @@
-import { Document, Page, pdfjs } from 'react-pdf';
 import { AccordionTopContent, LineChart } from '../..';
 import { IDeck, IDeckSlidesStats, IDeckView } from '../../../types';
 import {
@@ -8,16 +7,6 @@ import {
   AccordionTrigger,
 } from '@/components/UI/Accordion';
 import DeckThumbnail from '../DeckThumbnail';
-
-pdfjs.GlobalWorkerOptions.workerSrc = new URL(
-  'pdfjs-dist/build/pdf.worker.min.js',
-  import.meta.url
-).toString();
-
-const options = {
-  cMapUrl: 'cmaps/',
-  standardFontDataUrl: 'standard_fonts/',
-};
 
 interface Props {
   deck: Partial<IDeck> | null;
@@ -61,35 +50,14 @@ function DeckIndividualStats({ deck, deckViews }: Props) {
                   />
                 </AccordionTrigger>
                 <AccordionContent>
-                  <div className="mb-16 w-full overflow-x-auto">
-                    <div className="min-w-min">
-                      <LineChart
-                        labels={labels as string[] | undefined}
-                        data={view.deckSlidesStats.map(
-                          (slide) => slide.viewingTime / 1000
-                        )}
-                        deck={deck}
-                      />
-                      <Document
-                        file={deck?.deckUrl}
-                        // onLoadSuccess={onDocumentLoadSuccess}
-                        options={options}
-                        noData={<DeckThumbnail deck={deck} />}
-                        className="averageStatsPreview w-full"
-                      >
-                        <div className="flex gap-2 overflow-hidden my-6 p-2 w-full">
-                          {Array.from(new Array(deck?.slides), (_el, index) => (
-                            <Page
-                              renderTextLayer={false}
-                              renderAnnotationLayer={false}
-                              key={`page_${index + 1}`}
-                              pageNumber={index + 1}
-                            />
-                          ))}
-                        </div>
-                      </Document>
-                    </div>
-                  </div>
+                  <LineChart
+                    labels={labels as string[] | undefined}
+                    data={view.deckSlidesStats.map(
+                      (slide) => slide.viewingTime / 1000
+                    )}
+                    deck={deck}
+                  />
+                  <DeckThumbnail deck={deck} />
                 </AccordionContent>
               </AccordionItem>
             </Accordion>
