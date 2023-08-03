@@ -21,6 +21,15 @@ export const createDeck = (
   return api.post(resource, deck, config);
 };
 
+export const validateDeck = (
+  deck: Partial<IDeck>,
+  config: AxiosRequestConfig<any> | undefined = undefined
+): Promise<{
+  data: { isValid: boolean };
+}> => {
+  return api.post(`${resource}/validate`, deck, config);
+};
+
 export const editDeck = (
   deck,
   id,
@@ -29,7 +38,10 @@ export const editDeck = (
   return api.patch(`${resource}/${id}`, deck, config);
 };
 
-export const getDeckByCustomLink = (customLink: string) =>
-  api.get(`${resource}/custom/${customLink}`);
+export const getDeckByCustomLink = (
+  customLink: string
+): Promise<{
+  data: IDeck;
+}> => api.get(`${resource}/custom/${customLink}`);
 
 export const deleteDeck = (deckId) => api.delete(`${resource}/${deckId}`);
