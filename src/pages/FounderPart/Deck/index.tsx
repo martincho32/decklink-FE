@@ -163,7 +163,7 @@ function Deck({ title = 'Create', deckId }: Props) {
         },
       });
     } else {
-      errorMessage += error.message;
+      errorMessage += error.message ?? error;
       enqueueSnackbar(errorMessage + contactSupportMessage, {
         variant: 'error',
         autoHideDuration: 10000,
@@ -176,10 +176,6 @@ function Deck({ title = 'Create', deckId }: Props) {
   };
 
   const submitHandler = async (event: React.FormEvent) => {
-    console.log(deckFile);
-    console.log(enteredDeckFileIsValid);
-    console.log(enteredDeckFileTouched);
-
     event.preventDefault();
 
     setEnteredDeckNameTouched(true);
@@ -194,6 +190,7 @@ function Deck({ title = 'Create', deckId }: Props) {
         !enteredPasswordIsValid ||
         !enteredDeckFileIsValid
       ) {
+        handleError('Some of the fields is not valid');
         return;
       }
     }
@@ -203,6 +200,7 @@ function Deck({ title = 'Create', deckId }: Props) {
       !enteredDeckLinkIsValid ||
       !enteredDeckFileIsValid
     ) {
+      handleError('Some of the fields is not valid');
       return;
     }
 

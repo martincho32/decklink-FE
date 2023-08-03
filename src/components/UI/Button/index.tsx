@@ -11,6 +11,7 @@ export interface ButtonProps {
   textColor?: string;
   onClick?: React.MouseEventHandler<HTMLButtonElement>;
   className?: string;
+  disabled?: boolean;
 }
 
 function Button({
@@ -22,6 +23,7 @@ function Button({
   textColor,
   onClick,
   className,
+  disabled,
 }: ButtonProps) {
   let buttonStyles = styles.button;
 
@@ -43,6 +45,7 @@ function Button({
       className={`${buttonStyles} ${className}`}
       style={{ backgroundColor, borderColor, color: textColor }}
       onClick={onClick || undefined}
+      disabled={disabled}
     >
       {text}
       {icon && <span className={styles.icon}>{icon}</span>}
