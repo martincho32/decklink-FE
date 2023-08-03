@@ -40,7 +40,7 @@ function DeclkDetail() {
   };
 
   const onClickCopyDeckLink = () => {
-    navigator.clipboard.writeText(deck?.customDeckLink as string).then(
+    navigator.clipboard.writeText(`decklink.com/${deck?.customDeckLink}`).then(
       () => {
         /* Resolved - text copied to clipboard successfully */
         enqueueSnackbar('Url successfully copied!!', {
