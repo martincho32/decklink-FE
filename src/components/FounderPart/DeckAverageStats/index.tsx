@@ -93,6 +93,7 @@ function DeckAverageStats({ deck, deckViews }: Props) {
                   renderAnnotationLayer={false}
                   key={`page_${index + 1}`}
                   pageNumber={index + 1}
+                  className="slidesPreview"
                 />
               ))}
             </div>

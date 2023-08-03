@@ -8,6 +8,7 @@ import {
   AccordionTrigger,
 } from '@/components/UI/Accordion';
 import DeckThumbnail from '../DeckThumbnail';
+import './DeckIndividualStats.css';
 
 pdfjs.GlobalWorkerOptions.workerSrc = new URL(
   'pdfjs-dist/build/pdf.worker.min.js',
@@ -84,6 +85,7 @@ function DeckIndividualStats({ deck, deckViews }: Props) {
                               renderAnnotationLayer={false}
                               key={`page_${index + 1}`}
                               pageNumber={index + 1}
+                              className="previewSlides"
                             />
                           ))}
                         </div>
