@@ -6,3 +6,4 @@ export { default as MyDecks } from './FounderPart/MyDecks';
 export { default as DeckCreation } from './FounderPart/DeckCreation';
 export { default as DeckEdit } from './FounderPart/DeckEdit';
 export { default as DeckDetail } from './FounderPart/DeckDetail';
+export { default as Presentation } from './Presentation';
