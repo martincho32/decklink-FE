@@ -43,7 +43,7 @@ function DeclkDetail() {
     navigator.clipboard.writeText(deck?.customDeckLink as string).then(
       () => {
         /* Resolved - text copied to clipboard successfully */
-        enqueueSnackbar('Url successfully copied!!', {
+        enqueueSnackbar('You copied link', {
           variant: 'success',
           autoHideDuration: 2000,
           anchorOrigin: {
@@ -62,7 +62,7 @@ function DeclkDetail() {
     <MainLayout>
       {/* Here put the top page actions new component (not yet created) */}
 
-      <div className="w-full my-12 grid grid-cols-1 md:flex md:justify-between md:content-center xl:grid-cols-3 gap-7 max-h-fit justify-center">
+      <div className="w-full justify-items-center	 items-center my-12 grid grid-cols-1 md:flex md:justify-between md:content-center xl:grid-cols-3 gap-7 max-h-fit justify-center">
         <div className="flex justify-center md:justify-start gap-6">
           <Button
             icon={<Logo color="white" />}
@@ -74,13 +74,13 @@ function DeclkDetail() {
             Go Back
           </span>
         </div>
-        <h1 className="text-2xl leading-normal">
-          <span className="text-persimmon">{deck?.name}</span> Detailed
-          Information
+        <h1 className="text-2xl leading-normal text-center">
+          <span className="text-persimmon text-center">{deck?.name} </span>
+          Detailed Information
         </h1>
         <Button
           type="button"
-          text="Copy Deck Link"
+          text="Copy Link"
           icon={<Logo />}
           textColor="#F1511B"
           onClick={onClickCopyDeckLink}
@@ -90,9 +90,9 @@ function DeclkDetail() {
       <DeckAverageStats deckViews={deckViews} deck={deck} />
       {/* One component for individual deck viewing statistics */}
       <div className="flex flex-col items-center">
-        <h3 className="text-2xl leading-normal">
-          <span className="text-persimmon">{deck?.name}</span> Detailed
-          Information
+        <h3 className="text-2xl leading-normal text-center">
+          <span className="text-persimmon text-center">{deck?.name} </span>
+          Detailed Information
         </h3>
         <span className="text-mirage">For each view</span>
       </div>
