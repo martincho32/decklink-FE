@@ -2,6 +2,7 @@
 /* eslint-disable prefer-template */
 /* eslint-disable object-shorthand */
 /* eslint-disable func-names */
+import { useMediaQuery } from 'react-responsive';
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -148,8 +149,27 @@ export default function LineChart({ deck, labels, data }: Props) {
   //     tooltip.options.padding + 'px ' + tooltip.options.padding + 'px';
   // };
 
+  const isMobile = useMediaQuery({ maxWidth: 576 });
+
+  const widthNumberDesktop = deck && deck.slides && deck.slides * 15 - 5;
+  const widthNumberMobile = deck && deck.slides && deck.slides * 10;
+
+  const widthStringDesktop = `${widthNumberDesktop}rem`;
+  const widthStringMobile = `${widthNumberMobile}rem`;
+
+  const desktopStyle = {
+    width: widthStringDesktop,
+    height: '12rem',
+    display: 'flex',
+  };
+  const mobileStyle = {
+    width: widthStringMobile,
+    height: '12rem',
+    display: 'flex',
+  };
+
   return (
-    <div>
+    <div className="chartWrapper" style={isMobile ? mobileStyle : desktopStyle}>
       <Line
         options={{
           responsive: true,
@@ -163,6 +183,7 @@ export default function LineChart({ deck, labels, data }: Props) {
               // external: externalTooltipHandler,
             },
           },
+          maintainAspectRatio: false,
         }}
         data={{
           labels: labels,
