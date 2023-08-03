@@ -146,7 +146,7 @@ function Deck({ title = 'Create', deckId }: Props) {
     setEnteredPasswordTouched(true);
   };
 
-  const handleError = (error: any) => {
+  const handleError = (error: Error | string) => {
     let errorMessage: string = 'Whoops! Something went wrong. Error: ';
     const contactSupportMessage = ' Please contact support.';
     if (axios.isAxiosError(error)) {
@@ -163,7 +163,7 @@ function Deck({ title = 'Create', deckId }: Props) {
         },
       });
     } else {
-      errorMessage += error.message ?? error;
+      errorMessage += (error as Error).message ?? error;
       enqueueSnackbar(errorMessage + contactSupportMessage, {
         variant: 'error',
         autoHideDuration: 10000,
@@ -420,18 +420,20 @@ function Deck({ title = 'Create', deckId }: Props) {
           </div>
         </div>
       </div>
-      <DeckPreview
-        type="deckCreationPreview"
-        onClose={handleOnClosePitchDeckSlidePreview}
-        visible={previewPickDeckSlide}
-        pageNumber={pageNumber}
-        file={deckFile}
-        onDocumentLoadSuccess={onDocumentLoadSuccess}
-        options={options}
-        numPages={numPages}
-        setPreviewPickDeckSlide={setPreviewPickDeckSlide}
-        setPageNumber={setPageNumber}
-      />
+      {previewPickDeckSlide && (
+        <DeckPreview
+          type="deckCreationPreview"
+          onClose={handleOnClosePitchDeckSlidePreview}
+          pageNumber={pageNumber}
+          file={deckFile}
+          onDocumentLoadSuccess={onDocumentLoadSuccess}
+          options={options}
+          numPages={numPages}
+          setPreviewPickDeckSlide={setPreviewPickDeckSlide}
+          setPageNumber={setPageNumber}
+          deckId={null}
+        />
+      )}
     </>
   );
 }
