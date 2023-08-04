@@ -1,5 +1,5 @@
 /* eslint-disable no-extra-boolean-cast */
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useSnackbar } from 'notistack';
 import { MainLayout, Button } from '../../../components';
@@ -9,8 +9,10 @@ import Card from '../../../components/FounderPart/MyDecks/Card';
 import EmptyState from '../../../components/ItemEmptyState';
 import { deckService } from '../../../services';
 import { IDeck } from '../../../types';
+import { AuthContext } from '@/context';
 
 function MyDecks() {
+  const { user } = useContext(AuthContext);
   const { enqueueSnackbar } = useSnackbar();
 
   const [deckList, setDeckList] = useState<IDeck[]>([]);
@@ -54,7 +56,9 @@ function MyDecks() {
       {!!deckList.length ? (
         <div className={styles.myDesksWrapper}>
           <div className={styles.pageNavigation}>
-            <h2 className={styles.title}>Hi! Here is your created decks</h2>
+            <h2 className={styles.title}>
+              Hi {user?.firstName}! Here is your created decks
+            </h2>
             <Link
               className={`${styles.link} hover:no-underline`}
               to="/founder/deck/create"

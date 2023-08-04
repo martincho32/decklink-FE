@@ -1,23 +1,19 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import styles from './AskEmailPassword.module.css';
 import Input from '../UI/Input';
 import Button from '../UI/Button';
 import whiteTopRightArrow from '../../assets/images/ArrowTopRight.svg';
+import { UIContext } from '@/context';
 
-// Props interface for the component
 export interface AskEmailPasswordProps {
-  show: boolean;
-  onClose: (event) => void;
+  // onClose: (event) => void;
   onSubmit: (email: string, password?: string) => void;
-  showPasswordInput?: boolean;
 }
 
-function AskEmailPassword({
-  show,
-  onClose,
-  onSubmit,
-  showPasswordInput = false,
-}: AskEmailPasswordProps) {
+function AskEmailPassword({ onSubmit }: AskEmailPasswordProps) {
+  const { isShowModal, hasEmailRequired, hasPasswordRequired } =
+    useContext(UIContext);
+
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
 
@@ -50,17 +46,27 @@ function AskEmailPassword({
     setEnteredPasswordTouched(true);
   };
 
+  const isFormInvalid = (): boolean => {
+    if (hasEmailRequired && hasPasswordRequired) {
+      return passwordInputIsInvalid || emailInputIsInvalid;
+    }
+    if (hasEmailRequired && !hasPasswordRequired) {
+      return emailInputIsInvalid;
+    }
+    return passwordInputIsInvalid;
+  };
+
   const handleFormSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    console.log('handleFormSubmit????');
 
     setEnteredEmailTouched(true);
     setEnteredPasswordTouched(true);
 
-    if (!enteredEmailIsValid || !enteredPasswordIsValid) {
-      return;
-    }
-
-    onSubmit(email, showPasswordInput ? password : '');
+    onSubmit(
+      hasEmailRequired ? email : '',
+      hasPasswordRequired ? password : ''
+    );
   };
 
   const emailInputClasses = emailInputIsInvalid
@@ -74,20 +80,20 @@ function AskEmailPassword({
   return (
     <div
       style={{
-        display: show ? 'block' : 'none',
+        display: isShowModal ? 'block' : 'none',
         overflowY: 'hidden',
       }}
     >
       <div
         role="button"
         tabIndex={0}
-        onClick={onClose}
+        // onClick={onClose}
         id="containerClose"
         className={styles.modal}
       >
         <div className={styles.modalContent}>
           <form onSubmit={handleFormSubmit}>
-            {showPasswordInput ? (
+            {hasPasswordRequired && hasEmailRequired && (
               <div className={styles.infoTextWrapper}>
                 <p className={styles.infoText}>
                   For this presentation, you need to enter your email and
@@ -98,32 +104,46 @@ function AskEmailPassword({
                   person who gave you the link to this presentation
                 </p>
               </div>
-            ) : (
+            )}
+            {hasEmailRequired && !hasPasswordRequired && (
               <div className={styles.infoTextWrapper}>
                 <p className={styles.infoText}>
                   For this presentation, you need to enter your email
                 </p>
               </div>
             )}
+            {hasPasswordRequired && !hasEmailRequired && (
+              <div className={styles.infoTextWrapper}>
+                <p className={styles.infoText}>
+                  For this presentation, you need to enter your password
+                </p>
+                <p className={styles.infoText}>
+                  If you do not know the password to the presentation - ask the
+                  person who gave you the link to this presentation
+                </p>
+              </div>
+            )}
 
-            <div className={emailInputClasses}>
-              <Input
-                required
-                labelColor={{ color: '#fff' }}
-                style="default"
-                type="email"
-                placeholder="example@gmail.com"
-                label="Your Email"
-                id="email"
-                value={email}
-                inputIsInvalid={emailInputIsInvalid}
-                errorMessage="Enter valid email"
-                onChange={handleEmailChange}
-                onBlur={emailInputBlur}
-                className="w-full"
-              />
-            </div>
-            {showPasswordInput ? (
+            {hasEmailRequired && (
+              <div className={emailInputClasses}>
+                <Input
+                  required
+                  labelColor={{ color: '#fff' }}
+                  style="default"
+                  type="email"
+                  placeholder="example@gmail.com"
+                  label="Your Email"
+                  id="email"
+                  value={email}
+                  inputIsInvalid={emailInputIsInvalid}
+                  errorMessage="Enter valid email"
+                  onChange={handleEmailChange}
+                  onBlur={emailInputBlur}
+                  className="w-full"
+                />
+              </div>
+            )}
+            {hasPasswordRequired && (
               <div className={passwordInputClasses}>
                 <Input
                   required
@@ -140,8 +160,9 @@ function AskEmailPassword({
                   className="w-full"
                 />
               </div>
-            ) : null}
+            )}
             <Button
+              disabled={isFormInvalid()}
               type="submit"
               text="Continue"
               icon={<img src={whiteTopRightArrow} alt="Arrow" />}

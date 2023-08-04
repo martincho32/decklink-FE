@@ -19,7 +19,7 @@ function SignUp() {
 
   const [page, setPage] = useState<number>(0);
 
-  const [loginError, setSignUpError] = useState<string | null>(null);
+  // const [loginError, setSignUpError] = useState<string | null>(null);
   const [enteredEmailTouched, setEnteredEmailTouched] =
     useState<boolean>(false);
   const [enteredFirstNameTouched, setEnteredFirstNameTouched] =
@@ -104,7 +104,9 @@ function SignUp() {
     const { hasError } = await registerUser(
       formData.email,
       formData.password,
-      formData.confirmPassword
+      formData.confirmPassword,
+      formData.firstName,
+      formData.lastName
     );
     if (hasError) {
       enqueueSnackbar('Something went wrong. Please contact support.', {
@@ -117,7 +119,7 @@ function SignUp() {
       });
       return;
     }
-    navigate('/login', { state: { isSignedUp: true } });
+    navigate('/founder/decks', { state: { isSignedUp: true } });
     enqueueSnackbar('Registration succesful!!!', {
       variant: 'success',
       autoHideDuration: 2000,

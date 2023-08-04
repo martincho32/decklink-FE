@@ -1,3 +1,4 @@
+import { AxiosRequestConfig } from 'axios';
 import { api } from '../adapters/api';
 import { IDeckView } from '../types';
 
@@ -8,3 +9,20 @@ export const getDeckViewByDeckId = (
 ): Promise<{
   data: IDeckView[];
 }> => api.get(`${resource}/${id}`).then((data) => data);
+
+export const createDeckView = (
+  deckView: Partial<IDeckView>,
+  config: AxiosRequestConfig<any> | undefined = undefined
+): Promise<{
+  data: IDeckView;
+}> => {
+  return api.post(resource, deckView, config);
+};
+
+export const editDeckView = (
+  deckView: Partial<IDeckView>,
+  id,
+  config: AxiosRequestConfig<any> | undefined = undefined
+) => {
+  return api.patch(`${resource}/${id}`, deckView, config);
+};

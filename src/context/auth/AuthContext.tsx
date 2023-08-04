@@ -3,13 +3,15 @@ import { IUser } from '../../types';
 
 interface ContextProps {
   isLoggedIn: boolean;
-  user?: IUser;
+  user?: Partial<IUser>;
 
   loginUser: (_email: string, password: string) => Promise<boolean>;
   registerUser: (
     _email: string,
     password: string,
-    cfpassword: string
+    cfpassword: string,
+    firstName: string,
+    lastName: string
   ) => Promise<{
     hasError: boolean;
     message?: string;
