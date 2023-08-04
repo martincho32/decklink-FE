@@ -13,7 +13,7 @@ const axiosApi = axios.create({
   },
 });
 
-const basePath = 'http://localhost:3000/api';
+const basePath = 'https://algebraic-hub-392717.uc.r.appspot.com/api';
 
 const api = {
   get: (endpoint: string) => axiosApi.get(`/${endpoint}`),
