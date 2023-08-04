@@ -30,6 +30,8 @@ function Presentation() {
   const [numPages, setNumPages] = useState<number>();
   const [pageNumber, setPageNumber] = useState(1);
   const [deckId, setDeckId] = useState<string | null>(null);
+  const [deckSlidesNumber, setDeckSlidesNumber] = useState<number | null>(null);
+  const [userId, setUserId] = useState<string | null>(null);
 
   const onDocumentLoadSuccess = ({
     numPages: nextNumPages,
@@ -56,11 +58,24 @@ function Presentation() {
       deckService
         .getDeckByCustomLink(customDeckLink)
         .then(({ data }) => {
+          if (!data) {
+            enqueueSnackbar('Deck not found, please contact support.', {
+              variant: 'error',
+              autoHideDuration: 10000,
+              anchorOrigin: {
+                vertical: 'top',
+                horizontal: 'right',
+              },
+            });
+            return;
+          }
           setDeckFile(data.deckUrl);
           setDeckId(data._id);
           setShowModal(data.requestEmail || data.requestPassword);
           setRequireEmail(data.requestEmail);
           setRequirePassword(data.requestPassword);
+          setDeckSlidesNumber(data.slides);
+          setUserId(data.userId);
         })
         .catch((error) => {
           console.error('Presentation page error: ', error.message);
@@ -81,6 +96,8 @@ function Presentation() {
         setPreviewPickDeckSlide={() => {}}
         setPageNumber={setPageNumber}
         deckId={deckId}
+        deckSlidesNumber={deckSlidesNumber}
+        userId={userId}
       />
     </MainLayout>
   );

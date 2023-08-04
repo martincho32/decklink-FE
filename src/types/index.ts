@@ -1,12 +1,19 @@
 export interface IUser {
+  _id?: string;
   email?: string;
-  authToken?: string;
+  token?: string;
+  firstName?: string;
+  lastName?: string;
+  company?: string;
+  websiteUrl?: string;
+  linkedInUrl?: string;
   role?: string;
 }
-export interface IAuthContext {
-  user: IUser | null;
-  setUser: React.Dispatch<React.SetStateAction<IUser>>;
-}
+
+// export interface IAuthContext {
+//   user: IUser | null;
+//   setUser: React.Dispatch<React.SetStateAction<IUser>>;
+// }
 
 export interface IDeck {
   _id: string;
@@ -32,6 +39,8 @@ export interface IDeckView {
   deckId: string;
   deckSlidesStats: Array<IDeckSlidesStats>;
   viewerEmail: string | null | undefined;
+  viewerInfo: string | null | undefined;
+  deckOwnerId: string;
   createdAt?: string;
   updatedAt?: string;
 }

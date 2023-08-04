@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Document, Page, pdfjs } from 'react-pdf';
 import { LineChart } from '../..'; // Replace this with the correct path to your LineChart component
 import { IDeck, IDeckSlidesStats, IDeckView } from '../../../types';
@@ -74,11 +74,7 @@ function DeckAverageStats({ deck, deckViews }: Props) {
       </span>
       <div className="mb-16 w-full overflow-x-auto">
         <div className="min-w-min">
-          <LineChart
-            labels={labels as string[] | undefined}
-            data={data}
-            deck={deck}
-          />
+          <LineChart labels={labels as string[]} data={data} deck={deck} />
           <Document
             file={pdfFile}
             onLoadSuccess={onDocumentLoadSuccess}
