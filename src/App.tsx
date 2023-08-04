@@ -1,7 +1,6 @@
 // src/App.tsx
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { SnackbarProvider } from 'notistack';
-import useLoading from './hooks/useLoading';
 import {
   Landing,
   LogIn,
