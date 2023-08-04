@@ -1,5 +1,8 @@
+// src/App.tsx
+import React from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { SnackbarProvider } from 'notistack';
+import useLoading from './hooks/useLoading';
 import {
   Landing,
   LogIn,
@@ -13,9 +16,14 @@ import {
 } from './pages';
 import ProtectedRoute from './components/ProtectedRoute';
 import { AuthProvider, UIProvider } from './context';
+import { Preloading } from './components';
 
 function App() {
-  return (
+  const isLoading = useLoading();
+
+  return isLoading ? (
+    <Preloading />
+  ) : (
     <AuthProvider>
       <UIProvider>
         <SnackbarProvider maxSnack={3}>

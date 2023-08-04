@@ -6,6 +6,8 @@ import { deckService, deckViewService } from '../../../services';
 import { IDeck, IDeckView } from '../../../types/index';
 import DeckAverageStats from '../../../components/FounderPart/DeckAverageStats';
 import DeckIndividualStats from '@/components/FounderPart/DeckIndividualStats';
+import useLoading from '@/hooks/useLoading';
+import Loading from '../../../components/PreloadingScreen';
 
 function DeclkDetail() {
   const { enqueueSnackbar } = useSnackbar();
@@ -16,24 +18,22 @@ function DeclkDetail() {
   const [deck, setDeck] = useState<IDeck | null>(null);
   const [deckViews, setDeckViews] = useState<IDeckView[] | null>(null);
 
-  useEffect(() => {
+  const isLoading = useLoading(async () => {
     if (!id) {
       // TODO Handle this, maybe use Snackbar to show error
       console.error('Error: There is no deck id to get.');
       navigate('/founder/decks');
     } else {
-      deckService
-        .getDeckById(id)
-        .then(async ({ data }) => {
-          setDeck(data);
-          const response = await deckViewService.getDeckViewByDeckId(id);
-          setDeckViews(response.data);
-        })
-        .catch((error) => {
-          console.error('Error: ', error.message);
-        });
+      try {
+        const deckResponse = await deckService.getDeckById(id);
+        setDeck(deckResponse.data);
+        const deckViewsResponse = await deckViewService.getDeckViewByDeckId(id);
+        setDeckViews(deckViewsResponse.data);
+      } catch (error: any) {
+        console.error('Error: ', error.message);
+      }
     }
-  }, []);
+  });
 
   const onClickGoBack = () => {
     navigate('/founder/decks');
@@ -58,7 +58,9 @@ function DeclkDetail() {
     );
   };
 
-  return (
+  return isLoading ? (
+    <Loading />
+  ) : (
     <MainLayout>
       {/* Here put the top page actions new component (not yet created) */}
 

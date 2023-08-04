@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { pdfjs, Document, Thumbnail } from 'react-pdf'; /** File library */
 import type { PDFDocumentProxy } from 'pdfjs-dist'; /** File library */
@@ -12,6 +12,8 @@ import 'react-pdf/dist/esm/Page/AnnotationLayer.css';
 import 'react-pdf/dist/esm/Page/TextLayer.css';
 import EmptyDeckPreview from '../../../components/FounderPart/DeckPreview/EmptyDeckPreview';
 import { deckService } from '../../../services';
+import useLoading from '@/hooks/useLoading';
+import Loading from '../../../components/PreloadingScreen';
 
 pdfjs.GlobalWorkerOptions.workerSrc = new URL(
   'pdfjs-dist/build/pdf.worker.min.js',
@@ -267,25 +269,26 @@ function Deck({ title = 'Create', deckId }: Props) {
     }
   };
 
-  useEffect(() => {
+  const isLoading = useLoading(async () => {
     if (deckId) {
-      deckService
-        .getDeckById(deckId)
-        .then(({ data }) => {
-          setDeckName(data.name);
-          setDeckLink(data.customDeckLink.replace('decklink.com/', ''));
-          setDeckPassword(data.password);
-          setEmailToogleChecked(data.requestEmail);
-          setPassToogleChecked(data.requestPassword);
-          setDeckFile(data.deckUrl);
-        })
-        .catch((error) => {
-          console.error('Error: ', error);
-          handleError(error);
-        });
+      try {
+        const { data } = await deckService.getDeckById(deckId);
+        setDeckName(data.name);
+        setDeckLink(data.customDeckLink.replace('decklink.com/', ''));
+        setDeckPassword(data.password);
+        setEmailToogleChecked(data.requestEmail);
+        setPassToogleChecked(data.requestPassword);
+        setDeckFile(data.deckUrl);
+      } catch (error: any) {
+        console.error('Error: ', error);
+        handleError(error);
+      }
     }
-  }, []);
-  return (
+  });
+
+  return isLoading ? (
+    <Loading />
+  ) : (
     <>
       <form
         onSubmit={submitHandler}

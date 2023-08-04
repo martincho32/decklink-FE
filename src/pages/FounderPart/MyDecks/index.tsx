@@ -1,5 +1,5 @@
 /* eslint-disable no-extra-boolean-cast */
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useSnackbar } from 'notistack';
 import { MainLayout, Button } from '../../../components';
@@ -9,6 +9,10 @@ import Card from '../../../components/FounderPart/MyDecks/Card';
 import EmptyState from '../../../components/ItemEmptyState';
 import { deckService } from '../../../services';
 import { IDeck } from '../../../types';
+import Loading from '../../../components/PreloadingScreen';
+
+// Import the useLoading hook
+import useLoading from '../../../hooks/useLoading';
 
 function MyDecks() {
   const { enqueueSnackbar } = useSnackbar();
@@ -37,8 +41,9 @@ function MyDecks() {
     }
   };
 
-  useEffect(() => {
-    deckService
+  // Use the useLoading hook with the actual backend request function
+  const isLoading = useLoading(() => {
+    return deckService
       .getDecksByUserId()
       .then(({ data }) => {
         setDeckList(data);
@@ -47,10 +52,13 @@ function MyDecks() {
         console.error('Error getting decks: ', error);
         // TODO handle error;
       });
-  }, [refresh]);
+  });
 
-  return (
+  return isLoading ? (
+    <Loading />
+  ) : (
     <MainLayout>
+      {/* Display the loading screen if the backend request is still loading */}
       {!!deckList.length ? (
         <div className={styles.myDesksWrapper}>
           <div className={styles.pageNavigation}>
