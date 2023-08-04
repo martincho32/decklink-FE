@@ -1,4 +1,4 @@
-import { useContext } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import axios from 'axios';
 import { Page, Document, Thumbnail } from 'react-pdf'; /** File library */
 import { enqueueSnackbar } from 'notistack';
@@ -7,7 +7,9 @@ import Button from '../../UI/Button';
 import { CloseIcon, Logo } from '../..';
 import AskEmailPassword from '../../AskEmailPassword';
 import { UIContext } from '@/context';
-import { deckService } from '@/services';
+import { deckService, deckViewService } from '@/services';
+import { IDeckSlidesStats } from '@/types';
+// import { milisecondsToMinutesAndSeconds } from '@/utils';
 
 export interface Props {
   type: 'deckCreationPreview' | 'deckUserPreview';
@@ -20,6 +22,8 @@ export interface Props {
   setPreviewPickDeckSlide;
   setPageNumber;
   deckId: string | null;
+  deckSlidesNumber: number | null;
+  userId: string | null;
 }
 
 function DeckPreview({
@@ -33,34 +37,15 @@ function DeckPreview({
   setPreviewPickDeckSlide,
   setPageNumber,
   deckId,
+  deckSlidesNumber,
+  userId,
 }: Props) {
   const { isShowModal, setShowModal, hasPasswordRequired } =
     useContext(UIContext);
-
-  const handleOnClose = (event) => {
-    if (event.target.id === 'container') {
-      onClose();
-    }
-  };
-
-  const onSaveDeck = () => {
-    console.log('testing save');
-  };
-
-  const onPrev = () => {
-    setPageNumber(pageNumber - 1);
-  };
-
-  const onNext = () => {
-    setPageNumber(pageNumber + 1);
-  };
-
-  // const handleOnCloseFormClose = (event) => {
-  //   console.log(event.target);
-  //   if (event.target.id === 'containerClose') {
-  //     // setShowModal(false);
-  //   }
-  // };
+  const [currentSlideStartTime, setCurrentSlideStartTime] = useState(0);
+  const [isPageActive, setIsPageActive] = useState(true);
+  const [slidesStats, setSlidesStats] = useState<IDeckSlidesStats[]>([]);
+  const [deckViewId, setDeckViewId] = useState<string | null>(null);
 
   const handleError = (error: Error | string) => {
     let errorMessage: string = 'Whoops! Something went wrong. Error: ';
@@ -90,22 +75,157 @@ function DeckPreview({
       });
     }
   };
+  const updateDeckView = () => {
+    if (deckViewId) {
+      try {
+        deckViewService.editDeckView(
+          { deckSlidesStats: slidesStats },
+          deckViewId
+        );
+      } catch (error: any) {
+        console.error('Error while updating deckView');
+        handleError(error);
+      }
+    }
+  };
+
+  const updateSlideTime = () => {
+    if (isPageActive) {
+      if (slidesStats.length) {
+        const currentTime = Date.now();
+        const elapsedTime = currentTime - currentSlideStartTime;
+        const auxSlidesStats = JSON.parse(JSON.stringify(slidesStats));
+        auxSlidesStats[pageNumber - 1].viewingTime += elapsedTime;
+        // console.log(
+        //   `El usuario ${userId} miró la slide ${pageNumber} durante ${milisecondsToMinutesAndSeconds(
+        //     auxSlidesStats[pageNumber - 1].viewingTime
+        //   )}`
+        // );
+        setSlidesStats([...auxSlidesStats]);
+        setCurrentSlideStartTime(Date.now());
+      }
+    }
+  };
+
+  const handleOnClose = (event) => {
+    if (event.target.id === 'container') {
+      onClose();
+    }
+  };
+
+  const onSaveDeck = () => {
+    console.log('testing save');
+  };
+
+  const onPrev = () => {
+    updateSlideTime();
+    setPageNumber(pageNumber - 1);
+  };
+
+  const onNext = () => {
+    updateSlideTime();
+    setPageNumber(pageNumber + 1);
+  };
+
+  function initializeArrayOfSLidesStats(count): IDeckSlidesStats[] {
+    const arrayOfEmptyObjects: { slideNumber: number; viewingTime: number }[] =
+      [];
+
+    for (let i = 0; i < count; i++) {
+      arrayOfEmptyObjects.push({
+        slideNumber: i + 1,
+        viewingTime: 0,
+      });
+    }
+
+    return arrayOfEmptyObjects;
+  }
+
+  function initializeCounting() {
+    setCurrentSlideStartTime(Date.now());
+  }
 
   const handleModalSubmit = async (email: string, password?: string) => {
     try {
+      if (!deckId) {
+        enqueueSnackbar('deck id is null. Please contact support.', {
+          variant: 'error',
+          autoHideDuration: 2000,
+          anchorOrigin: {
+            vertical: 'top',
+            horizontal: 'right',
+          },
+        });
+        return;
+      }
       if (hasPasswordRequired) {
         await deckService.validateDeck({
           _id: deckId as string,
           password,
         });
       }
-      // TODO Here call deck-view service to create a new deck view, this will be updated later but is created now
 
+      const auxSlidesStats = initializeArrayOfSLidesStats(deckSlidesNumber);
+      setSlidesStats(auxSlidesStats);
+      const { data } = await deckViewService.createDeckView({
+        deckId,
+        deckSlidesStats: slidesStats,
+        viewerEmail: email,
+        deckOwnerId: userId!,
+      });
       setShowModal(false);
+      setDeckViewId(data._id);
+      initializeCounting();
     } catch (error: any) {
       handleError(error);
     }
   };
+
+  const handleVisibilityChange = () => {
+    if (document.visibilityState === 'visible') {
+      // User gets back to our tab
+      setIsPageActive(true);
+      setCurrentSlideStartTime(Date.now());
+    } else {
+      // User changes to another tab
+      setIsPageActive(false);
+      // updateSlideTime();
+    }
+  };
+
+  useEffect(() => {
+    if (type === 'deckUserPreview') {
+      document.addEventListener('visibilitychange', handleVisibilityChange);
+    }
+    return () => {
+      if (type === 'deckUserPreview') {
+        document.removeEventListener(
+          'visibilitychange',
+          handleVisibilityChange
+        );
+        // TODO do one last update to the deck-view endpoint
+        updateDeckView();
+      }
+    };
+  }, []);
+
+  // useEffect(() => {
+  //   if (deckViewId) {
+  //     window.addEventListener('beforeunload', (event) => {
+  //       console.log('beforeunload: ');
+  //       getSlidesInfo();
+  //       // updateDeckView();
+  //       // eslint-disable-next-line no-param-reassign
+  //       event.returnValue = 'Are you sure about closing this tab?';
+  //     });
+  //   }
+  // }, [deckViewId]);
+
+  useEffect(() => {
+    if (slidesStats.length) {
+      updateDeckView();
+    }
+  }, [slidesStats]);
 
   return (
     <div
@@ -172,7 +292,7 @@ function DeckPreview({
           </div>
           {type === 'deckCreationPreview' && (
             <div className="previewPagesWrapper">
-              {Array.from(new Array(numPages), (el, index) => (
+              {Array.from(new Array(numPages), (_el, index) => (
                 <Thumbnail
                   onItemClick={() => {
                     setPreviewPickDeckSlide(true);
