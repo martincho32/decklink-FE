@@ -6,7 +6,7 @@ import { loginService } from '../../services';
 
 export interface AuthState {
   isLoggedIn: boolean;
-  user?: IUser;
+  user?: Partial<IUser>;
 }
 
 const AUTH_INITIAL_STATE: AuthState = {
@@ -33,11 +33,17 @@ export function AuthProvider({ children }: PropsWithChildren) {
         email: _email,
         password,
       });
-      const { token, email, role } = data;
-      Cookies.set('token', token);
+      const { token, email, role, firstName, lastName } = data;
+      Cookies.set('token', data.token);
       dispatch({
         type: '[Auth] - Login',
-        payload: { email, role, authToken: token },
+        payload: {
+          email,
+          role,
+          token,
+          firstName,
+          lastName,
+        },
       });
       return true;
     } catch (error) {
@@ -48,13 +54,26 @@ export function AuthProvider({ children }: PropsWithChildren) {
   const registerUser = async (
     _email: string,
     password: string,
-    cfpassword: string
-  ): Promise<{ hasError: boolean; message?: string }> => {
+    cfpassword: string,
+    _firstName: string,
+    _lastName: string
+  ): Promise<{
+    hasError: boolean;
+    message?: string;
+  }> => {
     try {
-      await loginService.registerUser({
+      const { data } = await loginService.registerUser({
         email: _email,
         password,
         cfpassword,
+        firstName: _firstName,
+        lastName: _lastName,
+      });
+      const { token, firstName, lastName, email, role } = data;
+      Cookies.set('token', token);
+      dispatch({
+        type: '[Auth] - SignUp',
+        payload: { email, role, token, firstName, lastName },
       });
       return {
         hasError: false,
@@ -76,8 +95,8 @@ export function AuthProvider({ children }: PropsWithChildren) {
       const { token, email, role } = data;
       Cookies.set('token', token);
       dispatch({
-        type: '[Auth] - Login',
-        payload: { email, role, authToken: token },
+        type: '[Auth] - Validate',
+        payload: { email, role, token },
       });
       return true;
     } catch (error) {
