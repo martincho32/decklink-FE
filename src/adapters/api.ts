@@ -2,7 +2,7 @@
 import axios, { AxiosRequestConfig } from 'axios';
 
 const axiosApi = axios.create({
-  baseURL: 'http://localhost:3000/api',
+  baseURL: 'https://algebraic-hub-392717.uc.r.appspot.com/api',
   withCredentials: true,
   headers: {
     'Content-Type': 'application/json',
