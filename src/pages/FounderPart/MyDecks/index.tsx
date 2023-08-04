@@ -1,5 +1,5 @@
 /* eslint-disable no-extra-boolean-cast */
-import { useContext, useEffect, useState } from 'react';
+import { useContext, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useSnackbar } from 'notistack';
 import { MainLayout, Button } from '../../../components';

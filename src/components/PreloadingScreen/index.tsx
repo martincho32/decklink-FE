@@ -1,4 +1,3 @@
-import React from 'react';
 import BrandBlock from '../../assets/images/BrandBlock.png';
 import './PreloadingScreen.css'; // Create a new CSS file for styles
 

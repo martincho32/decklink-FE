@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { pdfjs, Document, Thumbnail } from 'react-pdf'; /** File library */
 import type { PDFDocumentProxy } from 'pdfjs-dist'; /** File library */
@@ -12,7 +12,6 @@ import 'react-pdf/dist/esm/Page/AnnotationLayer.css';
 import 'react-pdf/dist/esm/Page/TextLayer.css';
 import EmptyDeckPreview from '../../../components/FounderPart/DeckPreview/EmptyDeckPreview';
 import { deckService } from '../../../services';
-import useLoading from '@/hooks/useLoading';
 import Loading from '../../../components/PreloadingScreen';
 
 pdfjs.GlobalWorkerOptions.workerSrc = new URL(
@@ -269,22 +268,35 @@ function Deck({ title = 'Create', deckId }: Props) {
     }
   };
 
-  const isLoading = useLoading(async () => {
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
     if (deckId) {
-      try {
-        const { data } = await deckService.getDeckById(deckId);
-        setDeckName(data.name);
-        setDeckLink(data.customDeckLink.replace('decklink.com/', ''));
-        setDeckPassword(data.password);
-        setEmailToogleChecked(data.requestEmail);
-        setPassToogleChecked(data.requestPassword);
-        setDeckFile(data.deckUrl);
-      } catch (error: any) {
-        console.error('Error: ', error);
-        handleError(error);
-      }
+      // Fetch deck data from the backend here
+      deckService
+        .getDeckById(deckId)
+        .then(({ data }) => {
+          setDeckName(data.name);
+          setDeckLink(data.customDeckLink.replace('decklink.com/', ''));
+          setDeckPassword(data.password);
+          setEmailToogleChecked(data.requestEmail);
+          setPassToogleChecked(data.requestPassword);
+          setDeckFile(data.deckUrl);
+          setTimeout(() => {
+            setIsLoading(false); // Set isLoading to false once data is fetched
+          }, 1000);
+        })
+        .catch((error) => {
+          console.error('Error: ', error);
+          handleError(error);
+          setTimeout(() => {
+            setIsLoading(false); // Set isLoading to false once data is fetched
+          }, 1000);
+        });
+    } else {
+      setIsLoading(false); // Set isLoading to false for the create page
     }
-  });
+  }, [deckId]);
 
   return isLoading ? (
     <Loading />
