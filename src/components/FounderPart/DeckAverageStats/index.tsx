@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Document, Page, pdfjs } from 'react-pdf';
 import { LineChart } from '../..'; // Replace this with the correct path to your LineChart component
 import { IDeck, IDeckSlidesStats, IDeckView } from '../../../types';

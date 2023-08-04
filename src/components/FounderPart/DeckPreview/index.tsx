@@ -22,8 +22,8 @@ export interface Props {
   setPreviewPickDeckSlide;
   setPageNumber;
   deckId: string | null;
-  deckSlidesNumber: number | null;
-  userId: string | null;
+  deckSlidesNumber?: number | null;
+  userId?: string | null;
 }
 
 function DeckPreview({
