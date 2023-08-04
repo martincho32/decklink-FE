@@ -39,6 +39,8 @@ export interface IDeckView {
   deckId: string;
   deckSlidesStats: Array<IDeckSlidesStats>;
   viewerEmail: string | null | undefined;
+  viewerInfo: string | null | undefined;
+  deckOwnerId: string;
   createdAt?: string;
   updatedAt?: string;
 }
