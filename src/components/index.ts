@@ -25,3 +25,4 @@ export {
   AccordionTrigger,
 } from './UI/Accordion';
 export { buttonVariants } from './UI/ShadcnButton';
+export { default as Preloading } from './PreloadingScreen';

@@ -12,6 +12,7 @@ import 'react-pdf/dist/esm/Page/AnnotationLayer.css';
 import 'react-pdf/dist/esm/Page/TextLayer.css';
 import EmptyDeckPreview from '../../../components/FounderPart/DeckPreview/EmptyDeckPreview';
 import { deckService } from '../../../services';
+import Loading from '../../../components/PreloadingScreen';
 
 pdfjs.GlobalWorkerOptions.workerSrc = new URL(
   'pdfjs-dist/build/pdf.worker.min.js',
@@ -267,8 +268,11 @@ function Deck({ title = 'Create', deckId }: Props) {
     }
   };
 
+  const [isLoading, setIsLoading] = useState(true);
+
   useEffect(() => {
     if (deckId) {
+      // Fetch deck data from the backend here
       deckService
         .getDeckById(deckId)
         .then(({ data }) => {
@@ -278,14 +282,25 @@ function Deck({ title = 'Create', deckId }: Props) {
           setEmailToogleChecked(data.requestEmail);
           setPassToogleChecked(data.requestPassword);
           setDeckFile(data.deckUrl);
+          setTimeout(() => {
+            setIsLoading(false); // Set isLoading to false once data is fetched
+          }, 1000);
         })
         .catch((error) => {
           console.error('Error: ', error);
           handleError(error);
+          setTimeout(() => {
+            setIsLoading(false); // Set isLoading to false once data is fetched
+          }, 1000);
         });
+    } else {
+      setIsLoading(false); // Set isLoading to false for the create page
     }
-  }, []);
-  return (
+  }, [deckId]);
+
+  return isLoading ? (
+    <Loading />
+  ) : (
     <>
       <form
         onSubmit={submitHandler}
