@@ -101,8 +101,9 @@ export function AuthProvider({ children }: PropsWithChildren) {
         payload: { email, role, token },
       });
       return true;
-    } catch (error) {
-      removeItem('token');
+    } catch (error: any) {
+      console.log('Error in validateToken: ', error.message);
+      // removeItem('token');
       return false;
     }
   };
