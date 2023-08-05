@@ -1,6 +1,8 @@
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import axios, { AxiosRequestConfig } from 'axios';
 
+const token = localStorage.getItem('token');
+
 const axiosApi = axios.create({
   baseURL: 'https://algebraic-hub-392717.uc.r.appspot.com/api',
   withCredentials: true,
@@ -10,6 +12,7 @@ const axiosApi = axios.create({
     'Access-Control-Allow-Headers':
       'Origin, X-Requested-With, Content-Type, Accept, Z-Key',
     'Access-Control-Allow-Methods': 'GET, HEAD, POST, PUT, DELETE, OPTIONS',
+    Authorization: `Bearer ${token}`,
   },
 });
 

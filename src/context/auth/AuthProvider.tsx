@@ -1,8 +1,9 @@
 import { PropsWithChildren, useReducer, useMemo, useEffect } from 'react';
-import Cookies from 'js-cookie';
+// import Cookies from 'js-cookie';
 import { AuthContext, authReducer } from '.';
 import { IUser } from '../../types';
 import { loginService } from '../../services';
+import { useLocalStorage } from '@/hooks/useLocalStorage';
 
 export interface AuthState {
   isLoggedIn: boolean;
@@ -16,9 +17,10 @@ const AUTH_INITIAL_STATE: AuthState = {
 
 export function AuthProvider({ children }: PropsWithChildren) {
   const [state, dispatch] = useReducer(authReducer, AUTH_INITIAL_STATE);
+  const { removeItem, setItem, getItem } = useLocalStorage();
 
   const logoutUser = () => {
-    Cookies.remove('token');
+    removeItem('token');
     dispatch({
       type: '[Auth] - Logout',
     });
@@ -34,7 +36,7 @@ export function AuthProvider({ children }: PropsWithChildren) {
         password,
       });
       const { token, email, role, firstName, lastName } = data;
-      Cookies.set('token', data.token);
+      setItem('token', data.token);
       dispatch({
         type: '[Auth] - Login',
         payload: {
@@ -70,7 +72,7 @@ export function AuthProvider({ children }: PropsWithChildren) {
         lastName: _lastName,
       });
       const { token, firstName, lastName, email, role } = data;
-      Cookies.set('token', token);
+      setItem('token', token);
       dispatch({
         type: '[Auth] - SignUp',
         payload: { email, role, token, firstName, lastName },
@@ -87,20 +89,20 @@ export function AuthProvider({ children }: PropsWithChildren) {
   };
 
   const validateToken = async (): Promise<boolean> => {
-    if (!Cookies.get('token')) {
+    if (!getItem('token')) {
       return false;
     }
     try {
       const { data } = await loginService.validateUserToken();
       const { token, email, role } = data;
-      Cookies.set('token', token);
+      setItem('token', token);
       dispatch({
         type: '[Auth] - Validate',
         payload: { email, role, token },
       });
       return true;
     } catch (error) {
-      Cookies.remove('token');
+      removeItem('token');
       return false;
     }
   };
