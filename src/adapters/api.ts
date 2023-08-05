@@ -6,7 +6,8 @@ const axiosApi = axios.create({
   withCredentials: true,
   headers: {
     'Content-Type': 'application/json',
-    'Access-Control-Allow-Origin': '*',
+    'Access-Control-Allow-Origin':
+      'https://vercel.com/martincho32/decklink-fe/G1fUNGy8ipsDXHPyAXpuFf5zah78',
     'Access-Control-Allow-Headers':
       'Origin, X-Requested-With, Content-Type, Accept, Z-Key',
     'Access-Control-Allow-Methods': 'GET, HEAD, POST, PUT, DELETE, OPTIONS',
