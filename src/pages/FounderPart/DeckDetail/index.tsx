@@ -25,9 +25,20 @@ function DeclkDetail() {
       navigate('/founder/decks');
     } else {
       try {
-        const deckResponse = await deckService.getDeckById(id);
+        const deckResponse = await deckService.getDeckById(id, {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('token')}`,
+          },
+        });
         setDeck(deckResponse.data);
-        const deckViewsResponse = await deckViewService.getDeckViewByDeckId(id);
+        const deckViewsResponse = await deckViewService.getDeckViewByDeckId(
+          id,
+          {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem('token')}`,
+            },
+          }
+        );
         setDeckViews(deckViewsResponse.data);
       } catch (error: any) {
         console.error('Error: ', error.message);

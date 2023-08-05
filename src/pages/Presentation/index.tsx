@@ -56,7 +56,11 @@ function Presentation() {
       navigate('/');
     } else {
       deckService
-        .getDeckByCustomLink(customDeckLink)
+        .getDeckByCustomLink(customDeckLink, {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('token')}`,
+          },
+        })
         .then(({ data }) => {
           if (!data) {
             enqueueSnackbar('Deck not found, please contact support.', {

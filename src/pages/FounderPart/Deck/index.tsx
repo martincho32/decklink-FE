@@ -235,11 +235,17 @@ function Deck({ title = 'Create', deckId }: Props) {
       if (passToogleChecked) fd.append('password', `${deckPassword}`);
       if (deckId) {
         await deckService.editDeck(fd, deckId, {
-          headers: { 'Content-Type': 'multipart/form-data' },
+          headers: {
+            'Content-Type': 'multipart/form-data',
+            Authorization: `Bearer ${localStorage.getItem('token')}`,
+          },
         });
       } else {
         await deckService.createDeck(fd, {
-          headers: { 'Content-Type': 'multipart/form-data' },
+          headers: {
+            'Content-Type': 'multipart/form-data',
+            Authorization: `Bearer ${localStorage.getItem('token')}`,
+          },
         });
       }
       let msg = 'Deck successfully created';
@@ -274,7 +280,11 @@ function Deck({ title = 'Create', deckId }: Props) {
     if (deckId) {
       // Fetch deck data from the backend here
       deckService
-        .getDeckById(deckId)
+        .getDeckById(deckId, {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('token')}`,
+          },
+        })
         .then(({ data }) => {
           setDeckName(data.name);
           setDeckLink(data.customDeckLink.replace('decklink.com/', ''));

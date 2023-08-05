@@ -5,10 +5,11 @@ import { IDeckView } from '../types';
 const resource = 'deck-view';
 
 export const getDeckViewByDeckId = (
-  id: string
+  id: string,
+  config: AxiosRequestConfig<any> | undefined = undefined
 ): Promise<{
   data: IDeckView[];
-}> => api.get(`${resource}/${id}`).then((data) => data);
+}> => api.get(`${resource}/${id}`, config).then((data) => data);
 
 export const createDeckView = (
   deckView: Partial<IDeckView>,

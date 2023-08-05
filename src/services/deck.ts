@@ -4,15 +4,18 @@ import { IDeck } from '../types';
 
 const resource = 'deck';
 
-export const getDecksByUserId = (): Promise<{
+export const getDecksByUserId = (
+  config: AxiosRequestConfig<any> | undefined = undefined
+): Promise<{
   data: IDeck[];
-}> => api.get(resource).then((data) => data);
+}> => api.get(resource, config).then((data) => data);
 
 export const getDeckById = (
-  id: string
+  id: string,
+  config: AxiosRequestConfig<any> | undefined = undefined
 ): Promise<{
   data: IDeck;
-}> => api.get(`${resource}/${id}`).then((data) => data);
+}> => api.get(`${resource}/${id}`, config).then((data) => data);
 
 export const createDeck = (
   deck,
@@ -39,9 +42,13 @@ export const editDeck = (
 };
 
 export const getDeckByCustomLink = (
-  customLink: string
+  customLink: string,
+  config: AxiosRequestConfig<any> | undefined = undefined
 ): Promise<{
   data: IDeck;
-}> => api.get(`${resource}/custom/${customLink}`);
+}> => api.get(`${resource}/custom/${customLink}`, config);
 
-export const deleteDeck = (deckId) => api.delete(`${resource}/${deckId}`);
+export const deleteDeck = (
+  deckId,
+  config: AxiosRequestConfig<any> | undefined = undefined
+) => api.delete(`${resource}/${deckId}`, config);

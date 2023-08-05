@@ -80,7 +80,12 @@ function DeckPreview({
       try {
         deckViewService.editDeckView(
           { deckSlidesStats: slidesStats },
-          deckViewId
+          deckViewId,
+          {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem('token')}`,
+            },
+          }
         );
       } catch (error: any) {
         console.error('Error while updating deckView');
@@ -159,20 +164,34 @@ function DeckPreview({
         return;
       }
       if (hasPasswordRequired) {
-        await deckService.validateDeck({
-          _id: deckId as string,
-          password,
-        });
+        await deckService.validateDeck(
+          {
+            _id: deckId as string,
+            password,
+          },
+          {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem('token')}`,
+            },
+          }
+        );
       }
 
       const auxSlidesStats = initializeArrayOfSLidesStats(deckSlidesNumber);
       setSlidesStats(auxSlidesStats);
-      const { data } = await deckViewService.createDeckView({
-        deckId,
-        deckSlidesStats: slidesStats,
-        viewerEmail: email,
-        deckOwnerId: userId!,
-      });
+      const { data } = await deckViewService.createDeckView(
+        {
+          deckId,
+          deckSlidesStats: slidesStats,
+          viewerEmail: email,
+          deckOwnerId: userId!,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('token')}`,
+          },
+        }
+      );
       setShowModal(false);
       setDeckViewId(data._id);
       initializeCounting();

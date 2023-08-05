@@ -1,8 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import axios, { AxiosRequestConfig } from 'axios';
 
-const token = localStorage.getItem('token');
-
 const axiosApi = axios.create({
   baseURL: 'https://algebraic-hub-392717.uc.r.appspot.com/api',
   withCredentials: true,
@@ -12,14 +10,16 @@ const axiosApi = axios.create({
     'Access-Control-Allow-Headers':
       'Origin, X-Requested-With, Content-Type, Accept, Z-Key',
     'Access-Control-Allow-Methods': 'GET, HEAD, POST, PUT, DELETE, OPTIONS',
-    Authorization: `Bearer ${token}`,
   },
 });
 
 const basePath = 'https://algebraic-hub-392717.uc.r.appspot.com/api';
 
 const api = {
-  get: (endpoint: string) => axiosApi.get(`/${endpoint}`),
+  get: (
+    endpoint: string,
+    config: AxiosRequestConfig<any> | undefined = undefined
+  ) => axiosApi.get(`/${endpoint}`, config),
   post: (
     endpoint: string,
     body,
@@ -35,7 +35,10 @@ const api = {
     body,
     config: AxiosRequestConfig<any> | undefined = undefined
   ) => axiosApi.patch(`${basePath}/${endpoint}`, body, config),
-  delete: (endpoint: string) => axiosApi.delete(`${basePath}/${endpoint}`),
+  delete: (
+    endpoint: string,
+    config: AxiosRequestConfig<any> | undefined = undefined
+  ) => axiosApi.delete(`${basePath}/${endpoint}`, config),
 };
 
 export { api };

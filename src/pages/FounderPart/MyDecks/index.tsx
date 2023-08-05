@@ -24,7 +24,11 @@ function MyDecks() {
 
   const handleClickDelete = async (id) => {
     try {
-      const { data } = await deckService.deleteDeck(id);
+      const { data } = await deckService.deleteDeck(id, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('token')}`,
+        },
+      });
       if (data) {
         setRefresh(!refresh);
       } else {
@@ -46,7 +50,11 @@ function MyDecks() {
   // Use the useLoading hook with the actual backend request function
   const isLoading = useLoading(() => {
     return deckService
-      .getDecksByUserId()
+      .getDecksByUserId({
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('token')}`,
+        },
+      })
       .then(({ data }) => {
         setDeckList(data);
       })
