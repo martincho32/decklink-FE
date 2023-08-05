@@ -1,4 +1,5 @@
 // import { IUser } from '@/types';
+import { AxiosRequestConfig } from 'axios';
 import { api } from '../adapters/api';
 
 const resource = 'auth';
@@ -39,6 +40,8 @@ export const loginUser = (
   };
 }> => api.post(`${resource}/login`, userCredentials);
 
-export const validateUserToken = (): Promise<{
+export const validateUserToken = (
+  config: AxiosRequestConfig<any> | undefined = undefined
+): Promise<{
   data: { email: string; role: string; token: string };
-}> => api.get(`${resource}/validate-token`);
+}> => api.get(`${resource}/validate-token`, config);

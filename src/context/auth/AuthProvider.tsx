@@ -93,7 +93,12 @@ export function AuthProvider({ children }: PropsWithChildren) {
       return false;
     }
     try {
-      const { data } = await loginService.validateUserToken();
+      const { data } = await loginService.validateUserToken({
+        headers: {
+          'Content-Type': 'multipart/form-data',
+          Authorization: `Bearer ${localStorage.getItem('token')}`,
+        },
+      });
       const { token, email, role } = data;
       setItem('token', token);
       dispatch({
@@ -103,7 +108,7 @@ export function AuthProvider({ children }: PropsWithChildren) {
       return true;
     } catch (error: any) {
       console.log('Error in validateToken: ', error.message);
-      // removeItem('token');
+      removeItem('token');
       return false;
     }
   };
