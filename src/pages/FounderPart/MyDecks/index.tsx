@@ -49,8 +49,7 @@ function MyDecks() {
         throw new Error('Deck not found! Please contact support.');
       }
     } catch (error: any) {
-      console.error('Error deleting deck: ', error);
-      enqueueSnackbar(`Error deleting deck: Error: ${error.message}`, {
+      enqueueSnackbar(`Couldn't delete the deck. Please contact support.`, {
         variant: 'error',
         autoHideDuration: 10000,
         anchorOrigin: {
@@ -72,9 +71,15 @@ function MyDecks() {
       .then(({ data }) => {
         setDeckList(data);
       })
-      .catch((error) => {
-        console.error('Error getting decks: ', error);
-        // TODO handle error;
+      .catch(() => {
+        enqueueSnackbar(`Couldn't load decks. Please contact support.`, {
+          variant: 'error',
+          autoHideDuration: 10000,
+          anchorOrigin: {
+            vertical: 'top',
+            horizontal: 'right',
+          },
+        });
       });
   });
 

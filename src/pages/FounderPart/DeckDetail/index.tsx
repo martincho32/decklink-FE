@@ -65,8 +65,18 @@ function DeclkDetail() {
             },
           });
         },
-        (error) => {
-          console.error('Failed to copy: ', error);
+        () => {
+          enqueueSnackbar(
+            'Something went wrong. Please try again or contact our support',
+            {
+              variant: 'success',
+              autoHideDuration: 2000,
+              anchorOrigin: {
+                vertical: 'top',
+                horizontal: 'right',
+              },
+            }
+          );
         }
       );
   };
