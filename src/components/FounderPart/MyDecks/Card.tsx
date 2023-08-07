@@ -39,40 +39,38 @@ function Card({ deck, handleClickDelete }: Props) {
   };
 
   const handleCopyClick = () => {
-    navigator.clipboard.writeText(`decklink.com/${deck?.customDeckLink}`).then(
-      () => {
-        /* Resolved - text copied to clipboard successfully */
-        enqueueSnackbar('Url successfully copied!!', {
-          variant: 'success',
-          autoHideDuration: 2000,
-          anchorOrigin: {
-            vertical: 'top',
-            horizontal: 'right',
-          },
-        });
-      },
-      (error) => {
-        console.error('Failed to copy: ', error);
-      }
-    );
+    navigator.clipboard
+      .writeText(`https://www.fundraisingtoolbox.io/${deck?.customDeckLink}`)
+      .then(
+        () => {
+          enqueueSnackbar('Url successfully copied!', {
+            variant: 'success',
+            autoHideDuration: 2000,
+            anchorOrigin: {
+              vertical: 'top',
+              horizontal: 'right',
+            },
+          });
+        },
+        (error) => {
+          enqueueSnackbar(`Failed to copy. Please contact support. ${error}`, {
+            variant: 'error',
+            autoHideDuration: 2000,
+            anchorOrigin: {
+              vertical: 'top',
+              horizontal: 'right',
+            },
+          });
+        }
+      );
   };
 
-  const handleLoadError = (error: any) => {
-    console.error('Error while loading PDF:', error);
+  const handleLoadError = () => {
     setLoading(true);
   };
 
   return (
     <div className={styles.deckBlock}>
-      {/* Conditionally render the loading image while PDF is loading */}
-      {/* {loading && (
-        <img
-          className={styles.dummyPreviewImage}
-          src={loadingImage}
-          alt="Loading"
-        />
-      )} */}
-
       <Document
         file={deck.deckUrl}
         onLoadSuccess={onDocumentLoadSuccess}
@@ -86,7 +84,6 @@ function Card({ deck, handleClickDelete }: Props) {
         }
         loading=""
       >
-        {/* Only render the <Page> component when the PDF is loaded */}
         {!loading && (
           <Page
             renderTextLayer={false}
