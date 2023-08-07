@@ -1,9 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import axios, { AxiosRequestConfig } from 'axios';
 
-console.log('import.meta.env.PROD ', import.meta.env.PROD);
-console.log('import.meta.env.DEV ', import.meta.env.DEV);
-
 const basePath = import.meta.env.DEV
   ? 'http://localhost:3000/api'
   : 'https://algebraic-hub-392717.uc.r.appspot.com/api';

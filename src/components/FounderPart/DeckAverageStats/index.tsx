@@ -23,16 +23,14 @@ interface Props {
 function DeckAverageStats({ deck, deckViews }: Props) {
   const [numPages, setNumPages] = useState<number>(0);
   const [pdfFile, setPdfFile] = useState<string | null>(null);
-
   useEffect(() => {
     setPdfFile(deck?.deckUrl || null);
   }, [deck]);
 
-  const labels =
-    deckViews &&
-    deckViews[0].deckSlidesStats.map((slide) => {
-      return `Slide ${slide.slideNumber}`;
-    });
+  const labels = Array.from(
+    new Array(deck?.slides),
+    (_el, index) => `Slide ${index + 1}`
+  );
 
   const rawData =
     deckViews &&
