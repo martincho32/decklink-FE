@@ -16,11 +16,11 @@ export interface Props {
   onClose: () => void;
   pageNumber: number;
   file;
-  onDocumentLoadSuccess;
-  options;
+  onDocumentLoadSuccess?;
+  options?;
   numPages;
   setPreviewPickDeckSlide;
-  setPageNumber;
+  setPageNumber?;
   deckId: string | null;
   deckSlidesNumber?: number | null;
   userId?: string | null;

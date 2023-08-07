@@ -2,7 +2,7 @@
 import { useContext, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useSnackbar } from 'notistack';
-import { MainLayout, Button } from '../../../components';
+import { MainLayout, Button, DeckPreview } from '../../../components';
 import whiteTopRightArrow from '../../../assets/images/ArrowTopRight.svg';
 import styles from './MyDecks.module.css';
 import Card from '../../../components/FounderPart/MyDecks/Card';
@@ -15,7 +15,20 @@ import Loading from '../../../components/PreloadingScreen';
 import useLoading from '../../../hooks/useLoading';
 import { AuthContext } from '@/context';
 
+const options = {
+  cMapUrl: 'cmaps/',
+  standardFontDataUrl: 'standard_fonts/',
+};
+
 function MyDecks() {
+  const [previewPickDeckSlide, setPreviewPickDeckSlide] = useState(false);
+  const [pageNumber, setPageNumber] = useState(1);
+
+  const handleOnClosePitchDeckSlidePreview = () => {
+    document.body.style.overflow = 'auto';
+    setPreviewPickDeckSlide(false);
+  };
+
   const { user } = useContext(AuthContext);
   const { enqueueSnackbar } = useSnackbar();
 
@@ -91,11 +104,30 @@ function MyDecks() {
           <div className={styles.decksBlock}>
             {deckList.map((deck) => {
               return (
-                <Card
-                  handleClickDelete={() => handleClickDelete(deck._id)}
-                  key={deck._id}
-                  deck={deck}
-                />
+                <>
+                  <Card
+                    onClick={() => {
+                      document.body.style.overflow = 'hidden';
+                      setPreviewPickDeckSlide(true);
+                    }}
+                    handleClickDelete={() => handleClickDelete(deck._id)}
+                    key={deck._id}
+                    deck={deck}
+                  />
+                  {previewPickDeckSlide && (
+                    <DeckPreview
+                      type="deckCreationPreview"
+                      onClose={handleOnClosePitchDeckSlidePreview}
+                      pageNumber={pageNumber}
+                      file={deck.deckUrl}
+                      options={options}
+                      numPages={deck.slides}
+                      setPreviewPickDeckSlide={setPreviewPickDeckSlide}
+                      setPageNumber={setPageNumber}
+                      deckId={null}
+                    />
+                  )}
+                </>
               );
             })}
           </div>

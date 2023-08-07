@@ -27,9 +27,10 @@ import {
 interface Props {
   deck: IDeck;
   handleClickDelete: (id: string) => Promise<void>;
+  onClick: () => void;
 }
 
-function Card({ deck, handleClickDelete }: Props) {
+function Card({ deck, handleClickDelete, onClick }: Props) {
   const { enqueueSnackbar } = useSnackbar();
 
   const [loading, setLoading] = useState<boolean>(true);
@@ -70,7 +71,12 @@ function Card({ deck, handleClickDelete }: Props) {
   };
 
   return (
-    <div className={styles.deckBlock}>
+    <div
+      onClick={onClick}
+      tabIndex={0}
+      role="button"
+      className={styles.deckBlock}
+    >
       <Document
         file={deck.deckUrl}
         onLoadSuccess={onDocumentLoadSuccess}
