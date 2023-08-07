@@ -9,6 +9,10 @@
   justify-content: center !important;
 }
 
+.hide-tawk-chat{
+  display: none!important;
+}
+
 .buttonClose{
   z-index: 2;
   color: white !important;
