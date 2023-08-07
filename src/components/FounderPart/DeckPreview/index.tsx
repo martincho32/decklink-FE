@@ -122,9 +122,9 @@ function DeckPreview({
     }
   };
 
-  const onSaveDeck = () => {
-    console.log('testing save');
-  };
+  // const onSaveDeck = () => {
+  //   console.log('testing save');
+  // };
 
   const onPrev = () => {
     updateSlideTime();
@@ -276,7 +276,7 @@ function DeckPreview({
       tabIndex={0}
       onClick={handleOnClose}
       className={`fixedContainer fixed overflow-y-scroll h-screen inset-0 bg-black bg-opacity-80 backdrop-blur-sm ${
-        type === 'deckUserPreview' ? 'p-2' : ''
+        type === 'deckUserPreview' ? 'p-2' : 'p-2'
       }`}
     >
       <AskEmailPassword onSubmit={handleModalSubmit} />
@@ -299,6 +299,9 @@ function DeckPreview({
             }`}
           >
             <Button
+              className={`${
+                type === 'deckCreationPreview' ? 'prev max-h-min' : 'max-h-min'
+              }`}
               type="button"
               icon={
                 <Logo
@@ -327,7 +330,9 @@ function DeckPreview({
                   color={pageNumber === numPages ? '#f1511b2e' : '#F1511B'}
                 />
               }
-              className="max-h-min"
+              className={`${
+                type === 'deckCreationPreview' ? 'next max-h-min' : 'max-h-min'
+              }`}
               onClick={onNext}
               disabled={pageNumber === numPages}
             />
@@ -350,7 +355,7 @@ function DeckPreview({
         </Document>
       )}
 
-      {type === 'deckUserPreview' && (
+      {/* {type === 'deckUserPreview' && (
         <Button
           type="button"
           text="Save This Deck"
@@ -360,7 +365,19 @@ function DeckPreview({
           textColor="#FFF"
           onClick={onSaveDeck}
         />
-      )}
+      )} */}
+
+      <div
+        className={`${
+          type === 'deckCreationPreview'
+            ? 'counter fixed flex flex-row top-8 left-8 p-2 bg-persimmon rounded-md text-white text-xs'
+            : 'fixed flex flex-row top-8 left-8 p-2 bg-persimmon rounded-md text-white text-xs'
+        }`}
+      >
+        <p>{pageNumber}</p>
+        <p>/</p>
+        <p>{numPages}</p>
+      </div>
 
       {type === 'deckCreationPreview' && (
         <Button

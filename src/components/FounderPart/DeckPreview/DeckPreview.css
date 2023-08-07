@@ -116,6 +116,18 @@
 }
 
 @media (max-width: 768px) {
+  .counter{
+    display: none !important;
+  }
+
+  .next{
+    display: none !important;
+  }
+
+  .prev{
+    display: none !important;
+  }
+
   .pageWrapper {
     display: none !important;
   }
