@@ -1,7 +1,13 @@
-import { useContext, useEffect, useState } from 'react';
+import { useContext, useEffect, useRef, useState } from 'react';
 import axios from 'axios';
-import { Page, Document, Thumbnail } from 'react-pdf'; /** File library */
+import {
+  Page,
+  Document,
+  Thumbnail,
+  pdfjs,
+} from 'react-pdf'; /** File library */
 import { enqueueSnackbar } from 'notistack';
+import { Helmet } from 'react-helmet-async';
 import './DeckPreview.css';
 import Button from '../../UI/Button';
 import { CloseIcon, Logo } from '../..';
@@ -11,16 +17,20 @@ import { deckService, deckViewService } from '@/services';
 import { IDeckSlidesStats } from '@/types';
 // import { milisecondsToMinutesAndSeconds } from '@/utils';
 
+interface KeyboardEvent {
+  key: string;
+}
+
 export interface Props {
   type: 'deckCreationPreview' | 'deckUserPreview';
   onClose: () => void;
   pageNumber: number;
   file;
-  onDocumentLoadSuccess;
-  options;
+  onDocumentLoadSuccess?;
+  options?;
   numPages;
   setPreviewPickDeckSlide;
-  setPageNumber;
+  setPageNumber?;
   deckId: string | null;
   deckSlidesNumber?: number | null;
   userId?: string | null;
@@ -124,13 +134,32 @@ function DeckPreview({
 
   const onPrev = () => {
     updateSlideTime();
-    setPageNumber(pageNumber - 1);
+    if (pageNumber > 1) {
+      setPageNumber(pageNumber - 1);
+    }
   };
 
   const onNext = () => {
     updateSlideTime();
-    setPageNumber(pageNumber + 1);
+    if (pageNumber !== numPages) {
+      setPageNumber(pageNumber + 1);
+    }
   };
+
+  const handleKeyDown = (event: KeyboardEvent) => {
+    if (event.key === 'ArrowRight') {
+      onNext();
+    } else if (event.key === 'ArrowLeft') {
+      onPrev();
+    }
+  };
+
+  useEffect(() => {
+    document.addEventListener('keydown', handleKeyDown);
+    return () => {
+      document.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [pageNumber]);
 
   function initializeArrayOfSLidesStats(count): IDeckSlidesStats[] {
     const arrayOfEmptyObjects: { slideNumber: number; viewingTime: number }[] =
@@ -228,23 +257,65 @@ function DeckPreview({
     };
   }, []);
 
-  // useEffect(() => {
-  //   if (deckViewId) {
-  //     window.addEventListener('beforeunload', (event) => {
-  //       console.log('beforeunload: ');
-  //       getSlidesInfo();
-  //       // updateDeckView();
-  //       // eslint-disable-next-line no-param-reassign
-  //       event.returnValue = 'Are you sure about closing this tab?';
-  //     });
-  //   }
-  // }, [deckViewId]);
-
   useEffect(() => {
     if (slidesStats.length) {
       updateDeckView();
     }
   }, [slidesStats]);
+
+  const urlParts = window.location.pathname.split('/');
+  const deckName = urlParts[urlParts.length - 1];
+
+  useEffect(() => {
+    if (type === 'deckUserPreview') {
+      document.title = deckName;
+    }
+
+    // Cleanup function to reset the document title when the component unmounts
+    return () => {
+      document.title = 'Fundraisingtoolbox'; // Replace with default tab name
+    };
+  }, [type]);
+
+  const canvasRef: any = useRef(null);
+
+  useEffect(() => {
+    const renderPdfAsImage = async () => {
+      try {
+        // Load the PDF document using pdf.js
+        const loadingTask = pdfjs.getDocument(file);
+        const pdfDocument = await loadingTask.promise;
+
+        // Get the first page of the PDF
+        const slideNumber = 1;
+        const page = await pdfDocument.getPage(slideNumber);
+
+        // Set the scale for the image rendering (adjust as needed)
+        const scale = 1.5;
+        const viewport = page.getViewport({ scale });
+
+        // Prepare the canvas
+        const canvas: any = canvasRef.current;
+
+        const context = canvas?.getContext('2d');
+        canvas.width = viewport.width;
+        canvas.height = viewport.height;
+
+        // Render the PDF page as an image
+        const renderContext = {
+          canvasContext: context,
+          viewport,
+        };
+        await page.render(renderContext).promise;
+
+        // Now you can use the canvas as an image
+      } catch (error) {
+        console.error('Error rendering PDF:', error);
+      }
+    };
+
+    renderPdfAsImage();
+  }, [file]);
 
   return (
     <div
@@ -257,7 +328,38 @@ function DeckPreview({
       }`}
     >
       <AskEmailPassword onSubmit={handleModalSubmit} />
-
+      <Document
+        file={file}
+        renderMode="svg"
+        onLoadSuccess={onDocumentLoadSuccess}
+        options={options}
+      >
+        <Helmet>
+          {/* Open Graph meta tags for Facebook */}
+          <meta property="og:title" content={deckName} />
+          <meta
+            property="og:description"
+            content={`This is pitch deck of ${deckName}.`}
+          />
+          <meta property="og:image" content={canvasRef.current?.toDataURL()} />
+          <meta property="og:image:width" content="1200" />{' '}
+          {/* Recommended width for Facebook */}
+          <meta property="og:image:height" content="630" />{' '}
+          {/* Recommended height for Facebook */}
+          <meta property="og:image:alt" content={`Preview for ${deckName}`} />
+          <meta property="og:type" content="website" />
+          {/* Twitter Card meta tags for Twitter */}
+          <meta name="twitter:card" content="summary_large_image" />
+          <meta name="twitter:title" content={deckName} />
+          <meta
+            name="twitter:description"
+            content={`This is pitch deck of ${deckName}.`}
+          />
+          <meta name="twitter:image" content={canvasRef.current?.toDataURL()} />
+          <meta name="twitter:image:alt" content={`Preview for ${deckName}`} />
+          {/* You can add other Twitter Card meta tags here */}
+        </Helmet>
+      </Document>
       {!isShowModal && (
         <Document
           file={file}

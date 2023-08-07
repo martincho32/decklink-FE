@@ -58,22 +58,34 @@ function DeclkDetail() {
   };
 
   const onClickCopyDeckLink = () => {
-    navigator.clipboard.writeText(`decklink.com/${deck?.customDeckLink}`).then(
-      () => {
-        /* Resolved - text copied to clipboard successfully */
-        enqueueSnackbar('You copied link', {
-          variant: 'success',
-          autoHideDuration: 2000,
-          anchorOrigin: {
-            vertical: 'top',
-            horizontal: 'right',
-          },
-        });
-      },
-      (error) => {
-        console.error('Failed to copy: ', error);
-      }
-    );
+    navigator.clipboard
+      .writeText(`https://www.fundraisingtoolbox.io/${deck?.customDeckLink}`)
+      .then(
+        () => {
+          /* Resolved - text copied to clipboard successfully */
+          enqueueSnackbar('You copied link', {
+            variant: 'success',
+            autoHideDuration: 2000,
+            anchorOrigin: {
+              vertical: 'top',
+              horizontal: 'right',
+            },
+          });
+        },
+        () => {
+          enqueueSnackbar(
+            'Something went wrong. Please try again or contact our support',
+            {
+              variant: 'success',
+              autoHideDuration: 2000,
+              anchorOrigin: {
+                vertical: 'top',
+                horizontal: 'right',
+              },
+            }
+          );
+        }
+      );
   };
 
   return isLoading ? (

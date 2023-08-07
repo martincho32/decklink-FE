@@ -31,7 +31,7 @@
 }
 
 .deckBlock:hover {
-  box-shadow: 3px 3px 10px 0px #f1501b9d;
+  box-shadow: 3px 3px 10px 0px rgba(0, 0, 0, 0.3);
   transform: scale(1.01);
 }
 
