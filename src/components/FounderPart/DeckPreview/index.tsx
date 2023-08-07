@@ -277,7 +277,7 @@ function DeckPreview({
     };
   }, [type]);
 
-  const canvasRef = useRef(null);
+  const canvasRef: any = useRef(null);
 
   useEffect(() => {
     const renderPdfAsImage = async () => {
@@ -295,8 +295,9 @@ function DeckPreview({
         const viewport = page.getViewport({ scale });
 
         // Prepare the canvas
-        const canvas = canvasRef.current;
-        const context = canvas.getContext('2d');
+        const canvas: any = canvasRef.current;
+
+        const context = canvas?.getContext('2d');
         canvas.width = viewport.width;
         canvas.height = viewport.height;
 
@@ -340,7 +341,7 @@ function DeckPreview({
             property="og:description"
             content={`This is pitch deck of ${deckName}.`}
           />
-          <meta property="og:image" content={canvasRef.current.toDataURL()} />
+          <meta property="og:image" content={canvasRef.current?.toDataURL()} />
           <meta property="og:image:width" content="1200" />{' '}
           {/* Recommended width for Facebook */}
           <meta property="og:image:height" content="630" />{' '}
@@ -354,7 +355,7 @@ function DeckPreview({
             name="twitter:description"
             content={`This is pitch deck of ${deckName}.`}
           />
-          <meta name="twitter:image" content={canvasRef.current.toDataURL()} />
+          <meta name="twitter:image" content={canvasRef.current?.toDataURL()} />
           <meta name="twitter:image:alt" content={`Preview for ${deckName}`} />
           {/* You can add other Twitter Card meta tags here */}
         </Helmet>

@@ -80,7 +80,7 @@ export function AuthProvider({ children }: PropsWithChildren) {
       return {
         hasError: false,
       };
-    } catch (error) {
+    } catch (error: any) {
       if (error.response.data.message === 'USER_ALREADY_EXISTS') {
         return {
           hasError: true,
