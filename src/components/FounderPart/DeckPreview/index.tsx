@@ -251,23 +251,23 @@ function DeckPreview({
     };
   }, []);
 
-  // useEffect(() => {
-  //   if (deckViewId) {
-  //     window.addEventListener('beforeunload', (event) => {
-  //       console.log('beforeunload: ');
-  //       getSlidesInfo();
-  //       // updateDeckView();
-  //       // eslint-disable-next-line no-param-reassign
-  //       event.returnValue = 'Are you sure about closing this tab?';
-  //     });
-  //   }
-  // }, [deckViewId]);
-
   useEffect(() => {
     if (slidesStats.length) {
       updateDeckView();
     }
   }, [slidesStats]);
+
+  useEffect(() => {
+    if (type === 'deckUserPreview') {
+      const parts = window.location.pathname.split('/');
+      const lastPart = parts[parts.length - 1];
+      document.title = lastPart;
+    }
+    // Cleanup function to reset the document title when the component unmounts
+    return () => {
+      document.title = 'Fundraisingtoolbox'; // Replace with default tab name
+    };
+  }, [type]);
 
   return (
     <div
