@@ -1,4 +1,5 @@
 /* eslint-disable no-extra-boolean-cast */
+import * as React from 'react';
 import { useContext, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useSnackbar } from 'notistack';
@@ -102,34 +103,33 @@ function MyDecks() {
             </Link>
           </div>
           <div className={styles.decksBlock}>
-            {deckList.map((deck) => {
-              return (
-                <>
-                  <Card
-                    onClick={() => {
+            {deckList.map((deck) => (
+              <React.Fragment key={deck._id}>
+                <Card
+                  onClick={(event: React.MouseEvent<HTMLDivElement>) => {
+                    if (event.target instanceof HTMLDivElement) {
                       document.body.style.overflow = 'hidden';
                       setPreviewPickDeckSlide(true);
-                    }}
-                    handleClickDelete={() => handleClickDelete(deck._id)}
-                    key={deck._id}
-                    deck={deck}
+                    }
+                  }}
+                  deck={deck}
+                  handleClickDelete={() => handleClickDelete(deck._id)}
+                />
+                {previewPickDeckSlide && (
+                  <DeckPreview
+                    type="deckCreationPreview"
+                    onClose={handleOnClosePitchDeckSlidePreview}
+                    pageNumber={pageNumber}
+                    file={deck.deckUrl}
+                    options={options}
+                    numPages={deck.slides}
+                    setPreviewPickDeckSlide={setPreviewPickDeckSlide}
+                    setPageNumber={setPageNumber}
+                    deckId={null}
                   />
-                  {previewPickDeckSlide && (
-                    <DeckPreview
-                      type="deckCreationPreview"
-                      onClose={handleOnClosePitchDeckSlidePreview}
-                      pageNumber={pageNumber}
-                      file={deck.deckUrl}
-                      options={options}
-                      numPages={deck.slides}
-                      setPreviewPickDeckSlide={setPreviewPickDeckSlide}
-                      setPageNumber={setPageNumber}
-                      deckId={null}
-                    />
-                  )}
-                </>
-              );
-            })}
+                )}
+              </React.Fragment>
+            ))}
           </div>
         </div>
       ) : (

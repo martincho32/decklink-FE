@@ -11,6 +11,10 @@ import { deckService, deckViewService } from '@/services';
 import { IDeckSlidesStats } from '@/types';
 // import { milisecondsToMinutesAndSeconds } from '@/utils';
 
+interface KeyboardEvent {
+  key: string;
+}
+
 export interface Props {
   type: 'deckCreationPreview' | 'deckUserPreview';
   onClose: () => void;
@@ -124,13 +128,32 @@ function DeckPreview({
 
   const onPrev = () => {
     updateSlideTime();
-    setPageNumber(pageNumber - 1);
+    if (pageNumber > 1) {
+      setPageNumber(pageNumber - 1);
+    }
   };
 
   const onNext = () => {
     updateSlideTime();
-    setPageNumber(pageNumber + 1);
+    if (pageNumber !== numPages) {
+      setPageNumber(pageNumber + 1);
+    }
   };
+
+  const handleKeyDown = (event: KeyboardEvent) => {
+    if (event.key === 'ArrowRight') {
+      onNext();
+    } else if (event.key === 'ArrowLeft') {
+      onPrev();
+    }
+  };
+
+  useEffect(() => {
+    document.addEventListener('keydown', handleKeyDown);
+    return () => {
+      document.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [pageNumber]);
 
   function initializeArrayOfSLidesStats(count): IDeckSlidesStats[] {
     const arrayOfEmptyObjects: { slideNumber: number; viewingTime: number }[] =

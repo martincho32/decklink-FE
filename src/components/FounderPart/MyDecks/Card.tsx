@@ -27,7 +27,7 @@ import {
 interface Props {
   deck: IDeck;
   handleClickDelete: (id: string) => Promise<void>;
-  onClick: () => void;
+  onClick: (event) => void;
 }
 
 function Card({ deck, handleClickDelete, onClick }: Props) {
