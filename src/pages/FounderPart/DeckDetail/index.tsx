@@ -31,15 +31,22 @@ function DeclkDetail() {
           },
         });
         setDeck(deckResponse.data);
-        const deckViewsResponse = await deckViewService.getDeckViewByDeckId(
-          id,
-          {
-            headers: {
-              Authorization: `Bearer ${localStorage.getItem('token')}`,
+        const { data } = await deckViewService.getDeckViewByDeckId(id, {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('token')}`,
+          },
+        });
+        if (!data.length) {
+          enqueueSnackbar(`Whoops!! You don't have any views yet.`, {
+            variant: 'info',
+            autoHideDuration: 3000,
+            anchorOrigin: {
+              vertical: 'top',
+              horizontal: 'right',
             },
-          }
-        );
-        setDeckViews(deckViewsResponse.data);
+          });
+        }
+        setDeckViews(data);
       } catch (error: any) {
         console.error('Error: ', error.message);
       }
