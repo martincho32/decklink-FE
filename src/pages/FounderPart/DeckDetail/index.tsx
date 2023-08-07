@@ -99,16 +99,7 @@ function DeclkDetail() {
           onClick={onClickCopyDeckLink}
         />
       </div>
-      {/* One component for global deck viewing statistics */}
       <DeckAverageStats deckViews={deckViews} deck={deck} />
-      {/* One component for individual deck viewing statistics */}
-      <div className="flex flex-col items-center">
-        <h3 className="text-2xl leading-normal text-center">
-          <span className="text-persimmon text-center">{deck?.name} </span>
-          Detailed Information
-        </h3>
-        <span className="text-mirage">For each view</span>
-      </div>
       <DeckIndividualStats deckViews={deckViews} deck={deck} />
     </MainLayout>
   );
