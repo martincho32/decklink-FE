@@ -11,14 +11,24 @@ export interface RequiredSignUpInfoProps {
     companyWebUrl,
     companyLinkedInUrl,
   }: SignUpFormData) => void;
+  companyNameInputClasses;
+  companyNameIsInvalid;
+  setEnternedCompanyNameTouched;
 }
 
 function RequiredSignUpInfo({
   formData,
   setFormData,
+  companyNameInputClasses,
+  companyNameIsInvalid,
+  setEnternedCompanyNameTouched,
 }: RequiredSignUpInfoProps) {
   const handleCompanyNameChange = (value: string) => {
     setFormData({ ...formData, companyName: value });
+  };
+
+  const companyNameInputBlur = () => {
+    setEnternedCompanyNameTouched(true);
   };
 
   const handleCompanyWebsiteChange = (value: string) => {
@@ -31,16 +41,21 @@ function RequiredSignUpInfo({
 
   return (
     <>
-      <Input
-        required
-        style="default"
-        type="text"
-        placeholder="Apple"
-        label="Your Company Name"
-        id="your-company-name"
-        value={formData.companyName}
-        onChange={handleCompanyNameChange}
-      />
+      <div className={companyNameInputClasses}>
+        <Input
+          required
+          style="default"
+          type="text"
+          placeholder="Apple"
+          label="Your Company Name"
+          id="your-company-name"
+          value={formData.companyName}
+          inputIsInvalid={companyNameIsInvalid}
+          errorMessage="First name must be at least 2 characters long"
+          onChange={handleCompanyNameChange}
+          onBlur={companyNameInputBlur}
+        />
+      </div>
       <Input
         required
         style="default"

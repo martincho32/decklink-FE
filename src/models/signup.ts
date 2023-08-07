@@ -9,7 +9,7 @@ class SignUpFormData {
 
   confirmPassword: string;
 
-  companyName?: string;
+  companyName: string;
 
   companyWebUrl?: string;
 
