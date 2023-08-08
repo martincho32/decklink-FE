@@ -6,7 +6,12 @@ import axios from 'axios';
 import { useSnackbar } from 'notistack';
 import './DeckCreation.css';
 import { Logo } from '../../../components/icons';
-import { Button, Input, DeckPreview } from '../../../components';
+import {
+  Button,
+  Input,
+  DeckPreview,
+  AlertDialogComponent,
+} from '../../../components';
 /** File library */
 import 'react-pdf/dist/esm/Page/AnnotationLayer.css';
 import 'react-pdf/dist/esm/Page/TextLayer.css';
@@ -41,6 +46,8 @@ function Deck({ title = 'Create', deckId }: Props) {
   const [previewPickDeckSlide, setPreviewPickDeckSlide] = useState(false);
   const [uploadInputFileLabel, setUploadInputFileLabel] =
     useState('Upload File (.pdf)');
+  const [isEdited, setIsEdited] = useState(false);
+
   // const [progress, setProgress] = useState({ started: false, pc: 0 });
   // const [msg, setMsg] = useState<string | null>(null);
 
@@ -63,6 +70,7 @@ function Deck({ title = 'Create', deckId }: Props) {
         setEnteredDeckFileTouched(true);
         setDeckFile(selectedFile);
         setUploadInputFileLabel('Change File (.pdf)');
+        setIsEdited(true);
       }
     }
   };
@@ -89,6 +97,12 @@ function Deck({ title = 'Create', deckId }: Props) {
   const [enteredPasswordTouched, setEnteredPasswordTouched] =
     useState<boolean>(false);
 
+  useEffect(() => {
+    if (isEdited) {
+      console.log('some one has changed');
+    }
+  }, [isEdited]);
+
   const enteredPasswordIsValid =
     deckPassword?.length >= 6 && deckPassword?.length <= 35;
   const enteredDeckNameIsValid = deckName.trim() !== '' && deckName.length >= 3;
@@ -107,23 +121,30 @@ function Deck({ title = 'Create', deckId }: Props) {
     !enteredDeckFileIsValid && enteredDeckFileTouched;
 
   const onClickGoBack = () => {
+    if (isEdited) {
+      // TODO do something here
+    }
     navigate('/founder/decks');
   };
 
   const handleDeckNameChange = (value: string) => {
     setDeckName(value);
+    setIsEdited(true);
   };
 
   const handleDeckLinkChange = (value: string) => {
     setDeckLink(value.replace(/\s+/g, '-').toLowerCase());
+    setIsEdited(true);
   };
 
   const handlePassToogleChange = () => {
     setPassToogleChecked(!passToogleChecked);
+    setIsEdited(true);
   };
 
   const handleEmailToogleChange = () => {
     setEmailToogleChecked(!emailToogleChecked);
+    setIsEdited(true);
   };
 
   const deckNameBlur = () => {
@@ -323,12 +344,25 @@ function Deck({ title = 'Create', deckId }: Props) {
       >
         <div className="w-full my-12 grid grid-cols-1 md:flex md:justify-between md:content-center xl:grid-cols-3 gap-7 max-h-fit justify-center">
           <div className="flex justify-center md:justify-start gap-6">
-            <Button
-              icon={<Logo color="white" />}
-              type="button"
-              className="bg-persimmon -rotate-90 p-4"
-              onClick={onClickGoBack}
-            />
+            {isEdited ? (
+              <AlertDialogComponent
+                actionClassName="bg-persimmon"
+                action={onClickGoBack}
+              >
+                <Button
+                  icon={<Logo color="white" />}
+                  type="button"
+                  className="bg-persimmon -rotate-90 p-4"
+                />
+              </AlertDialogComponent>
+            ) : (
+              <Button
+                icon={<Logo color="white" />}
+                type="button"
+                className="bg-persimmon -rotate-90 p-4"
+                onClick={onClickGoBack}
+              />
+            )}
             <span className="self-center text-xl leading-normal justify-center">
               Go Back
             </span>
