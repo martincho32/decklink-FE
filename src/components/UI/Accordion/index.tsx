@@ -35,7 +35,7 @@ const AccordionTrigger = React.forwardRef<
     >
       <div className="text-persimmon flex flex-col justify-center h-full lg:pl-6 lg:border-l border-l-persimmon border-solid">
         <span className="flex gap-3 lg:whitespace-nowrap font-bold">
-          Show Detailed Schedule of Viewing Time
+          Show detailed Graph
           <Logo />
         </span>
       </div>
