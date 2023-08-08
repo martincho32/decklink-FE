@@ -1,8 +1,13 @@
 import { useContext, useEffect, useState } from 'react';
 import axios from 'axios';
-import { Page, Document, Thumbnail } from 'react-pdf'; /** File library */
+import {
+  Page,
+  Document,
+  Thumbnail,
+  pdfjs,
+} from 'react-pdf'; /** File library */
 import { enqueueSnackbar } from 'notistack';
-// import { Helmet } from 'react-helmet-async';
+import { Helmet } from 'react-helmet-async';
 import './DeckPreview.css';
 import Button from '../../UI/Button';
 import { CloseIcon, Logo } from '../..';
@@ -312,6 +317,36 @@ function DeckPreview({
   //   renderPdfAsImage();
   // }, [file]);
 
+  const pdfUrl = file;
+  const [pdfImage, setPDFImage] = useState<string | null>(null);
+
+  const generatePDFImage = async () => {
+    const pdfDocument = await pdfjs.getDocument(pdfUrl).promise;
+    const pdfPage = await pdfDocument.getPage(1);
+    const viewport = pdfPage.getViewport({ scale: 1 });
+    const canvas = document.createElement('canvas');
+    const context = canvas.getContext('2d');
+
+    if (context) {
+      canvas.width = viewport.width;
+      canvas.height = viewport.height;
+
+      const renderContext = {
+        canvasContext: context,
+        viewport,
+      };
+
+      await pdfPage.render(renderContext).promise;
+
+      const imageDataURL = canvas.toDataURL('image/png');
+      setPDFImage(imageDataURL);
+    }
+  };
+
+  useEffect(() => {
+    generatePDFImage();
+  }, []);
+
   return (
     <div
       id="container"
@@ -323,6 +358,19 @@ function DeckPreview({
       }`}
     >
       <AskEmailPassword onSubmit={handleModalSubmit} />
+      <Document file={pdfUrl}>
+        <Page pageNumber={1} />
+      </Document>
+      {pdfImage && (
+        <Helmet>
+          <meta property="og:title" content="Custom Link Preview" />
+          <meta
+            property="og:description"
+            content="Check out this PDF link preview!"
+          />
+          <meta property="og:image" content={pdfImage} />
+        </Helmet>
+      )}
       {/* <Document
         file={file}
         renderMode="svg"
