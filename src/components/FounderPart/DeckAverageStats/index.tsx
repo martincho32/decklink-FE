@@ -72,7 +72,11 @@ function DeckAverageStats({ deck, deckViews }: Props) {
       </span>
       <div className="mb-16 w-full overflow-x-auto">
         <div className="min-w-min">
-          <LineChart labels={labels as string[]} data={data} deck={deck} />
+          <LineChart
+            labels={['0', ...(labels as string[])]}
+            data={data}
+            deck={deck}
+          />
           <Document
             file={pdfFile}
             onLoadSuccess={onDocumentLoadSuccess}
