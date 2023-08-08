@@ -348,6 +348,7 @@ function Deck({ title = 'Create', deckId }: Props) {
               <AlertDialogComponent
                 actionClassName="bg-persimmon"
                 action={onClickGoBack}
+                alertDescription="You didn't save your recent changes."
               >
                 <Button
                   icon={<Logo color="white" />}
