@@ -122,7 +122,7 @@ function MyDecks() {
                 />
                 {previewPickDeckSlide && (
                   <DeckPreview
-                    type="deckCreationPreview"
+                    type="deckUserPreview"
                     onClose={handleOnClosePitchDeckSlidePreview}
                     pageNumber={pageNumber}
                     file={deck.deckUrl}
