@@ -110,7 +110,6 @@ function SignUp() {
     ) {
       return;
     }
-    debugger;
     const { hasError, message } = await registerUser(
       formData.email,
       formData.password,
