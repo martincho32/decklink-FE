@@ -4,10 +4,10 @@ import {
   Page,
   Document,
   Thumbnail,
-  pdfjs,
+  // pdfjs,
 } from 'react-pdf'; /** File library */
 import { enqueueSnackbar } from 'notistack';
-import { Helmet } from 'react-helmet-async';
+// import { Helmet } from 'react-helmet-async';
 import './DeckPreview.css';
 import Button from '../../UI/Button';
 import { CloseIcon, Logo } from '../..';
@@ -50,7 +50,7 @@ function DeckPreview({
   deckSlidesNumber,
   userId,
 }: Props) {
-  const { isShowModal, setShowModal, hasPasswordRequired } =
+  const { isShowModal, setShowModal, hasPasswordRequired, hasEmailRequired } =
     useContext(UIContext);
   const [currentSlideStartTime, setCurrentSlideStartTime] = useState(0);
   const [isPageActive, setIsPageActive] = useState(true);
@@ -112,9 +112,9 @@ function DeckPreview({
         const auxSlidesStats = JSON.parse(JSON.stringify(slidesStats));
         auxSlidesStats[pageNumber - 1].viewingTime += elapsedTime;
         // console.log(
-        //   `El usuario ${userId} miró la slide ${pageNumber} durante ${milisecondsToMinutesAndSeconds(
+        //   `El usuario ${userId} miró la slide ${pageNumber} durante ${
         //     auxSlidesStats[pageNumber - 1].viewingTime
-        //   )}`
+        //   }`
         // );
         setSlidesStats([...auxSlidesStats]);
         setCurrentSlideStartTime(Date.now());
@@ -128,9 +128,9 @@ function DeckPreview({
     }
   };
 
-  // const onSaveDeck = () => {
-  //   console.log('testing save');
-  // };
+  const onSaveDeck = () => {
+    console.log('Pending: redirect to some form');
+  };
 
   const onPrev = () => {
     updateSlideTime();
@@ -214,6 +214,7 @@ function DeckPreview({
           deckSlidesStats: slidesStats,
           viewerEmail: email,
           deckOwnerId: userId!,
+          stale: false,
         },
         {
           headers: {
@@ -262,6 +263,35 @@ function DeckPreview({
       updateDeckView();
     }
   }, [slidesStats]);
+
+  useEffect(() => {
+    if (!hasPasswordRequired && !hasEmailRequired && deckSlidesNumber) {
+      const auxSlidesStats = initializeArrayOfSLidesStats(deckSlidesNumber);
+      setSlidesStats(auxSlidesStats);
+      deckViewService
+        .createDeckView(
+          {
+            deckId: deckId as string,
+            deckSlidesStats: slidesStats,
+            viewerEmail: null,
+            deckOwnerId: userId!,
+            stale: false,
+          },
+          {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem('token')}`,
+            },
+          }
+        )
+        .then(({ data }) => {
+          setDeckViewId(data._id);
+          initializeCounting();
+        })
+        .catch((error: any) => {
+          console.error('Presentation page error: ', error);
+        });
+    }
+  }, [deckSlidesNumber]);
 
   const urlParts = window.location.pathname.split('/');
   const deckName = urlParts[urlParts.length - 1];
@@ -317,35 +347,35 @@ function DeckPreview({
   //   renderPdfAsImage();
   // }, [file]);
 
-  const pdfUrl = file;
-  const [pdfImage, setPDFImage] = useState<string | null>(null);
+  // const pdfUrl = file;
+  // const [pdfImage, setPDFImage] = useState<string | null>(null);
 
-  const generatePDFImage = async () => {
-    const pdfDocument = await pdfjs.getDocument(pdfUrl).promise;
-    const pdfPage = await pdfDocument.getPage(1);
-    const viewport = pdfPage.getViewport({ scale: 1 });
-    const canvas = document.createElement('canvas');
-    const context = canvas.getContext('2d');
+  // const generatePDFImage = async () => {
+  //   const pdfDocument = await pdfjs.getDocument(pdfUrl).promise;
+  //   const pdfPage = await pdfDocument.getPage(1);
+  //   const viewport = pdfPage.getViewport({ scale: 1 });
+  //   const canvas = document.createElement('canvas');
+  //   const context = canvas.getContext('2d');
 
-    if (context) {
-      canvas.width = viewport.width;
-      canvas.height = viewport.height;
+  //   if (context) {
+  //     canvas.width = viewport.width;
+  //     canvas.height = viewport.height;
 
-      const renderContext = {
-        canvasContext: context,
-        viewport,
-      };
+  //     const renderContext = {
+  //       canvasContext: context,
+  //       viewport,
+  //     };
 
-      await pdfPage.render(renderContext).promise;
+  //     await pdfPage.render(renderContext).promise;
 
-      const imageDataURL = canvas.toDataURL('image/png');
-      setPDFImage(imageDataURL);
-    }
-  };
+  //     const imageDataURL = canvas.toDataURL('image/png');
+  //     setPDFImage(imageDataURL);
+  //   }
+  // };
 
-  useEffect(() => {
-    generatePDFImage();
-  }, []);
+  // useEffect(() => {
+  //   generatePDFImage();
+  // }, []);
 
   return (
     <div
@@ -358,7 +388,7 @@ function DeckPreview({
       }`}
     >
       <AskEmailPassword onSubmit={handleModalSubmit} />
-      <Document file={pdfUrl}>
+      {/* <Document file={pdfUrl}>
         <Page pageNumber={1} />
       </Document>
       {pdfImage && (
@@ -370,7 +400,7 @@ function DeckPreview({
           />
           <meta property="og:image" content={pdfImage} />
         </Helmet>
-      )}
+      )} */}
       {/* <Document
         file={file}
         renderMode="svg"
@@ -472,17 +502,17 @@ function DeckPreview({
         </Document>
       )}
 
-      {/* {type === 'deckUserPreview' && (
+      {type === 'deckUserPreview' && (
         <Button
           type="button"
           text="Save This Deck"
           icon={<Logo color="white" />}
-          className="bg-persimmon text-white fixed bottom-4 left-1/2 -translate-x-1/2"
-          backgroundColor="#F1511B"
+          className="bg-persimmon/25 text-white fixed bottom-4 right-[7%]  py-3 px-3"
+          // backgroundColor="#F1511B"
           textColor="#FFF"
           onClick={onSaveDeck}
         />
-      )} */}
+      )}
 
       <div
         className={`${
