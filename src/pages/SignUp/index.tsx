@@ -42,7 +42,6 @@ function SignUp() {
     confirmPassword: '',
     companyName: '',
     companyWebUrl: '',
-    companyLinkedInUrl: '',
   });
 
   const formTitles = ['Sign Up', 'Additional Information'];
@@ -111,6 +110,7 @@ function SignUp() {
     ) {
       return;
     }
+    debugger;
     const { hasError, message } = await registerUser(
       formData.email,
       formData.password,
@@ -118,7 +118,6 @@ function SignUp() {
       formData.firstName,
       formData.lastName,
       formData.companyName,
-      formData.companyLinkedInUrl,
       formData.companyWebUrl
     );
     if (hasError) {
