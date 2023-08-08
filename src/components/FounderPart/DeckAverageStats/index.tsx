@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Document, Page, pdfjs } from 'react-pdf';
+import type { PDFDocumentProxy } from 'pdfjs-dist';
 import { LineChart } from '../..'; // Replace this with the correct path to your LineChart component
 import { IDeck, IDeckSlidesStats, IDeckView } from '../../../types';
 import DeckThumbnail from '../DeckThumbnail';
@@ -61,7 +62,7 @@ function DeckAverageStats({ deck, deckViews }: Props) {
 
   const onDocumentLoadSuccess = ({
     numPages: nextNumPages,
-  }: pdfjs.PDFDocumentProxy) => {
+  }: PDFDocumentProxy): void => {
     setNumPages(nextNumPages);
   };
 
@@ -73,7 +74,7 @@ function DeckAverageStats({ deck, deckViews }: Props) {
       <div className="mb-16 w-full overflow-x-auto">
         <div className="min-w-min">
           <LineChart
-            labels={['0', ...(labels as string[])]}
+            labels={labels as string[]}
             data={data}
             deck={deck}
           />
