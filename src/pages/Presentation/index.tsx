@@ -42,9 +42,7 @@ function Presentation() {
   useEffect(() => {
     // TODO GET deck service to get deck file
     if (!customDeckLink) {
-      const errorMessage =
-        'Error fetching deck customDeckLink is undefined or null';
-      console.error(errorMessage);
+      const errorMessage = `Error fetching deck's customDeckLink is undefined or null. Please contact support.`;
       enqueueSnackbar(errorMessage, {
         variant: 'error',
         autoHideDuration: 10000,

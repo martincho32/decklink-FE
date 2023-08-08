@@ -31,15 +31,22 @@ function DeclkDetail() {
           },
         });
         setDeck(deckResponse.data);
-        const deckViewsResponse = await deckViewService.getDeckViewByDeckId(
-          id,
-          {
-            headers: {
-              Authorization: `Bearer ${localStorage.getItem('token')}`,
+        const { data } = await deckViewService.getDeckViewByDeckId(id, {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('token')}`,
+          },
+        });
+        if (!data.length) {
+          enqueueSnackbar(`Whoops!! You don't have any views yet.`, {
+            variant: 'info',
+            autoHideDuration: 3000,
+            anchorOrigin: {
+              vertical: 'top',
+              horizontal: 'right',
             },
-          }
-        );
-        setDeckViews(deckViewsResponse.data);
+          });
+        }
+        setDeckViews(data);
       } catch (error: any) {
         console.error('Error: ', error.message);
       }
@@ -51,22 +58,34 @@ function DeclkDetail() {
   };
 
   const onClickCopyDeckLink = () => {
-    navigator.clipboard.writeText(`decklink.com/${deck?.customDeckLink}`).then(
-      () => {
-        /* Resolved - text copied to clipboard successfully */
-        enqueueSnackbar('You copied link', {
-          variant: 'success',
-          autoHideDuration: 2000,
-          anchorOrigin: {
-            vertical: 'top',
-            horizontal: 'right',
-          },
-        });
-      },
-      (error) => {
-        console.error('Failed to copy: ', error);
-      }
-    );
+    navigator.clipboard
+      .writeText(`https://www.fundraisingtoolbox.io/${deck?.customDeckLink}`)
+      .then(
+        () => {
+          /* Resolved - text copied to clipboard successfully */
+          enqueueSnackbar('You copied link', {
+            variant: 'success',
+            autoHideDuration: 2000,
+            anchorOrigin: {
+              vertical: 'top',
+              horizontal: 'right',
+            },
+          });
+        },
+        () => {
+          enqueueSnackbar(
+            'Something went wrong. Please try again or contact our support',
+            {
+              variant: 'success',
+              autoHideDuration: 2000,
+              anchorOrigin: {
+                vertical: 'top',
+                horizontal: 'right',
+              },
+            }
+          );
+        }
+      );
   };
 
   return isLoading ? (
@@ -99,16 +118,7 @@ function DeclkDetail() {
           onClick={onClickCopyDeckLink}
         />
       </div>
-      {/* One component for global deck viewing statistics */}
       <DeckAverageStats deckViews={deckViews} deck={deck} />
-      {/* One component for individual deck viewing statistics */}
-      <div className="flex flex-col items-center">
-        <h3 className="text-2xl leading-normal text-center">
-          <span className="text-persimmon text-center">{deck?.name} </span>
-          Detailed Information
-        </h3>
-        <span className="text-mirage">For each view</span>
-      </div>
       <DeckIndividualStats deckViews={deckViews} deck={deck} />
     </MainLayout>
   );
