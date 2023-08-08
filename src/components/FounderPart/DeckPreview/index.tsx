@@ -1,11 +1,6 @@
-import { useContext, useEffect, useRef, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import axios from 'axios';
-import {
-  Page,
-  Document,
-  Thumbnail,
-  pdfjs,
-} from 'react-pdf'; /** File library */
+import { Page, Document, Thumbnail } from 'react-pdf'; /** File library */
 import { enqueueSnackbar } from 'notistack';
 // import { Helmet } from 'react-helmet-async';
 import './DeckPreview.css';
@@ -277,7 +272,7 @@ function DeckPreview({
     };
   }, [type]);
 
-  const canvasRef: any = useRef(null);
+  // const canvasRef: any = useRef(null);
 
   // useEffect(() => {
   //   const renderPdfAsImage = async () => {
