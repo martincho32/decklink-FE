@@ -115,7 +115,7 @@ function Deck({ title = 'Create', deckId }: Props) {
   };
 
   const handleDeckLinkChange = (value: string) => {
-    setDeckLink(value);
+    setDeckLink(value.replace(/\s+/g, '-').toLowerCase());
   };
 
   const handlePassToogleChange = () => {
@@ -135,7 +135,6 @@ function Deck({ title = 'Create', deckId }: Props) {
   };
 
   const deckFileBlur = () => {
-    console.log('onBlure');
     setEnteredDeckFileTouched(true);
   };
 
@@ -357,6 +356,7 @@ function Deck({ title = 'Create', deckId }: Props) {
           </div>
           <div className="">
             <Input
+              className="lowercase"
               required
               style="prefilled"
               type="text"
