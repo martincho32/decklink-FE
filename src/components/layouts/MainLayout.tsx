@@ -6,9 +6,11 @@ interface Props {
 
 function MainLayout({ children }: Props) {
   return (
-    <div className="w-full md:max-w-5xl xl:max-w-screen-2xl px-4 md:px-4 xl:px-24 pt-6 mx-auto">
-      <Navbar />
-      <main>{children}</main>
+    <div className="w-full desktop:px-16 tablet:px-8 mobileh:px-5 mobilev:px-4">
+      <div className="desktop:pt-8 tablet:pt-6 pt-2 mx-auto w-full max-w-custom">
+        <Navbar />
+        <main>{children}</main>
+      </div>
     </div>
   );
 }
