@@ -18,7 +18,7 @@ const useLoading = (loadingFunction: () => Promise<any>) => {
     };
 
     fetchData();
-  }, [loadingFunction]);
+  }, []);
 
   return isLoading;
 };

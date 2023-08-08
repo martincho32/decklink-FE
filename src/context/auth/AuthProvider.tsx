@@ -86,7 +86,13 @@ export function AuthProvider({ children }: PropsWithChildren) {
       return {
         hasError: false,
       };
-    } catch (error) {
+    } catch (error: any) {
+      if (error.response.data.message === 'USER_ALREADY_EXISTS') {
+        return {
+          hasError: true,
+          message: 'User with such email already exists',
+        };
+      }
       return {
         hasError: true,
         message: 'Something went wrong. Please contact support.',
@@ -113,7 +119,6 @@ export function AuthProvider({ children }: PropsWithChildren) {
       });
       return true;
     } catch (error: any) {
-      console.log('Error in validateToken: ', error.message);
       removeItem('token');
       return false;
     }
