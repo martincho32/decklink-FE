@@ -33,6 +33,16 @@ interface Props {
 }
 
 function Card({ deck, handleClickDelete, onClick }: Props) {
+  const [isPopupVisible, setPopupVisible] = useState(false);
+
+  const handleMouseEnter = () => {
+    setPopupVisible(true);
+  };
+
+  const handleMouseLeave = () => {
+    setPopupVisible(false);
+  };
+
   const { enqueueSnackbar } = useSnackbar();
 
   const [loading, setLoading] = useState<boolean>(true);
@@ -44,7 +54,9 @@ function Card({ deck, handleClickDelete, onClick }: Props) {
 
   const handleCopyClick = () => {
     navigator.clipboard
-      .writeText(`https://www.fundraisingtoolbox.io/${deck?.customDeckLink}`)
+      .writeText(
+        `https://www.fundraisingtoolbox.io/preview/${deck?.customDeckLink}`
+      )
       .then(
         () => {
           enqueueSnackbar('Url successfully copied!', {
@@ -125,13 +137,22 @@ function Card({ deck, handleClickDelete, onClick }: Props) {
               <h3 className={styles.deckTitle}>{deck.name}</h3>
               {/* <p className={styles.subtitle}>Published</p> */}
             </div>
-            <Button
-              type="button"
-              text="Copy Link"
-              icon={<Logo color="#161A20" />}
-              textColor="#161A20"
-              onClick={handleCopyClick}
-            />
+            <div className={styles.buttonContainer}>
+              <Button
+                type="button"
+                text="Copy Link"
+                icon={<Logo color="#161A20" />}
+                textColor="#161A20"
+                onMouserEnter={handleMouseEnter}
+                onMouserLeave={handleMouseLeave}
+                onClick={handleCopyClick}
+              />
+              {isPopupVisible && (
+                <div
+                  className={styles.popup}
+                >{`https://www.fundraisingtoolbox.io/preview/${deck?.customDeckLink}`}</div>
+              )}
+            </div>
           </div>
           <div className={styles.deckMainInfo}>
             <div className={styles.deckMainInfoItem}>

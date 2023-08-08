@@ -6,28 +6,28 @@
   box-shadow: 3px 3px 10px 0px rgba(0, 0, 0, 0.2);
 }
 
-.previewImage canvas{
-  width: 100%!important;
-  height: auto!important;
-  max-height: 9.5rem!important;
-  object-fit: cover!important;
+.previewImage canvas {
+  width: 100% !important;
+  height: auto !important;
+  max-height: 9.5rem !important;
+  object-fit: cover !important;
   border-top-left-radius: 5px !important;
   border-top-right-radius: 5px !important;
 }
 
-.dummyPreviewImage{
-  width: 100%!important;
-  height: auto!important;
+.dummyPreviewImage {
+  width: 100% !important;
+  height: auto !important;
   border-top-left-radius: 5px !important;
   border-top-right-radius: 5px !important;
 }
 
-.previewImage .textLayer{
-  visibility: hidden!important;
+.previewImage .textLayer {
+  visibility: hidden !important;
 }
 
-.previewImage .annotationLayer{
-  visibility: hidden!important;
+.previewImage .annotationLayer {
+  visibility: hidden !important;
 }
 
 .deckBlock:hover {
@@ -45,7 +45,7 @@
   justify-content: space-between;
 }
 
-.deckMainInfoAndButtons{
+.deckMainInfoAndButtons {
   width: 100%;
   display: flex;
   flex-direction: column;
@@ -75,8 +75,8 @@
   font-style: normal;
   font-weight: 700;
   line-height: normal;
-  white-space: normal; 
-  word-wrap: break-word; 
+  white-space: normal;
+  word-wrap: break-word;
 }
 
 .subtitle {
@@ -169,38 +169,43 @@
   flex-grow: 1;
 }
 
-.editButton:hover{
+.editButton:hover {
   text-decoration: none;
 }
 
-.editButton > :first-child{
+.editButton > :first-child {
   flex-grow: 1;
 }
 
+.buttonContainer {
+  position: relative;
+}
 
-
-
+.popup {
+  position: absolute;
+  top: -2rem;
+  left: 100%;
+  background-color: #f1f1f1;
+  color: #333;
+  padding: 5px 10px;
+  border-radius: 5px;
+  box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.2);
+}
 
 @media (max-width: 1536px) {
-
 }
 
 @media (max-width: 1280px) {
-
 }
 
 @media (max-width: 1024px) {
-
 }
 
 @media (max-width: 768px) {
-
 }
 
 @media (max-width: 576px) {
-
 }
 
 @media (max-width: 320px) {
-
 }

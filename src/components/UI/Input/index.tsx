@@ -229,7 +229,7 @@ function Input({
             }
           >
             <label className={styles.placeholder} htmlFor={id}>
-              decklink.com/
+              fundraisingtoolbox.io/preview/
             </label>
             <input
               required={required}

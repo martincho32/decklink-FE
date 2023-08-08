@@ -59,7 +59,9 @@ function DeclkDetail() {
 
   const onClickCopyDeckLink = () => {
     navigator.clipboard
-      .writeText(`https://www.fundraisingtoolbox.io/${deck?.customDeckLink}`)
+      .writeText(
+        `https://www.fundraisingtoolbox.io/preview/${deck?.customDeckLink}`
+      )
       .then(
         () => {
           /* Resolved - text copied to clipboard successfully */

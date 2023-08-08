@@ -286,7 +286,12 @@ function Deck({ title = 'Create', deckId }: Props) {
         })
         .then(({ data }) => {
           setDeckName(data.name);
-          setDeckLink(data.customDeckLink.replace('decklink.com/', ''));
+          setDeckLink(
+            data.customDeckLink.replace(
+              'https://www.fundraisingtoolbox.io/preview/',
+              ''
+            )
+          );
           setDeckPassword(data.password);
           setEmailToogleChecked(data.requestEmail);
           setPassToogleChecked(data.requestPassword);
