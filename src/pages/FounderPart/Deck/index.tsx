@@ -379,6 +379,8 @@ function Deck({ title = 'Create', deckId }: Props) {
         <div className="w-full grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-7 max-h-fit justify-center mt-6">
           <div className="flex justify-between">
             <Input
+              showExplanation
+              explanationMessage="Ask the user for their email to get access to the deck"
               style="toggle"
               label="Request Email"
               id="request-email"
@@ -386,6 +388,8 @@ function Deck({ title = 'Create', deckId }: Props) {
               checked={emailToogleChecked}
             />
             <Input
+              showExplanation
+              explanationMessage="Ask the user for a custom password to access the deck"
               style="toggle"
               label="Request Password"
               id="request-pass"
