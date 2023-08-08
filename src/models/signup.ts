@@ -11,9 +11,9 @@ class SignUpFormData {
 
   companyName: string;
 
-  companyWebUrl?: string;
+  companyWebUrl: string;
 
-  companyLinkedInUrl?: string;
+  companyLinkedInUrl: string;
 
   constructor(
     email: string,

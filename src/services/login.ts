@@ -13,6 +13,9 @@ type RegisterUserCredentials = UserCredentials & {
   cfpassword: string;
   firstName: string;
   lastName: string;
+  companyName: string;
+  companyWebUrl: string;
+  companyLinkedInUrl: string;
 };
 
 export const registerUser = (

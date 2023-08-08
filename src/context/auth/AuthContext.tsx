@@ -13,8 +13,8 @@ interface ContextProps {
     firstName: string,
     lastName: string,
     companyName: string,
-    companyWebUrl: string | undefined,
-    companyLinkedInUrl: string | undefined
+    companyWebUrl: string,
+    companyLinkedInUrl: string
   ) => Promise<{
     hasError: boolean;
     message?: string;
