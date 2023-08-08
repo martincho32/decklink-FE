@@ -1,8 +1,13 @@
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import axios, { AxiosRequestConfig } from 'axios';
 
+const basePath = import.meta.env.DEV
+  ? 'http://localhost:3000/api'
+  : 'https://algebraic-hub-392717.uc.r.appspot.com/api';
+
 const axiosApi = axios.create({
-  baseURL: 'https://algebraic-hub-392717.uc.r.appspot.com/api',
+  // baseURL: 'https://algebraic-hub-392717.uc.r.appspot.com/api',
+  baseURL: basePath,
   withCredentials: true,
   headers: {
     'Content-Type': 'application/json',
@@ -13,7 +18,7 @@ const axiosApi = axios.create({
   },
 });
 
-const basePath = 'https://algebraic-hub-392717.uc.r.appspot.com/api';
+// const basePath = 'https://algebraic-hub-392717.uc.r.appspot.com/api';
 
 const api = {
   get: (
@@ -29,16 +34,16 @@ const api = {
     endpoint: string,
     body,
     config: AxiosRequestConfig<any> | undefined = undefined
-  ) => axiosApi.put(`${basePath}/${endpoint}`, body, config),
+  ) => axiosApi.put(`/${endpoint}`, body, config),
   patch: (
     endpoint: string,
     body,
     config: AxiosRequestConfig<any> | undefined = undefined
-  ) => axiosApi.patch(`${basePath}/${endpoint}`, body, config),
+  ) => axiosApi.patch(`/${endpoint}`, body, config),
   delete: (
     endpoint: string,
     config: AxiosRequestConfig<any> | undefined = undefined
-  ) => axiosApi.delete(`${basePath}/${endpoint}`, config),
+  ) => axiosApi.delete(`/${endpoint}`, config),
 };
 
 export { api };

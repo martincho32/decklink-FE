@@ -46,6 +46,7 @@ module.exports = {
     'react/jsx-props-no-spreading': 0,
     'react/require-default-props': 0,
     'no-plusplus': 0,
+    'no-extra-boolean-cast': 0,
     'prettier/prettier': [
       'error',
       {

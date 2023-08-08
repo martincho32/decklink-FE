@@ -51,7 +51,7 @@ function RequiredSignUpInfo({
           id="your-company-name"
           value={formData.companyName}
           inputIsInvalid={companyNameIsInvalid}
-          errorMessage="First name must be at least 2 characters long"
+          errorMessage="Company name must be at least 2 characters long"
           onChange={handleCompanyNameChange}
           onBlur={companyNameInputBlur}
         />

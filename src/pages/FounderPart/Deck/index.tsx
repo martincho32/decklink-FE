@@ -115,7 +115,7 @@ function Deck({ title = 'Create', deckId }: Props) {
   };
 
   const handleDeckLinkChange = (value: string) => {
-    setDeckLink(value);
+    setDeckLink(value.replace(/\s+/g, '-').toLowerCase());
   };
 
   const handlePassToogleChange = () => {
@@ -135,7 +135,6 @@ function Deck({ title = 'Create', deckId }: Props) {
   };
 
   const deckFileBlur = () => {
-    console.log('onBlure');
     setEnteredDeckFileTouched(true);
   };
 
@@ -148,14 +147,14 @@ function Deck({ title = 'Create', deckId }: Props) {
   };
 
   const handleError = (error: Error | string) => {
-    let errorMessage: string = 'Whoops! Something went wrong. Error: ';
-    const contactSupportMessage = ' Please contact support.';
+    let errorMessage: string =
+      'Whoops! Something went wrong. Please contact support. Error: ';
     if (axios.isAxiosError(error)) {
       errorMessage +=
         error.response?.data?.message ??
         error.response?.data ??
         'Server error.';
-      enqueueSnackbar(errorMessage + contactSupportMessage, {
+      enqueueSnackbar(errorMessage, {
         variant: 'error',
         autoHideDuration: 10000,
         anchorOrigin: {
@@ -165,7 +164,7 @@ function Deck({ title = 'Create', deckId }: Props) {
       });
     } else {
       errorMessage += (error as Error).message ?? error;
-      enqueueSnackbar(errorMessage + contactSupportMessage, {
+      enqueueSnackbar(errorMessage, {
         variant: 'error',
         autoHideDuration: 10000,
         anchorOrigin: {
@@ -362,6 +361,7 @@ function Deck({ title = 'Create', deckId }: Props) {
           </div>
           <div className="">
             <Input
+              className="lowercase"
               required
               style="prefilled"
               type="text"
