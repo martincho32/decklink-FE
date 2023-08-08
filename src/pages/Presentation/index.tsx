@@ -85,6 +85,12 @@ function Presentation() {
     }
   }, []);
 
+  useEffect(() => {
+    if (!deckFile) {
+      navigate('/404');
+    }
+  }, [deckFile]);
+
   return (
     <MainLayout>
       <DeckPreview
