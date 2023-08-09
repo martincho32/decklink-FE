@@ -35,7 +35,7 @@ function MyDecks() {
   const [previewPickDeckSlide, setPreviewPickDeckSlide] = useState(false);
   const [pageNumber, setPageNumber] = useState(1);
   const [showFirstTimeModal, setShowFirstTimeModal] =
-    useState<boolean>(true);
+    useState<boolean>(isFirstDeck);
   const [showCalendly, setShowCalendly] = useState<boolean>(false);
 
   const handleOnClosePitchDeckSlidePreview = () => {
