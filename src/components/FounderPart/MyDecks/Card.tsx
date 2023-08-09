@@ -5,7 +5,6 @@ import { Link } from 'react-router-dom';
 import { Button } from '../..';
 import whiteTopRightArrow from '../../../assets/images/ArrowTopRight.svg';
 import styles from './Card.module.css';
-import { Logo } from '../../icons';
 import viewIcon from '../../../assets/images/Views.png';
 import AverageTimeIcon from '../../../assets/images/AverageTime.png';
 import orangeTopRightArrow from '../../../assets/images/OrangeArrowTopRight.svg';
