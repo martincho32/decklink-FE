@@ -1,9 +1,9 @@
 import * as React from 'react';
 import { useContext, useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { useSnackbar } from 'notistack';
-import Carousel from 'react-spring-3d-carousel';
-import { config } from 'react-spring';
+import Carousel from 'react-spring-3d-carousel'; // packages
+import { config } from 'react-spring'; // packages
 import { MainLayout, Button, DeckPreview, Logo } from '../../../components';
 import whiteTopRightArrow from '../../../assets/images/ArrowTopRight.svg';
 import styles from './MyDecks.module.css';
@@ -22,6 +22,7 @@ import customImage from '../../../assets/images/CustromImage.png';
 import useLoading from '../../../hooks/useLoading';
 import { AuthContext } from '@/context';
 import Popup from '@/components/UI/Popup';
+import CalendlyIntegration from '@/components/CalendlyIntegration';
 
 const options = {
   cMapUrl: 'cmaps/',
@@ -29,9 +30,13 @@ const options = {
 };
 
 function MyDecks() {
+  const location = useLocation();
+  const isFirstDeck = location.state?.isFirstDeck;
   const [previewPickDeckSlide, setPreviewPickDeckSlide] = useState(false);
   const [pageNumber, setPageNumber] = useState(1);
-  const [showFirstTimeModal, setShowFirstTimeModal] = useState<boolean>(true);
+  const [showFirstTimeModal, setShowFirstTimeModal] =
+    useState<boolean>(true);
+  const [showCalendly, setShowCalendly] = useState<boolean>(false);
 
   const handleOnClosePitchDeckSlidePreview = () => {
     document.body.style.overflow = 'auto';
@@ -111,6 +116,14 @@ function MyDecks() {
       key: 'thirdReview',
       content: <img src={thirdReview} alt="3" />,
     },
+    {
+      key: '2',
+      content: <img src={thirdReview} alt="3" />,
+    },
+    {
+      key: '3',
+      content: <img src={thirdReview} alt="3" />,
+    },
   ];
 
   const [offsetRadius, setOffsetRadius] = useState(1.5);
@@ -124,7 +137,7 @@ function MyDecks() {
   const [cards] = useState(table);
 
   useEffect(() => {
-    setOffsetRadius(2);
+    setOffsetRadius(1);
     setShowArrows(false);
   }, []);
 
@@ -180,10 +193,24 @@ function MyDecks() {
               backgroundColor="#F1511B"
               textColor="#FFF"
               onClick={() => {
-                console.log('test');
+                setShowFirstTimeModal(false);
+                setShowCalendly(true);
               }}
               className="py-3 w-full mx-auto z-10"
             />
+          </div>
+        </Popup>
+      )}
+      {showCalendly && (
+        <Popup
+          isOpen
+          onClose={() => {
+            document.body.style.overflow = 'auto';
+            setShowCalendly(false);
+          }}
+        >
+          <div className="">
+            <CalendlyIntegration />
           </div>
         </Popup>
       )}

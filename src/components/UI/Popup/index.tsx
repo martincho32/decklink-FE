@@ -37,7 +37,7 @@ export default function Popup({ isOpen, onClose, children }: PopupProps) {
         <Button
           type="button"
           icon={<CloseIcon width="16" height="16" color="#FFFFFF" />}
-          className="z-5 text-white fixed w-8 h-8 top-8 right-8 p-2 bg-persimmon rounded-md"
+          className="text-white z-50 fixed w-8 h-8 top-8 right-8 p-2 bg-persimmon rounded-md"
           onClick={onClose}
         />
         <div className="">{children}</div>
