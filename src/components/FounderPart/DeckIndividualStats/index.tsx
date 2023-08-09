@@ -1,4 +1,4 @@
-import { Document, Page, pdfjs } from 'react-pdf';
+import { pdfjs } from 'react-pdf';
 import { AccordionTopContent, LineChart } from '../..';
 import { IDeck, IDeckView } from '../../../types';
 import {
@@ -7,7 +7,7 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from '@/components/UI/Accordion';
-import DeckThumbnail from '../DeckThumbnail';
+// import DeckThumbnail from '../DeckThumbnail';
 import './DeckIndividualStats.css';
 import { getTotalViewingTime } from '@/utils';
 
@@ -16,10 +16,10 @@ pdfjs.GlobalWorkerOptions.workerSrc = new URL(
   import.meta.url
 ).toString();
 
-const options = {
-  cMapUrl: 'cmaps/',
-  standardFontDataUrl: 'standard_fonts/',
-};
+// const options = {
+//   cMapUrl: 'cmaps/',
+//   standardFontDataUrl: 'standard_fonts/',
+// };
 
 interface Props {
   deck: Partial<IDeck> | null;
@@ -78,7 +78,7 @@ function DeckIndividualStats({ deck, deckViews }: Props) {
                           )}
                           deck={deck}
                           pdfFile={deck?.deckUrl}
-                          numPages={deck?.slides}
+                          numPages={deck?.slides as number}
                         />
                         {/* <Document
                           file={deck?.deckUrl}

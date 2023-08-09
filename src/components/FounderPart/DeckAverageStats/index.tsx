@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react';
-import { Document, Page, pdfjs } from 'react-pdf';
+import { pdfjs } from 'react-pdf';
 import type { PDFDocumentProxy } from 'pdfjs-dist';
 import { LineChart } from '../..'; // Replace this with the correct path to your LineChart component
 import { IDeck, IDeckSlidesStats, IDeckView } from '../../../types';
-import DeckThumbnail from '../DeckThumbnail';
+// import DeckThumbnail from '../DeckThumbnail';
 import './DeckAverageStats.css';
 
 pdfjs.GlobalWorkerOptions.workerSrc = new URL(
@@ -11,10 +11,10 @@ pdfjs.GlobalWorkerOptions.workerSrc = new URL(
   import.meta.url
 ).toString();
 
-const options = {
-  cMapUrl: 'cmaps/',
-  standardFontDataUrl: 'standard_fonts/',
-};
+// const options = {
+//   cMapUrl: 'cmaps/',
+//   standardFontDataUrl: 'standard_fonts/',
+// };
 
 interface Props {
   deck: Partial<IDeck> | null;
