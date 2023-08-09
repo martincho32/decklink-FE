@@ -1,29 +1,9 @@
-/* eslint-disable import/no-extraneous-dependencies */
-/* eslint-disable no-extra-boolean-cast */
 import * as React from 'react';
 import { useContext, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useSnackbar } from 'notistack';
-// import { Carousel } from 'react-responsive-carousel';
-// import 'react-responsive-carousel/lib/styles/carousel.min.css';
-// import { v4 as uuidv4 } from 'uuid';
-// import Carousel from 'react-spring-3d-carousel';
-// import { config } from 'react-spring';
-
-import {
-  Navigation,
-  Pagination,
-  Scrollbar,
-  A11y,
-  EffectCoverflow,
-} from 'swiper/modules';
-import { Swiper, SwiperSlide } from 'swiper/react';
-// Import Swiper styles
-import 'swiper/css';
-import 'swiper/css/navigation';
-import 'swiper/css/pagination';
-import 'swiper/css/scrollbar';
-
+import Carousel from 'react-spring-3d-carousel';
+import { config } from 'react-spring';
 import { MainLayout, Button, DeckPreview, Logo } from '../../../components';
 import whiteTopRightArrow from '../../../assets/images/ArrowTopRight.svg';
 import styles from './MyDecks.module.css';
@@ -35,6 +15,8 @@ import Loading from '../../../components/PreloadingScreen';
 import firstReview from '../../../assets/images/FirstReview.png';
 import secondReview from '../../../assets/images/SecondReview.png';
 import thirdReview from '../../../assets/images/ThirdReview.png';
+import reviewStats from '../../../assets/images/ReviewStats.png';
+import customImage from '../../../assets/images/CustromImage.png';
 
 // Import the useLoading hook
 import useLoading from '../../../hooks/useLoading';
@@ -116,35 +98,35 @@ function MyDecks() {
     document.body.style.overflow = 'auto';
   }, [showFirstTimeModal]);
 
-  // const slides = [
-  //   {
-  //     key: 'firstReview',
-  //     content: <img src={firstReview} alt="1" />,
-  //   },
-  //   {
-  //     key: 'secondReview',
-  //     content: <img src={secondReview} alt="2" />,
-  //   },
-  //   {
-  //     key: 'thirdReview',
-  //     content: <img src={thirdReview} alt="3" />,
-  //   },
-  // ];
+  const slides = [
+    {
+      key: 'firstReview',
+      content: <img src={firstReview} alt="1" />,
+    },
+    {
+      key: 'secondReview',
+      content: <img src={secondReview} alt="2" />,
+    },
+    {
+      key: 'thirdReview',
+      content: <img src={thirdReview} alt="3" />,
+    },
+  ];
 
-  // const [offsetRadius, setOffsetRadius] = useState(4);
-  // const [showArrows, setShowArrows] = useState(false);
-  // const [goToSlide, setGoToSlide] = useState(null);
+  const [offsetRadius, setOffsetRadius] = useState(1.5);
+  const [showArrows, setShowArrows] = useState(false);
+  const [goToSlide, setGoToSlide] = useState(1);
 
-  // const table = slides.map((element, index: any) => {
-  //   return { ...element, onClick: () => setGoToSlide(index) };
-  // });
+  const table = slides.map((element, index: any) => {
+    return { ...element, onClick: () => setGoToSlide(index) };
+  });
 
-  // const [cards] = useState(table);
+  const [cards] = useState(table);
 
-  // useEffect(() => {
-  //   setOffsetRadius(4);
-  //   setShowArrows(false);
-  // });
+  useEffect(() => {
+    setOffsetRadius(2);
+    setShowArrows(false);
+  }, []);
 
   // eslint-disable-next-line no-nested-ternary
   return isLoading ? (
@@ -159,55 +141,38 @@ function MyDecks() {
             setShowFirstTimeModal(false);
           }}
         >
-          <div className="p-6 w-[50rem]">
-            <h2 className="text-4xl leading-normal text-mirage w-[40rem]">
+          <div className="">
+            <h2 className="mobilev:leading-normal desktopxl:text-5xl desktopxl:w-[50rem] desktopxl:leading-normal mobileh:text-2xl mobileh:w-[35rem] mobileh:leading-normal desktop:text-4xl desktop:leading-normal text-mirage desktop:w-[40rem] mb-8 mt-[-1rem] mobilev:mt-[-0.5rem]">
               Not getting as much
               <br />
-              <span className="text-white p-2 bg-persimmon">
+              <span className="text-white p-2 mobilev:p-1 bg-persimmon">
                 VC meetings as you want?
               </span>
             </h2>
-            <Swiper
-              effect="coverflow"
-              spaceBetween={50}
-              slidesPerView={3}
-              grabCursor
-              centeredSlides
-              coverflowEffect={{
-                rotate: 0,
-                stretch: 0,
-                depth: 200,
-                modifier: 5,
-              }}
-              modules={[EffectCoverflow, Pagination, Navigation]}
-              className="swiper_container"
-            >
-              <SwiperSlide>
-                <img src={firstReview} alt="slide_image" />
-              </SwiperSlide>
-              <SwiperSlide>
-                <img src={secondReview} alt="slide_image" />
-              </SwiperSlide>
-              <SwiperSlide>
-                <img src={thirdReview} alt="slide_image" />
-              </SwiperSlide>
-            </Swiper>
-            {/* <img src="#" alt="" /> */}
-            {/* <div
-              className=""
-              style={{
-                width: '100%',
-                height: '20rem',
-              }}
-            > */}
-            {/* <Carousel
-                goToSlide={goToSlide}
+            <div className="flex justify-between mobileh:mb-[-7rem] mobilev:mb-[-3rem] items-start mb-[-10rem]">
+              <img
+                src={reviewStats}
+                className="desktopxl:max-h-[7rem] mobileh:max-h-[4rem] mobilev:max-h-[3rem] max-h-[5rem] h-auto"
+                alt="Review Stats"
+              />
+              <img
+                src={customImage}
+                className="desktopxl:max-h-[17rem] mobileh:max-h-[10rem] mobilev:max-h-[7rem] max-h-[15rem] h-auto"
+                aria-hidden
+                alt="Custom Image"
+              />
+            </div>
+
+            <div className="desktopxl:h-[20rem] mobilev:h-[6rem] mobileh:h-[15rem] w-full h-[15rem] mx-auto">
+              <Carousel
+                goToSlide={goToSlide !== null ? goToSlide : undefined}
                 offsetRadius={offsetRadius}
                 showNavigation={showArrows}
                 animationConfig={config.gentle}
                 slides={cards}
-              /> */}
-            {/* </div> */}
+              />
+            </div>
+
             <Button
               type="button"
               text="Free Pitch Deck Review"
@@ -217,7 +182,7 @@ function MyDecks() {
               onClick={() => {
                 console.log('test');
               }}
-              className="py-3 w-32 z-10"
+              className="py-3 w-full mx-auto z-10"
             />
           </div>
         </Popup>
