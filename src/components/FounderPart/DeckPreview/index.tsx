@@ -439,7 +439,7 @@ function DeckPreview({
           }`}
         >
           <div
-            className={`flex gap-4 justify-center${
+            className={`flex items-center gap-4 justify-center${
               type === 'deckUserPreview'
                 ? ' max-w-full max-h-full w-auto h-auto'
                 : ''
@@ -447,15 +447,12 @@ function DeckPreview({
           >
             <Button
               className={`${
-                type === 'deckCreationPreview' ? 'prev max-h-min' : 'max-h-min'
+                type === 'deckCreationPreview' ? 'prev' : ''
+              } p-4 bg-white w-8 h-8 ${
+                pageNumber === 1 ? 'opacity-50 bg-transparent' : 'opacity-100'
               }`}
               type="button"
-              icon={
-                <Logo
-                  color={pageNumber === 1 ? '#f1511b2e' : '#F1511B'}
-                  topLeft
-                />
-              }
+              icon={<Logo color="#F1511B" topLeft />}
               onClick={onPrev}
               disabled={pageNumber === 1}
             />
@@ -478,7 +475,11 @@ function DeckPreview({
                 />
               }
               className={`${
-                type === 'deckCreationPreview' ? 'next max-h-min' : 'max-h-min'
+                type === 'deckCreationPreview' ? 'next' : ''
+              } p-4 bg-white w-8 h-8 ${
+                pageNumber === numPages
+                  ? 'opacity-50 bg-transparent'
+                  : 'opacity-100'
               }`}
               onClick={onNext}
               disabled={pageNumber === numPages}
