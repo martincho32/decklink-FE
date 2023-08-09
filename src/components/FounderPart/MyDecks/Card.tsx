@@ -5,13 +5,13 @@ import { Link } from 'react-router-dom';
 import { Button } from '../..';
 import whiteTopRightArrow from '../../../assets/images/ArrowTopRight.svg';
 import styles from './Card.module.css';
-import { Logo } from '../../icons';
 import viewIcon from '../../../assets/images/Views.png';
 import AverageTimeIcon from '../../../assets/images/AverageTime.png';
 import orangeTopRightArrow from '../../../assets/images/OrangeArrowTopRight.svg';
 import deleteIcon from '../../../assets/images/Delete.png';
 import { IDeck, IDeckView } from '../../../types';
 import loadingImage from '../../../assets/images/Dummy Slide.svg';
+import copyIcon from '../../../assets/images/CopyIcon.svg';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -137,20 +137,28 @@ function Card({ deck, handleClickDelete, onClick }: Props) {
               <h3 className={styles.deckTitle}>{deck.name}</h3>
               {/* <p className={styles.subtitle}>Published</p> */}
             </div>
-            <div className={styles.buttonContainer}>
-              <Button
+            <div
+              role="button"
+              tabIndex={0}
+              onMouseEnter={handleMouseEnter}
+              onMouseLeave={handleMouseLeave}
+              onClick={handleCopyClick}
+              className={`${styles.buttonContainer} flex w-full gap-1 p-2 bg-gray-200 rounded justify-between`}
+            >
+              {/* <Button
                 type="button"
-                text="Copy Link"
-                icon={<Logo color="#161A20" />}
+                text={`fundraisingtoolbox.io/preview/${deck?.customDeckLink}`}
                 textColor="#161A20"
                 onMouserEnter={handleMouseEnter}
                 onMouserLeave={handleMouseLeave}
                 onClick={handleCopyClick}
-              />
+              /> */}
+              <p className="break-all max-w-[12rem] truncate">{`fundraisingtoolbox.io/preview/${deck?.customDeckLink}`}</p>
+              <img src={copyIcon} alt="" />
               {isPopupVisible && (
                 <div
                   className={styles.popup}
-                >{`https://www.fundraisingtoolbox.io/preview/${deck?.customDeckLink}`}</div>
+                >{`fundraisingtoolbox.io/preview/${deck?.customDeckLink}`}</div>
               )}
             </div>
           </div>
