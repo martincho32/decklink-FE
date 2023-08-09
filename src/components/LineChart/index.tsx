@@ -1,7 +1,4 @@
-/* eslint-disable prefer-const */
-/* eslint-disable prefer-template */
 /* eslint-disable object-shorthand */
-/* eslint-disable func-names */
 import { useMediaQuery } from 'react-responsive';
 import {
   Chart as ChartJS,
