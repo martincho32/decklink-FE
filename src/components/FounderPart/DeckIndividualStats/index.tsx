@@ -1,4 +1,4 @@
-import { Document, Page, pdfjs } from 'react-pdf';
+import { pdfjs } from 'react-pdf';
 import { AccordionTopContent, LineChart } from '../..';
 import { IDeck, IDeckView } from '../../../types';
 import {
@@ -7,7 +7,7 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from '@/components/UI/Accordion';
-import DeckThumbnail from '../DeckThumbnail';
+// import DeckThumbnail from '../DeckThumbnail';
 import './DeckIndividualStats.css';
 import { getTotalViewingTime } from '@/utils';
 
@@ -16,10 +16,10 @@ pdfjs.GlobalWorkerOptions.workerSrc = new URL(
   import.meta.url
 ).toString();
 
-const options = {
-  cMapUrl: 'cmaps/',
-  standardFontDataUrl: 'standard_fonts/',
-};
+// const options = {
+//   cMapUrl: 'cmaps/',
+//   standardFontDataUrl: 'standard_fonts/',
+// };
 
 interface Props {
   deck: Partial<IDeck> | null;
@@ -69,16 +69,18 @@ function DeckIndividualStats({ deck, deckViews }: Props) {
                     />
                   </AccordionTrigger>
                   <AccordionContent>
-                    <div className="mb-16 w-full overflow-x-auto">
-                      <div className="min-w-min">
+                    <div className="mb-16 w-full">
+                      <div className="w-full">
                         <LineChart
                           labels={labels as string[] | undefined}
                           data={view.deckSlidesStats.map(
                             (slide) => slide.viewingTime / 1000
                           )}
                           deck={deck}
+                          pdfFile={deck?.deckUrl}
+                          numPages={deck?.slides as number}
                         />
-                        <Document
+                        {/* <Document
                           file={deck?.deckUrl}
                           // onLoadSuccess={onDocumentLoadSuccess}
                           options={options}
@@ -99,7 +101,7 @@ function DeckIndividualStats({ deck, deckViews }: Props) {
                               )
                             )}
                           </div>
-                        </Document>
+                        </Document> */}
                       </div>
                     </div>
                   </AccordionContent>

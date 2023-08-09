@@ -129,7 +129,7 @@ function DeckPreview({
   };
 
   const onSaveDeck = () => {
-    console.log('Pending: redirect to some form');
+    window.location.href = 'https://tally.so/r/w2a4dM';
   };
 
   const onPrev = () => {
@@ -506,7 +506,7 @@ function DeckPreview({
       {type === 'deckUserPreview' && (
         <Button
           type="button"
-          text="Save This Deck"
+          text="Join DeckLink"
           icon={<Logo color="white" />}
           className="bg-persimmon/25 text-white fixed bottom-4 right-[7%]  py-3 px-3"
           // backgroundColor="#F1511B"

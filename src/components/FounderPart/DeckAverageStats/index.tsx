@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react';
-import { Document, Page, pdfjs } from 'react-pdf';
+import { pdfjs } from 'react-pdf';
 import type { PDFDocumentProxy } from 'pdfjs-dist';
 import { LineChart } from '../..'; // Replace this with the correct path to your LineChart component
 import { IDeck, IDeckSlidesStats, IDeckView } from '../../../types';
-import DeckThumbnail from '../DeckThumbnail';
+// import DeckThumbnail from '../DeckThumbnail';
 import './DeckAverageStats.css';
 
 pdfjs.GlobalWorkerOptions.workerSrc = new URL(
@@ -11,10 +11,10 @@ pdfjs.GlobalWorkerOptions.workerSrc = new URL(
   import.meta.url
 ).toString();
 
-const options = {
-  cMapUrl: 'cmaps/',
-  standardFontDataUrl: 'standard_fonts/',
-};
+// const options = {
+//   cMapUrl: 'cmaps/',
+//   standardFontDataUrl: 'standard_fonts/',
+// };
 
 interface Props {
   deck: Partial<IDeck> | null;
@@ -71,14 +71,17 @@ function DeckAverageStats({ deck, deckViews }: Props) {
       <span className="text-xl text-mirage">
         Average time (in seconds) spent viewing each slide by all people
       </span>
-      <div className="mb-16 w-full overflow-x-auto">
-        <div className="min-w-min">
+      <div className="mb-16 w-full">
+        <div className="w-full">
           <LineChart
             labels={labels as string[]}
             data={data}
             deck={deck}
+            pdfFile={pdfFile}
+            onLoadSuccess={onDocumentLoadSuccess}
+            numPages={numPages}
           />
-          <Document
+          {/* <Document
             file={pdfFile}
             onLoadSuccess={onDocumentLoadSuccess}
             options={options}
@@ -96,7 +99,7 @@ function DeckAverageStats({ deck, deckViews }: Props) {
                 />
               ))}
             </div>
-          </Document>
+          </Document> */}
         </div>
       </div>
     </div>
