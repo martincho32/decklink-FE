@@ -13,7 +13,7 @@ import {
 
 interface Props {
   children: React.ReactNode;
-  action: () => void;
+  action: (() => void) | ((event: React.FormEvent) => Promise<void>);
   actionClassName?: string;
   alertDescription?: string;
 }
