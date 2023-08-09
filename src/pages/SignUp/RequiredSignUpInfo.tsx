@@ -11,7 +11,6 @@ export interface RequiredSignUpInfoProps {
     confirmPassword,
     companyName,
     companyWebUrl,
-    companyLinkedInUrl,
   }: SignUpFormData) => void;
   emailInputClasses: string;
   emailInputIsInvalid: boolean;

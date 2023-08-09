@@ -6,7 +6,12 @@ import axios from 'axios';
 import { useSnackbar } from 'notistack';
 import './DeckCreation.css';
 import { Logo } from '../../../components/icons';
-import { Button, Input, DeckPreview } from '../../../components';
+import {
+  Button,
+  Input,
+  DeckPreview,
+  AlertDialogComponent,
+} from '../../../components';
 /** File library */
 import 'react-pdf/dist/esm/Page/AnnotationLayer.css';
 import 'react-pdf/dist/esm/Page/TextLayer.css';
@@ -41,6 +46,25 @@ function Deck({ title = 'Create', deckId }: Props) {
   const [previewPickDeckSlide, setPreviewPickDeckSlide] = useState(false);
   const [uploadInputFileLabel, setUploadInputFileLabel] =
     useState('Upload File (.pdf)');
+  const [isEdited, setIsEdited] = useState(false);
+  const navigate = useNavigate();
+  const { enqueueSnackbar } = useSnackbar();
+
+  const [deckName, setDeckName] = useState<string>('');
+  const [enteredDeckNameTouched, setEnteredDeckNameTouched] =
+    useState<boolean>(false);
+  const [deckLink, setDeckLink] = useState<string>('');
+  const [enteredDeckLinkTouched, setEnteredDeckLinkTouched] =
+    useState<boolean>(false);
+  const [passToogleChecked, setPassToogleChecked] = useState<boolean>(false);
+  const [emailToogleChecked, setEmailToogleChecked] = useState<boolean>(false);
+
+  const [deckPassword, setDeckPassword] = useState<string>('');
+  const [enteredPasswordTouched, setEnteredPasswordTouched] =
+    useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState(true);
+  const [newFileChoosed, setNewFileChoosed] = useState(false);
+
   // const [progress, setProgress] = useState({ started: false, pc: 0 });
   // const [msg, setMsg] = useState<string | null>(null);
 
@@ -63,6 +87,8 @@ function Deck({ title = 'Create', deckId }: Props) {
         setEnteredDeckFileTouched(true);
         setDeckFile(selectedFile);
         setUploadInputFileLabel('Change File (.pdf)');
+        setIsEdited(true);
+        setNewFileChoosed(true);
       }
     }
   };
@@ -72,22 +98,6 @@ function Deck({ title = 'Create', deckId }: Props) {
     setNumPages(nextNumPages);
   };
   /** File Library */
-
-  const navigate = useNavigate();
-  const { enqueueSnackbar } = useSnackbar();
-
-  const [deckName, setDeckName] = useState<string>('');
-  const [enteredDeckNameTouched, setEnteredDeckNameTouched] =
-    useState<boolean>(false);
-  const [deckLink, setDeckLink] = useState<string>('');
-  const [enteredDeckLinkTouched, setEnteredDeckLinkTouched] =
-    useState<boolean>(false);
-  const [passToogleChecked, setPassToogleChecked] = useState<boolean>(false);
-  const [emailToogleChecked, setEmailToogleChecked] = useState<boolean>(false);
-
-  const [deckPassword, setDeckPassword] = useState<string>('');
-  const [enteredPasswordTouched, setEnteredPasswordTouched] =
-    useState<boolean>(false);
 
   const enteredPasswordIsValid =
     deckPassword?.length >= 6 && deckPassword?.length <= 35;
@@ -112,18 +122,22 @@ function Deck({ title = 'Create', deckId }: Props) {
 
   const handleDeckNameChange = (value: string) => {
     setDeckName(value);
+    setIsEdited(true);
   };
 
   const handleDeckLinkChange = (value: string) => {
     setDeckLink(value.replace(/\s+/g, '-').toLowerCase());
+    setIsEdited(true);
   };
 
   const handlePassToogleChange = () => {
     setPassToogleChecked(!passToogleChecked);
+    setIsEdited(true);
   };
 
   const handleEmailToogleChange = () => {
     setEmailToogleChecked(!emailToogleChecked);
+    setIsEdited(true);
   };
 
   const deckNameBlur = () => {
@@ -140,6 +154,7 @@ function Deck({ title = 'Create', deckId }: Props) {
 
   const handlePasswordChange = (value: string) => {
     setDeckPassword(value);
+    setIsEdited(true);
   };
 
   const passwordInputBlur = () => {
@@ -273,8 +288,6 @@ function Deck({ title = 'Create', deckId }: Props) {
     }
   };
 
-  const [isLoading, setIsLoading] = useState(true);
-
   useEffect(() => {
     if (deckId) {
       // Fetch deck data from the backend here
@@ -323,25 +336,56 @@ function Deck({ title = 'Create', deckId }: Props) {
       >
         <div className="w-full my-12 grid grid-cols-1 md:flex md:justify-between md:content-center xl:grid-cols-3 gap-7 max-h-fit justify-center">
           <div className="flex justify-center md:justify-start gap-6">
-            <Button
-              icon={<Logo color="white" />}
-              type="button"
-              className="bg-persimmon -rotate-90 p-4"
-              onClick={onClickGoBack}
-            />
+            {isEdited ? (
+              <AlertDialogComponent
+                actionClassName="bg-persimmon"
+                action={onClickGoBack}
+                alertDescription="You didn't save your recent changes."
+              >
+                <Button
+                  icon={<Logo color="white" />}
+                  type="button"
+                  className="bg-persimmon -rotate-90 p-4"
+                />
+              </AlertDialogComponent>
+            ) : (
+              <Button
+                icon={<Logo color="white" />}
+                type="button"
+                className="bg-persimmon -rotate-90 p-4"
+                onClick={onClickGoBack}
+              />
+            )}
             <span className="self-center text-xl leading-normal justify-center">
               Go Back
             </span>
           </div>
           <h1 className="text-2xl leading-normal">{title} new Deck</h1>
-          <Button
-            icon={<Logo color="white" />}
-            type="submit"
-            text={title}
-            backgroundColor="#F1511B"
-            textColor="#ffffff"
-            className="xl:justify-self-end justify-self-center max-w-min"
-          />
+          {newFileChoosed && deckId ? (
+            <AlertDialogComponent
+              actionClassName="bg-persimmon"
+              action={submitHandler}
+              alertDescription="All your pitch-deck stats will be lost if you change the file."
+            >
+              <Button
+                icon={<Logo color="white" />}
+                type="button"
+                text={title}
+                backgroundColor="#F1511B"
+                textColor="#ffffff"
+                className="xl:justify-self-end justify-self-center max-w-min"
+              />
+            </AlertDialogComponent>
+          ) : (
+            <Button
+              icon={<Logo color="white" />}
+              type="submit"
+              text={title}
+              backgroundColor="#F1511B"
+              textColor="#ffffff"
+              className="xl:justify-self-end justify-self-center max-w-min"
+            />
+          )}
         </div>
         <div className="w-full grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-7 max-h-fit justify-center">
           <div className="">
@@ -379,6 +423,8 @@ function Deck({ title = 'Create', deckId }: Props) {
         <div className="w-full grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-7 max-h-fit justify-center mt-6">
           <div className="flex justify-between">
             <Input
+              showExplanation
+              explanationMessage="Ask the user for their email to get access to the deck"
               style="toggle"
               label="Request Email"
               id="request-email"
@@ -386,6 +432,8 @@ function Deck({ title = 'Create', deckId }: Props) {
               checked={emailToogleChecked}
             />
             <Input
+              showExplanation
+              explanationMessage="Ask the user for a custom password to access the deck"
               style="toggle"
               label="Request Password"
               id="request-pass"

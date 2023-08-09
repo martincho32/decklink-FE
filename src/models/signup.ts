@@ -13,8 +13,6 @@ class SignUpFormData {
 
   companyWebUrl: string;
 
-  companyLinkedInUrl: string;
-
   constructor(
     email: string,
     firstName: string,
@@ -22,8 +20,7 @@ class SignUpFormData {
     password: string,
     confirmPassword: string,
     comapnyName: string,
-    companyWebUrl: string,
-    conapnyLinkedInUrl: string
+    companyWebUrl: string
   ) {
     this.email = email;
     this.firstName = firstName;
@@ -32,7 +29,6 @@ class SignUpFormData {
     this.confirmPassword = confirmPassword;
     this.companyName = comapnyName;
     this.companyWebUrl = companyWebUrl;
-    this.companyLinkedInUrl = conapnyLinkedInUrl;
   }
 }
 
