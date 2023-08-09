@@ -1,8 +1,9 @@
 import { Link } from 'react-router-dom';
 import Button from '../UI/Button';
-import { Hamburguer, Logo, CloseIcon, Wordmark } from '../icons';
+import { Hamburguer, Logo, CloseIcon } from '../icons';
 import NavLinks from './NavLinks';
 import styles from './HanburguerMenu.module.css';
+import logo from '../../assets/images/DeckLinkLogo.svg';
 
 interface Props {
   onClickHamburguer: () => void;
@@ -22,18 +23,17 @@ function HamburguerMenu({
   handleActions,
 }: Props) {
   return (
-    <div className="block md:hidden w-11 h-11">
+    <div className="block tablet:hidden w-11 h-11">
       {!isOpen ? (
         <button type="button" onClick={onClickHamburguer}>
           <Hamburguer />
         </button>
       ) : null}
       <div className={isOpen ? styles.showMenu : styles.hideMenu}>
-        <nav className="flex justify-between border border-persimmon h-20 rounded p-2 md:py-2 md:px-5 w-full">
+        <nav className="flex justify-between border border-persimmon rounded-3 p-2 md:py-2 md:px-5 w-full">
           <Link className={styles.logoWrapper} to="/">
-            <div className="self-center flex gap-0.7">
-              <Logo />
-              <Wordmark />
+            <div className="self-center flex gap-0.7 mobilev:w-40 tablet:w-auto">
+              <img src={logo} className="" alt="Fundraisingtoobox" />
             </div>
           </Link>
           <button type="button" onClick={onClickHamburguer}>
@@ -42,14 +42,15 @@ function HamburguerMenu({
         </nav>
         <NavLinks />
         {!isUserLogged ? (
-          <div className={styles.authButtonsWrapper}>
+          <div className="flex gap-1">
             <Button
               type="button"
               text="Log In"
-              icon={<Logo color="#FFFFFF" width="10" height="11" />}
-              backgroundColor="#F1511B"
-              textColor="#FFF"
+              icon={<Logo color="#F1511B" width="10" height="11" />}
+              backgroundColor="#FDE7DF"
+              textColor="#F1511B"
               onClick={handleActions.handleButtonLogIn}
+              className="py-3 w-32 pr-4 relative left-4 z-0 bg-[#FDE7DF] text-persimmon"
             />
             <Button
               type="button"
@@ -58,6 +59,7 @@ function HamburguerMenu({
               backgroundColor="#F1511B"
               textColor="#FFF"
               onClick={handleActions.handleButtonSignUp}
+              className="py-3 w-32 z-10"
             />
           </div>
         ) : (

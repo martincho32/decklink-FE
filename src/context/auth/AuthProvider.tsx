@@ -58,7 +58,9 @@ export function AuthProvider({ children }: PropsWithChildren) {
     password: string,
     cfpassword: string,
     _firstName: string,
-    _lastName: string
+    _lastName: string,
+    companyName: string,
+    companyWebUrl: string
   ): Promise<{
     hasError: boolean;
     message?: string;
@@ -70,6 +72,8 @@ export function AuthProvider({ children }: PropsWithChildren) {
         cfpassword,
         firstName: _firstName,
         lastName: _lastName,
+        companyName,
+        companyWebUrl,
       });
       const { token, firstName, lastName, email, role } = data;
       setItem('token', token);
@@ -80,7 +84,13 @@ export function AuthProvider({ children }: PropsWithChildren) {
       return {
         hasError: false,
       };
-    } catch (error) {
+    } catch (error: any) {
+      if (error.response.data.message === 'USER_ALREADY_EXISTS') {
+        return {
+          hasError: true,
+          message: 'User with such email already exists',
+        };
+      }
       return {
         hasError: true,
         message: 'Something went wrong. Please contact support.',
@@ -107,7 +117,6 @@ export function AuthProvider({ children }: PropsWithChildren) {
       });
       return true;
     } catch (error: any) {
-      console.log('Error in validateToken: ', error.message);
       removeItem('token');
       return false;
     }

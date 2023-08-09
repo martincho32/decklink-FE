@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useSnackbar } from 'notistack';
 import { Page, Document } from 'react-pdf'; /** File library */
 import { Link } from 'react-router-dom';
@@ -10,7 +10,7 @@ import viewIcon from '../../../assets/images/Views.png';
 import AverageTimeIcon from '../../../assets/images/AverageTime.png';
 import orangeTopRightArrow from '../../../assets/images/OrangeArrowTopRight.svg';
 import deleteIcon from '../../../assets/images/Delete.png';
-import { IDeck } from '../../../types';
+import { IDeck, IDeckView } from '../../../types';
 import loadingImage from '../../../assets/images/Dummy Slide.svg';
 import {
   AlertDialog,
@@ -23,56 +23,90 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from '../../UI/AlertDialog';
+import { deckViewService } from '@/services';
+import { getAverageTotalTime } from '@/utils';
 
 interface Props {
   deck: IDeck;
   handleClickDelete: (id: string) => Promise<void>;
+  onClick: (event) => void;
 }
 
-function Card({ deck, handleClickDelete }: Props) {
+function Card({ deck, handleClickDelete, onClick }: Props) {
+  const [isPopupVisible, setPopupVisible] = useState(false);
+
+  const handleMouseEnter = () => {
+    setPopupVisible(true);
+  };
+
+  const handleMouseLeave = () => {
+    setPopupVisible(false);
+  };
+
   const { enqueueSnackbar } = useSnackbar();
 
   const [loading, setLoading] = useState<boolean>(true);
+  const [deckViews, setDeckViews] = useState<IDeckView[] | null>(null);
 
   const onDocumentLoadSuccess = () => {
     setLoading(false);
   };
 
   const handleCopyClick = () => {
-    navigator.clipboard.writeText(`decklink.com/${deck?.customDeckLink}`).then(
-      () => {
-        /* Resolved - text copied to clipboard successfully */
-        enqueueSnackbar('Url successfully copied!!', {
-          variant: 'success',
-          autoHideDuration: 2000,
-          anchorOrigin: {
-            vertical: 'top',
-            horizontal: 'right',
-          },
-        });
-      },
-      (error) => {
-        console.error('Failed to copy: ', error);
-      }
-    );
+    navigator.clipboard
+      .writeText(
+        `https://www.fundraisingtoolbox.io/preview/${deck?.customDeckLink}`
+      )
+      .then(
+        () => {
+          enqueueSnackbar('Url successfully copied!', {
+            variant: 'success',
+            autoHideDuration: 2000,
+            anchorOrigin: {
+              vertical: 'top',
+              horizontal: 'right',
+            },
+          });
+        },
+        (error) => {
+          enqueueSnackbar(`Failed to copy. Please contact support. ${error}`, {
+            variant: 'error',
+            autoHideDuration: 2000,
+            anchorOrigin: {
+              vertical: 'top',
+              horizontal: 'right',
+            },
+          });
+        }
+      );
   };
 
-  const handleLoadError = (error: any) => {
-    console.error('Error while loading PDF:', error);
+  const handleLoadError = () => {
     setLoading(true);
   };
 
-  return (
-    <div className={styles.deckBlock}>
-      {/* Conditionally render the loading image while PDF is loading */}
-      {/* {loading && (
-        <img
-          className={styles.dummyPreviewImage}
-          src={loadingImage}
-          alt="Loading"
-        />
-      )} */}
+  useEffect(() => {
+    deckViewService
+      .getDeckViewByDeckId(deck._id, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('token')}`,
+        },
+      })
+      .then(({ data }) => {
+        setDeckViews(data);
+      })
+      .catch((error: any) => {
+        console.error('Error: ', error.message);
+      });
+  }, []);
 
+  return (
+    <div
+      onClick={onClick}
+      tabIndex={0}
+      role="button"
+      className={styles.deckBlock}
+    >
       <Document
         file={deck.deckUrl}
         onLoadSuccess={onDocumentLoadSuccess}
@@ -86,7 +120,6 @@ function Card({ deck, handleClickDelete }: Props) {
         }
         loading=""
       >
-        {/* Only render the <Page> component when the PDF is loaded */}
         {!loading && (
           <Page
             renderTextLayer={false}
@@ -104,13 +137,22 @@ function Card({ deck, handleClickDelete }: Props) {
               <h3 className={styles.deckTitle}>{deck.name}</h3>
               {/* <p className={styles.subtitle}>Published</p> */}
             </div>
-            <Button
-              type="button"
-              text="Copy Link"
-              icon={<Logo color="#161A20" />}
-              textColor="#161A20"
-              onClick={handleCopyClick}
-            />
+            <div className={styles.buttonContainer}>
+              <Button
+                type="button"
+                text="Copy Link"
+                icon={<Logo color="#161A20" />}
+                textColor="#161A20"
+                onMouserEnter={handleMouseEnter}
+                onMouserLeave={handleMouseLeave}
+                onClick={handleCopyClick}
+              />
+              {isPopupVisible && (
+                <div
+                  className={styles.popup}
+                >{`https://www.fundraisingtoolbox.io/preview/${deck?.customDeckLink}`}</div>
+              )}
+            </div>
           </div>
           <div className={styles.deckMainInfo}>
             <div className={styles.deckMainInfoItem}>
@@ -123,7 +165,9 @@ function Card({ deck, handleClickDelete }: Props) {
                 <p className={styles.deckMainInfoItemTitle}>Number of views:</p>
               </div>
               <div className={styles.dashedLine} />
-              <p className={styles.deckMainInfoItemData}>10</p>
+              <p className={styles.deckMainInfoItemData}>
+                {deckViews?.length ?? 0}
+              </p>
             </div>
             <div className={styles.deckMainInfoItem}>
               <div className={styles.deckTitleAndIcon}>
@@ -137,7 +181,9 @@ function Card({ deck, handleClickDelete }: Props) {
                 </p>
               </div>
               <div className={styles.dashedLine} />
-              <p className={styles.deckMainInfoItemData}>10</p>
+              <p className={styles.deckMainInfoItemData}>
+                {getAverageTotalTime(deckViews)}
+              </p>
             </div>
           </div>
         </div>

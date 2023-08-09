@@ -4,9 +4,12 @@ import styles from './Input.module.css';
 import hideInputText from '../../../assets/images/HideInput.png';
 import showInputText from '../../../assets/images/ShowInput.png';
 import uploadFileIcon from '../../../assets/images/ArrowTopRight.svg';
+import explanationIcon from '../../../assets/images/ExplanationIcon.svg';
 
 export interface InputProps {
   required?: boolean;
+  showExplanation?: boolean;
+  explanationMessage?: string;
   labelColor?: React.CSSProperties;
   type?: string;
   style: 'password' | 'toggle' | 'upload' | 'default' | 'prefilled';
@@ -25,6 +28,8 @@ export interface InputProps {
 
 function Input({
   required = false,
+  showExplanation = false,
+  explanationMessage,
   labelColor,
   style,
   type,
@@ -99,13 +104,39 @@ function Input({
     setShowPassword(!showPassword);
   };
 
+  const [isPopupVisible, setPopupVisible] = useState(false);
+
+  const onMouseEnterExplanationIcon = () => {
+    setPopupVisible(true);
+  };
+
+  const onMouseLeaveExplanationIcon = () => {
+    setPopupVisible(false);
+  };
+
   switch (style) {
     case 'password':
       inputElement = (
         <div className={styles.InputWrapper}>
-          <label style={labelColor} htmlFor={id}>
-            {label}
-          </label>
+          <div className="flex flex-row gap-2 relative">
+            <label style={labelColor} htmlFor={id}>
+              {label}
+            </label>
+            {showExplanation ? (
+              <img
+                onMouseEnter={onMouseEnterExplanationIcon}
+                onMouseLeave={onMouseLeaveExplanationIcon}
+                className="w4 h4"
+                src={explanationIcon}
+                alt=""
+              />
+            ) : (
+              ''
+            )}
+            {isPopupVisible && (
+              <div className={styles.popup}>{explanationMessage}</div>
+            )}
+          </div>
           <div className={styles.defaultInputContainer}>
             <input
               required={required}
@@ -136,9 +167,25 @@ function Input({
     case 'toggle':
       inputElement = (
         <div className={styles.InputWrapper}>
-          <label style={labelColor} htmlFor={id}>
-            {label}
-          </label>
+          <div className="flex flex-row gap-2 relative">
+            <label style={labelColor} htmlFor={id}>
+              {label}
+            </label>
+            {showExplanation ? (
+              <img
+                onMouseEnter={onMouseEnterExplanationIcon}
+                onMouseLeave={onMouseLeaveExplanationIcon}
+                className="w4 h4"
+                src={explanationIcon}
+                alt=""
+              />
+            ) : (
+              ''
+            )}
+            {isPopupVisible && (
+              <div className={styles.popup}>{explanationMessage}</div>
+            )}
+          </div>
           <label
             htmlFor={id}
             className={`${styles.toggleSwitch} ${
@@ -193,9 +240,25 @@ function Input({
     case 'default':
       inputElement = (
         <div className={styles.InputWrapper}>
-          <label style={labelColor} htmlFor={id}>
-            {label}
-          </label>
+          <div className="flex flex-row gap-2 relative">
+            <label style={labelColor} htmlFor={id}>
+              {label}
+            </label>
+            {showExplanation ? (
+              <img
+                onMouseEnter={onMouseEnterExplanationIcon}
+                onMouseLeave={onMouseLeaveExplanationIcon}
+                className="w4 h4"
+                src={explanationIcon}
+                alt=""
+              />
+            ) : (
+              ''
+            )}
+            {isPopupVisible && (
+              <div className={styles.popup}>{explanationMessage}</div>
+            )}
+          </div>
           <input
             required={required}
             disabled={disabled}
@@ -218,9 +281,25 @@ function Input({
     case 'prefilled':
       inputElement = (
         <div className={styles.InputWrapper}>
-          <label style={labelColor} htmlFor={id}>
-            {label}
-          </label>
+          <div className="flex flex-row gap-2 relative">
+            <label style={labelColor} htmlFor={id}>
+              {label}
+            </label>
+            {showExplanation ? (
+              <img
+                onMouseEnter={onMouseEnterExplanationIcon}
+                onMouseLeave={onMouseLeaveExplanationIcon}
+                className="w4 h4"
+                src={explanationIcon}
+                alt=""
+              />
+            ) : (
+              ''
+            )}
+            {isPopupVisible && (
+              <div className={styles.popup}>{explanationMessage}</div>
+            )}
+          </div>
           <div
             className={
               prefilledInputHasValue
@@ -229,7 +308,7 @@ function Input({
             }
           >
             <label className={styles.placeholder} htmlFor={id}>
-              decklink.com/
+              fundraisingtoolbox.io/preview/
             </label>
             <input
               required={required}
@@ -252,9 +331,25 @@ function Input({
     default:
       inputElement = (
         <div className={styles.InputWrapper}>
-          <label style={labelColor} htmlFor={id}>
-            {label}
-          </label>
+          <div className="flex flex-row gap-2 relative">
+            <label style={labelColor} htmlFor={id}>
+              {label}
+            </label>
+            {showExplanation ? (
+              <img
+                onMouseEnter={onMouseEnterExplanationIcon}
+                onMouseLeave={onMouseLeaveExplanationIcon}
+                className="w4 h4"
+                src={explanationIcon}
+                alt=""
+              />
+            ) : (
+              ''
+            )}
+            {isPopupVisible && (
+              <div className={styles.popup}>{explanationMessage}</div>
+            )}
+          </div>
           <input
             required={required}
             disabled={disabled}

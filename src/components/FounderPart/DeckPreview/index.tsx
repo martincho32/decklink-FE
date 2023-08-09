@@ -1,7 +1,13 @@
 import { useContext, useEffect, useState } from 'react';
 import axios from 'axios';
-import { Page, Document, Thumbnail } from 'react-pdf'; /** File library */
+import {
+  Page,
+  Document,
+  Thumbnail,
+  // pdfjs,
+} from 'react-pdf'; /** File library */
 import { enqueueSnackbar } from 'notistack';
+// import { Helmet } from 'react-helmet-async';
 import './DeckPreview.css';
 import Button from '../../UI/Button';
 import { CloseIcon, Logo } from '../..';
@@ -11,16 +17,20 @@ import { deckService, deckViewService } from '@/services';
 import { IDeckSlidesStats } from '@/types';
 // import { milisecondsToMinutesAndSeconds } from '@/utils';
 
+interface KeyboardEvent {
+  key: string;
+}
+
 export interface Props {
   type: 'deckCreationPreview' | 'deckUserPreview';
   onClose: () => void;
   pageNumber: number;
   file;
-  onDocumentLoadSuccess;
-  options;
+  onDocumentLoadSuccess?;
+  options?;
   numPages;
   setPreviewPickDeckSlide;
-  setPageNumber;
+  setPageNumber?;
   deckId: string | null;
   deckSlidesNumber?: number | null;
   userId?: string | null;
@@ -40,7 +50,7 @@ function DeckPreview({
   deckSlidesNumber,
   userId,
 }: Props) {
-  const { isShowModal, setShowModal, hasPasswordRequired } =
+  const { isShowModal, setShowModal, hasPasswordRequired, hasEmailRequired } =
     useContext(UIContext);
   const [currentSlideStartTime, setCurrentSlideStartTime] = useState(0);
   const [isPageActive, setIsPageActive] = useState(true);
@@ -102,9 +112,9 @@ function DeckPreview({
         const auxSlidesStats = JSON.parse(JSON.stringify(slidesStats));
         auxSlidesStats[pageNumber - 1].viewingTime += elapsedTime;
         // console.log(
-        //   `El usuario ${userId} miró la slide ${pageNumber} durante ${milisecondsToMinutesAndSeconds(
+        //   `El usuario ${userId} miró la slide ${pageNumber} durante ${
         //     auxSlidesStats[pageNumber - 1].viewingTime
-        //   )}`
+        //   }`
         // );
         setSlidesStats([...auxSlidesStats]);
         setCurrentSlideStartTime(Date.now());
@@ -119,18 +129,37 @@ function DeckPreview({
   };
 
   const onSaveDeck = () => {
-    console.log('testing save');
+    window.location.href = 'https://tally.so/r/w2a4dM';
   };
 
   const onPrev = () => {
     updateSlideTime();
-    setPageNumber(pageNumber - 1);
+    if (pageNumber > 1) {
+      setPageNumber(pageNumber - 1);
+    }
   };
 
   const onNext = () => {
     updateSlideTime();
-    setPageNumber(pageNumber + 1);
+    if (pageNumber !== numPages) {
+      setPageNumber(pageNumber + 1);
+    }
   };
+
+  const handleKeyDown = (event: KeyboardEvent) => {
+    if (event.key === 'ArrowRight') {
+      onNext();
+    } else if (event.key === 'ArrowLeft') {
+      onPrev();
+    }
+  };
+
+  useEffect(() => {
+    document.addEventListener('keydown', handleKeyDown);
+    return () => {
+      document.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [pageNumber]);
 
   function initializeArrayOfSLidesStats(count): IDeckSlidesStats[] {
     const arrayOfEmptyObjects: { slideNumber: number; viewingTime: number }[] =
@@ -185,6 +214,7 @@ function DeckPreview({
           deckSlidesStats: slidesStats,
           viewerEmail: email,
           deckOwnerId: userId!,
+          stale: false,
         },
         {
           headers: {
@@ -228,23 +258,124 @@ function DeckPreview({
     };
   }, []);
 
-  // useEffect(() => {
-  //   if (deckViewId) {
-  //     window.addEventListener('beforeunload', (event) => {
-  //       console.log('beforeunload: ');
-  //       getSlidesInfo();
-  //       // updateDeckView();
-  //       // eslint-disable-next-line no-param-reassign
-  //       event.returnValue = 'Are you sure about closing this tab?';
-  //     });
-  //   }
-  // }, [deckViewId]);
-
   useEffect(() => {
     if (slidesStats.length) {
       updateDeckView();
     }
   }, [slidesStats]);
+
+  useEffect(() => {
+    if (!hasPasswordRequired && !hasEmailRequired && deckSlidesNumber) {
+      const auxSlidesStats = initializeArrayOfSLidesStats(deckSlidesNumber);
+      setSlidesStats(auxSlidesStats);
+      deckViewService
+        .createDeckView(
+          {
+            deckId: deckId as string,
+            deckSlidesStats: slidesStats,
+            viewerEmail: null,
+            deckOwnerId: userId!,
+            stale: false,
+          },
+          {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem('token')}`,
+            },
+          }
+        )
+        .then(({ data }) => {
+          setDeckViewId(data._id);
+          initializeCounting();
+        })
+        .catch((error: any) => {
+          console.error('Presentation page error: ', error);
+        });
+    }
+  }, [deckSlidesNumber]);
+
+  const urlParts = window.location.pathname.split('/');
+  const deckName = urlParts[urlParts.length - 1];
+
+  useEffect(() => {
+    if (type === 'deckUserPreview') {
+      document.title = deckName;
+    }
+
+    // Cleanup function to reset the document title when the component unmounts
+    return () => {
+      document.title = 'Fundraisingtoolbox'; // Replace with default tab name
+    };
+  }, [type]);
+
+  // const canvasRef: any = useRef(null);
+
+  // useEffect(() => {
+  //   const renderPdfAsImage = async () => {
+  //     try {
+  //       // Load the PDF document using pdf.js
+  //       const loadingTask = pdfjs.getDocument(file);
+  //       const pdfDocument = await loadingTask.promise;
+
+  //       // Get the first page of the PDF
+  //       const slideNumber = 1;
+  //       const page = await pdfDocument.getPage(slideNumber);
+
+  //       // Set the scale for the image rendering (adjust as needed)
+  //       const scale = 1.5;
+  //       const viewport = page.getViewport({ scale });
+
+  //       // Prepare the canvas
+  //       const canvas: any = canvasRef.current;
+
+  //       const context = canvas?.getContext('2d');
+  //       canvas.width = viewport.width;
+  //       canvas.height = viewport.height;
+
+  //       // Render the PDF page as an image
+  //       const renderContext = {
+  //         canvasContext: context,
+  //         viewport,
+  //       };
+  //       await page.render(renderContext).promise;
+
+  //       // Now you can use the canvas as an image
+  //     } catch (error) {
+  //       console.error('Error rendering PDF:', error);
+  //     }
+  //   };
+
+  //   renderPdfAsImage();
+  // }, [file]);
+
+  // const pdfUrl = file;
+  // const [pdfImage, setPDFImage] = useState<string | null>(null);
+
+  // const generatePDFImage = async () => {
+  //   const pdfDocument = await pdfjs.getDocument(pdfUrl).promise;
+  //   const pdfPage = await pdfDocument.getPage(1);
+  //   const viewport = pdfPage.getViewport({ scale: 1 });
+  //   const canvas = document.createElement('canvas');
+  //   const context = canvas.getContext('2d');
+
+  //   if (context) {
+  //     canvas.width = viewport.width;
+  //     canvas.height = viewport.height;
+
+  //     const renderContext = {
+  //       canvasContext: context,
+  //       viewport,
+  //     };
+
+  //     await pdfPage.render(renderContext).promise;
+
+  //     const imageDataURL = canvas.toDataURL('image/png');
+  //     setPDFImage(imageDataURL);
+  //   }
+  // };
+
+  // useEffect(() => {
+  //   generatePDFImage();
+  // }, []);
 
   return (
     <div
@@ -253,11 +384,50 @@ function DeckPreview({
       tabIndex={0}
       onClick={handleOnClose}
       className={`fixedContainer fixed overflow-y-scroll h-screen inset-0 bg-black bg-opacity-80 backdrop-blur-sm ${
-        type === 'deckUserPreview' ? 'p-2' : ''
+        type === 'deckUserPreview' ? 'p-2' : 'p-2'
       }`}
     >
       <AskEmailPassword onSubmit={handleModalSubmit} />
-
+      {/* <Document file={pdfUrl}>
+        <Page pageNumber={1} />
+      </Document>
+      {pdfImage && (
+        <Helmet>
+          <meta property="og:title" content="Custom Link Preview" />
+          <meta
+            property="og:description"
+            content="Check out this PDF link preview!"
+          />
+          <meta property="og:image" content={pdfImage} />
+        </Helmet>
+      )} */}
+      {/* <Document
+        file={file}
+        renderMode="svg"
+        onLoadSuccess={onDocumentLoadSuccess}
+        options={options}
+      >
+        <Helmet>
+          <meta property="og:title" content={deckName} />
+          <meta
+            property="og:description"
+            content={`This is pitch deck of ${deckName}.`}
+          />
+          <meta property="og:image" content={canvasRef.current?.toDataURL()} />
+          <meta property="og:image:width" content="1200" />{' '}
+          <meta property="og:image:height" content="630" />{' '}
+          <meta property="og:image:alt" content={`Preview for ${deckName}`} />
+          <meta property="og:type" content="website" />
+          <meta name="twitter:card" content="summary_large_image" />
+          <meta name="twitter:title" content={deckName} />
+          <meta
+            name="twitter:description"
+            content={`This is pitch deck of ${deckName}.`}
+          />
+          <meta name="twitter:image" content={canvasRef.current?.toDataURL()} />
+          <meta name="twitter:image:alt" content={`Preview for ${deckName}`} />
+        </Helmet>
+      </Document> */}
       {!isShowModal && (
         <Document
           file={file}
@@ -269,20 +439,20 @@ function DeckPreview({
           }`}
         >
           <div
-            className={`flex gap-4 justify-center${
+            className={`flex items-center gap-4 justify-center${
               type === 'deckUserPreview'
                 ? ' max-w-full max-h-full w-auto h-auto'
                 : ''
             }`}
           >
             <Button
+              className={`${
+                type === 'deckCreationPreview' ? 'prev' : ''
+              } p-4 bg-white w-8 h-8 ${
+                pageNumber === 1 ? 'opacity-50 bg-transparent' : 'opacity-100'
+              }`}
               type="button"
-              icon={
-                <Logo
-                  color={pageNumber === 1 ? '#f1511b2e' : '#F1511B'}
-                  topLeft
-                />
-              }
+              icon={<Logo color="#F1511B" topLeft />}
               onClick={onPrev}
               disabled={pageNumber === 1}
             />
@@ -304,7 +474,13 @@ function DeckPreview({
                   color={pageNumber === numPages ? '#f1511b2e' : '#F1511B'}
                 />
               }
-              className="max-h-min"
+              className={`${
+                type === 'deckCreationPreview' ? 'next' : ''
+              } p-4 bg-white w-8 h-8 ${
+                pageNumber === numPages
+                  ? 'opacity-50 bg-transparent'
+                  : 'opacity-100'
+              }`}
               onClick={onNext}
               disabled={pageNumber === numPages}
             />
@@ -330,14 +506,26 @@ function DeckPreview({
       {type === 'deckUserPreview' && (
         <Button
           type="button"
-          text="Save This Deck"
+          text="Join DeckLink"
           icon={<Logo color="white" />}
-          className="bg-persimmon text-white fixed bottom-4 left-1/2 -translate-x-1/2"
-          backgroundColor="#F1511B"
+          className="bg-persimmon/25 text-white fixed bottom-4 right-[7%]  py-3 px-3"
+          // backgroundColor="#F1511B"
           textColor="#FFF"
           onClick={onSaveDeck}
         />
       )}
+
+      <div
+        className={`${
+          type === 'deckCreationPreview'
+            ? 'counter fixed flex flex-row top-8 left-8 p-2 bg-persimmon rounded-md text-white text-xs'
+            : 'fixed flex flex-row top-8 left-8 p-2 bg-persimmon rounded-md text-white text-xs'
+        }`}
+      >
+        <p>{pageNumber}</p>
+        <p>/</p>
+        <p>{numPages}</p>
+      </div>
 
       {type === 'deckCreationPreview' && (
         <Button

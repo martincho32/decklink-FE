@@ -32,7 +32,10 @@ function App() {
                 <Route path="/founder/deck/edit/:id" element={<DeckEdit />} />
                 <Route path="/founder/deck/:id" element={<DeckDetail />} />
               </Route>
-              <Route path="/:customDeckLink" element={<Presentation />} />
+              <Route
+                path="/preview/:customDeckLink"
+                element={<Presentation />}
+              />
               <Route path="*" element={<NotFound />} />
             </Routes>
           </BrowserRouter>

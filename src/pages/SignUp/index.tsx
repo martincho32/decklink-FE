@@ -8,7 +8,7 @@ import graphImageStanding from '../../assets/images/graph-image-standing.png';
 import { MainLayout, Button } from '../../components';
 import SignUpFormData from '../../models/signup';
 import RequiredSignUpInfo from './RequiredSignUpInfo';
-import NotRequiredSignUpInfo from './NotRequiredSignUpInfo';
+import NotRequiredSignUpInfo from './PartlyNotRequiredSignUpInfo';
 import OrangeIconBottomLeft from '../../assets/images/OrangeArrowBottomLeft.svg';
 import { AuthContext } from '../../context';
 
@@ -31,6 +31,8 @@ function SignUp() {
   useState<boolean>(false);
   const [enternedRepeatPasswordTouched, setEnternedRepeatPasswordTouched] =
     useState<boolean>(false);
+  const [enternedCompanyNameTouched, setEnternedCompanyNameTouched] =
+    useState<boolean>(false);
 
   const [formData, setFormData] = useState<SignUpFormData>({
     email: '',
@@ -40,7 +42,6 @@ function SignUp() {
     confirmPassword: '',
     companyName: '',
     companyWebUrl: '',
-    companyLinkedInUrl: '',
   });
 
   const formTitles = ['Sign Up', 'Additional Information'];
@@ -70,6 +71,11 @@ function SignUp() {
   const repeatPasswordInputIsInvalid =
     !enteredRepeatPasswordIsValid && enternedRepeatPasswordTouched;
 
+  const enteredCompanyNameIsValid =
+    formData.companyName.trim() !== '' && formData.companyName?.length >= 2;
+  const companyNameIsInvalid =
+    !enteredCompanyNameIsValid && enternedCompanyNameTouched;
+
   const continueHandler = (event: React.MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
     setEnteredEmailTouched(true);
@@ -94,22 +100,27 @@ function SignUp() {
   const submitHandler = async (event: React.FormEvent) => {
     event.preventDefault();
 
+    setEnternedCompanyNameTouched(true);
+
     if (
       !enteredEmailIsValid ||
       !enteredPasswordIsValid ||
-      !enteredRepeatPasswordIsValid
+      !enteredRepeatPasswordIsValid ||
+      !enteredCompanyNameIsValid
     ) {
       return;
     }
-    const { hasError } = await registerUser(
+    const { hasError, message } = await registerUser(
       formData.email,
       formData.password,
       formData.confirmPassword,
       formData.firstName,
-      formData.lastName
+      formData.lastName,
+      formData.companyName,
+      formData.companyWebUrl
     );
     if (hasError) {
-      enqueueSnackbar('Something went wrong. Please contact support.', {
+      enqueueSnackbar(message, {
         variant: 'error',
         autoHideDuration: 2000,
         anchorOrigin: {
@@ -120,7 +131,7 @@ function SignUp() {
       return;
     }
     navigate('/founder/decks', { state: { isSignedUp: true } });
-    enqueueSnackbar('Registration succesful!!!', {
+    enqueueSnackbar('Registration succesful!', {
       variant: 'success',
       autoHideDuration: 2000,
       anchorOrigin: {
@@ -145,6 +156,10 @@ function SignUp() {
     : styles.inputBlock;
 
   const repeatPasswordInputClasses = repeatPasswordInputIsInvalid
+    ? `${styles.inputBlock} ${styles.inputBlockError}`
+    : styles.inputBlock;
+
+  const companyNameInputClasses = companyNameIsInvalid
     ? `${styles.inputBlock} ${styles.inputBlockError}`
     : styles.inputBlock;
 
@@ -204,6 +219,9 @@ function SignUp() {
                 <NotRequiredSignUpInfo
                   formData={formData}
                   setFormData={setFormData}
+                  companyNameInputClasses={companyNameInputClasses}
+                  companyNameIsInvalid={companyNameIsInvalid}
+                  setEnternedCompanyNameTouched={setEnternedCompanyNameTouched}
                 />
                 <Button
                   type="button"

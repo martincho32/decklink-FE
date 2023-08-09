@@ -1,8 +1,9 @@
 /* eslint-disable no-extra-boolean-cast */
+import * as React from 'react';
 import { useContext, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useSnackbar } from 'notistack';
-import { MainLayout, Button } from '../../../components';
+import { MainLayout, Button, DeckPreview } from '../../../components';
 import whiteTopRightArrow from '../../../assets/images/ArrowTopRight.svg';
 import styles from './MyDecks.module.css';
 import Card from '../../../components/FounderPart/MyDecks/Card';
@@ -15,7 +16,20 @@ import Loading from '../../../components/PreloadingScreen';
 import useLoading from '../../../hooks/useLoading';
 import { AuthContext } from '@/context';
 
+const options = {
+  cMapUrl: 'cmaps/',
+  standardFontDataUrl: 'standard_fonts/',
+};
+
 function MyDecks() {
+  const [previewPickDeckSlide, setPreviewPickDeckSlide] = useState(false);
+  const [pageNumber, setPageNumber] = useState(1);
+
+  const handleOnClosePitchDeckSlidePreview = () => {
+    document.body.style.overflow = 'auto';
+    setPreviewPickDeckSlide(false);
+  };
+
   const { user } = useContext(AuthContext);
   const { enqueueSnackbar } = useSnackbar();
 
@@ -35,8 +49,7 @@ function MyDecks() {
         throw new Error('Deck not found! Please contact support.');
       }
     } catch (error: any) {
-      console.error('Error deleting deck: ', error);
-      enqueueSnackbar(`Error deleting deck: Error: ${error.message}`, {
+      enqueueSnackbar(`Couldn't delete the deck. Please contact support.`, {
         variant: 'error',
         autoHideDuration: 10000,
         anchorOrigin: {
@@ -58,9 +71,15 @@ function MyDecks() {
       .then(({ data }) => {
         setDeckList(data);
       })
-      .catch((error) => {
-        console.error('Error getting decks: ', error);
-        // TODO handle error;
+      .catch(() => {
+        enqueueSnackbar(`Couldn't load decks. Please contact support.`, {
+          variant: 'error',
+          autoHideDuration: 10000,
+          anchorOrigin: {
+            vertical: 'top',
+            horizontal: 'right',
+          },
+        });
       });
   });
 
@@ -89,15 +108,33 @@ function MyDecks() {
             </Link>
           </div>
           <div className={styles.decksBlock}>
-            {deckList.map((deck) => {
-              return (
+            {deckList.map((deck) => (
+              <React.Fragment key={deck._id}>
                 <Card
-                  handleClickDelete={() => handleClickDelete(deck._id)}
-                  key={deck._id}
+                  onClick={(event: React.MouseEvent<HTMLDivElement>) => {
+                    if (event.target instanceof HTMLDivElement) {
+                      document.body.style.overflow = 'hidden';
+                      setPreviewPickDeckSlide(true);
+                    }
+                  }}
                   deck={deck}
+                  handleClickDelete={() => handleClickDelete(deck._id)}
                 />
-              );
-            })}
+                {previewPickDeckSlide && (
+                  <DeckPreview
+                    type="deckUserPreview"
+                    onClose={handleOnClosePitchDeckSlidePreview}
+                    pageNumber={pageNumber}
+                    file={deck.deckUrl}
+                    options={options}
+                    numPages={deck.slides}
+                    setPreviewPickDeckSlide={setPreviewPickDeckSlide}
+                    setPageNumber={setPageNumber}
+                    deckId={null}
+                  />
+                )}
+              </React.Fragment>
+            ))}
           </div>
         </div>
       ) : (

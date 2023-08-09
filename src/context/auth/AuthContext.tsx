@@ -11,7 +11,9 @@ interface ContextProps {
     password: string,
     cfpassword: string,
     firstName: string,
-    lastName: string
+    lastName: string,
+    companyName: string,
+    companyWebUrl: string
   ) => Promise<{
     hasError: boolean;
     message?: string;

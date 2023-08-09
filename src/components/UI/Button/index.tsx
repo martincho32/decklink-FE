@@ -10,6 +10,8 @@ export interface ButtonProps {
   borderColor?: string;
   textColor?: string;
   onClick?: React.MouseEventHandler<HTMLButtonElement>;
+  onMouserEnter?;
+  onMouserLeave?;
   className?: string;
   disabled?: boolean;
 }
@@ -22,6 +24,8 @@ function Button({
   borderColor,
   textColor,
   onClick,
+  onMouserEnter,
+  onMouserLeave,
   className,
   disabled,
 }: ButtonProps) {
@@ -45,6 +49,8 @@ function Button({
       className={`${buttonStyles} ${className}`}
       style={{ backgroundColor, borderColor, color: textColor }}
       onClick={onClick || undefined}
+      onMouseEnter={onMouserEnter}
+      onMouseLeave={onMouserLeave}
       disabled={disabled}
     >
       {text}

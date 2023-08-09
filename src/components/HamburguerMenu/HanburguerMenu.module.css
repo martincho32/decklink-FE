@@ -54,12 +54,22 @@
     background-color: white;
     height: 100vh;
     z-index: 2;
-    padding: 1.5rem 1rem;
+    padding: 0.5rem 1.25rem;
   }
 }
 
 @media (max-width: 576px) {
-
+  .showMenu {
+    display: flex;
+    position: fixed;
+    inset: 0;
+    flex-direction: column;
+    width: 100vw;
+    background-color: white;
+    height: 100vh;
+    z-index: 2;
+    padding: 0.5rem 1rem;
+  }
 }
 
 @media (max-width: 320px) {

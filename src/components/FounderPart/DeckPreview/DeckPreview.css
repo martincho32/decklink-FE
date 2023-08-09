@@ -9,6 +9,10 @@
   justify-content: center !important;
 }
 
+.hide-tawk-chat{
+  display: none!important;
+}
+
 .buttonClose{
   z-index: 2;
   color: white !important;
@@ -116,6 +120,18 @@
 }
 
 @media (max-width: 768px) {
+  .counter{
+    display: none !important;
+  }
+
+  .next{
+    display: none !important;
+  }
+
+  .prev{
+    display: none !important;
+  }
+
   .pageWrapper {
     display: none !important;
   }
