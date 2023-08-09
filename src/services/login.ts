@@ -15,7 +15,6 @@ type RegisterUserCredentials = UserCredentials & {
   lastName: string;
   companyName: string;
   companyWebUrl: string;
-  companyLinkedInUrl: string;
 };
 
 export const registerUser = (

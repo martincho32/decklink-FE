@@ -18,6 +18,7 @@ export {
   AlertDialogAction,
   AlertDialogCancel,
 } from './UI/AlertDialog';
+export { default as AlertDialogComponent } from './UI/AlertDialogComponent';
 export {
   Accordion,
   AccordionContent,
