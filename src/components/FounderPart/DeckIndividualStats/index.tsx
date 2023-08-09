@@ -69,16 +69,18 @@ function DeckIndividualStats({ deck, deckViews }: Props) {
                     />
                   </AccordionTrigger>
                   <AccordionContent>
-                    <div className="mb-16 w-full overflow-x-auto">
-                      <div className="min-w-min">
+                    <div className="mb-16 w-full">
+                      <div className="w-full">
                         <LineChart
                           labels={labels as string[] | undefined}
                           data={view.deckSlidesStats.map(
                             (slide) => slide.viewingTime / 1000
                           )}
                           deck={deck}
+                          pdfFile={deck?.deckUrl}
+                          numPages={deck?.slides}
                         />
-                        <Document
+                        {/* <Document
                           file={deck?.deckUrl}
                           // onLoadSuccess={onDocumentLoadSuccess}
                           options={options}
@@ -99,7 +101,7 @@ function DeckIndividualStats({ deck, deckViews }: Props) {
                               )
                             )}
                           </div>
-                        </Document>
+                        </Document> */}
                       </div>
                     </div>
                   </AccordionContent>

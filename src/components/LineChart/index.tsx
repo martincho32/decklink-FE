@@ -13,8 +13,10 @@ import {
   Tooltip,
   Legend,
 } from 'chart.js';
+import { Document, Page, pdfjs } from 'react-pdf';
 import { Line } from 'react-chartjs-2';
 import { IDeck } from '../../types';
+import DeckThumbnail from '../FounderPart/DeckThumbnail';
 
 ChartJS.register(
   CategoryScale,
@@ -30,9 +32,29 @@ interface Props {
   deck: Partial<IDeck> | null;
   labels: string[] | undefined;
   data: number[] | undefined;
+  pdfFile: any;
+  onLoadSuccess?;
+  numPages: number;
 }
 
-export default function LineChart({ deck, labels, data }: Props) {
+pdfjs.GlobalWorkerOptions.workerSrc = new URL(
+  'pdfjs-dist/build/pdf.worker.min.js',
+  import.meta.url
+).toString();
+
+const options = {
+  cMapUrl: 'cmaps/',
+  standardFontDataUrl: 'standard_fonts/',
+};
+
+export default function LineChart({
+  deck,
+  labels,
+  data,
+  pdfFile,
+  onLoadSuccess,
+  numPages,
+}: Props) {
   // const getOrCreateTooltip = (chart, slideTitle: string) => {
   //   let tooltipEl = chart.canvas.parentNode.querySelector('div');
 
@@ -158,51 +180,151 @@ export default function LineChart({ deck, labels, data }: Props) {
   const widthStringMobile = `${widthNumberMobile}rem`;
 
   const desktopStyle = {
-    marginLeft: '7.5rem',
     width: widthStringDesktop,
     height: '12rem',
     display: 'flex',
   };
   const mobileStyle = {
-    marginLeft: '5rem',
     width: widthStringMobile,
     height: '12rem',
     display: 'flex',
   };
 
   return (
-    <div className="chartWrapper" style={isMobile ? mobileStyle : desktopStyle}>
-      <Line
-        options={{
-          responsive: true,
-          plugins: {
-            legend: {
-              display: false,
-            },
-            tooltip: {
-              enabled: true,
-              // position: 'nearest',
-              // external: externalTooltipHandler,
-            },
-          },
-          maintainAspectRatio: false,
-        }}
-        data={{
-          labels: labels,
-          datasets: [
-            {
-              label: 'Seconds',
-              data: data,
-              tension: 0.5,
-              borderColor: 'rgb(241, 81, 27)',
-              backgroundColor: 'rgba(241, 81, 27, 0.5)',
-              pointRadius: 5,
-              pointBorderColor: 'rgba(241, 81, 27)',
-              pointBackgroundColor: 'rgba(241, 81, 27)',
-            },
-          ],
-        }}
-      />
+    <div className="">
+      <div
+        className="chartWrapper flex !w-full !h-auto ml-[-0.75rem]"
+        style={isMobile ? mobileStyle : desktopStyle}
+      >
+        <div className="w-8 h-[12rem] [&>*]:!w-auto [&>*]:!h-[12rem] z-10 bg-white">
+          <Line
+            options={{
+              plugins: {
+                legend: {
+                  display: false,
+                },
+                tooltip: {
+                  enabled: false,
+                },
+              },
+              maintainAspectRatio: false,
+              layout: {
+                padding: {
+                  bottom: 28.5,
+                },
+              },
+              scales: {
+                y: {
+                  beginAtZero: true,
+                  afterFit: (ctx) => {
+                    ctx.width = 32;
+                  },
+                },
+                x: {
+                  beginAtZero: true,
+                  ticks: {
+                    display: false,
+                  },
+                  grid: {
+                    drawTicks: false,
+                  },
+                },
+              },
+            }}
+            data={{
+              labels: labels,
+              datasets: [
+                {
+                  data: data,
+                  fill: false,
+                  borderColor: 'rgb(241, 81, 27)',
+                  backgroundColor: 'rgb(241, 81, 27)',
+                  pointRadius: 0,
+                  showLine: false,
+                },
+              ],
+            }}
+          />
+        </div>
+        <div
+          style={{ maxWidth: widthStringMobile }}
+          className="overflow-x-scroll h-auto ml-[-1rem] z-0"
+        >
+          <div
+            style={{ width: `calc(${widthNumberDesktop}rem - 4rem)` }} // Perform the subtraction with a numerical value
+            className="h-[12rem] [&>*]:!h-[12rem]"
+          >
+            <Line
+              options={{
+                plugins: {
+                  legend: {
+                    display: false,
+                  },
+                  tooltip: {
+                    enabled: true,
+                    // position: 'nearest',
+                    // external: externalTooltipHandler,
+                  },
+                },
+                maintainAspectRatio: false,
+                layout: {
+                  padding: {
+                    top: 10,
+                  },
+                },
+                scales: {
+                  x: {
+                    beginAtZero: true,
+                  },
+                  y: {
+                    beginAtZero: true,
+                    ticks: {
+                      display: false,
+                    },
+                    grid: {
+                      drawTicks: false,
+                    },
+                  },
+                },
+              }}
+              data={{
+                labels: ['', ...labels, ''],
+                datasets: [
+                  {
+                    label: 'Seconds',
+                    data: [null, ...data, null],
+                    tension: 0.5,
+                    borderColor: 'rgb(241, 81, 27)',
+                    backgroundColor: 'rgba(241, 81, 27, 0.5)',
+                    pointRadius: 5,
+                    pointBorderColor: 'rgba(241, 81, 27)',
+                    pointBackgroundColor: 'rgba(241, 81, 27)',
+                  },
+                ],
+              }}
+            />
+          </div>
+          <Document
+            file={pdfFile}
+            onLoadSuccess={onLoadSuccess}
+            options={options}
+            noData={<DeckThumbnail deck={deck} />}
+            className="averageStatsPreview w-full"
+          >
+            <div className="flex gap-2 pl-32 overflow-hidden my-2 p-2 w-full min-w-min">
+              {Array.from(new Array(numPages), (_el, index) => (
+                <Page
+                  renderTextLayer={false}
+                  renderAnnotationLayer={false}
+                  key={`page_${index + 1}`}
+                  pageNumber={index + 1}
+                  className="slidesPreview"
+                />
+              ))}
+            </div>
+          </Document>
+        </div>
+      </div>
     </div>
   );
 }
