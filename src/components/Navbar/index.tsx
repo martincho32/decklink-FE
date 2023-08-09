@@ -1,10 +1,10 @@
 import { useState, useContext } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Logo, Wordmark } from '../icons';
 import HamburguerMenu from '../HamburguerMenu';
 import NavLinks from '../HamburguerMenu/NavLinks';
 import AuthActions from './AuthActions';
 import { AuthContext } from '../../context';
+import logo from '../../assets/images/DeckLinkLogo.svg';
 
 // TODO fix this file
 
@@ -31,11 +31,10 @@ function Navbar() {
   };
 
   return (
-    <nav className="flex justify-between border border-persimmon h-20 items-center rounded p-2 md:py-2 md:px-5">
+    <nav className="flex justify-between border border-persimmon items-center rounded-3 p-2 md:py-2 md:px-3">
       <Link to="/founder/decks" className="flex justify-center">
-        <div className="self-center flex gap-0.7">
-          <Logo />
-          <Wordmark />
+        <div className="self-center flex gap-0.7 mobilev:w-40 tablet:w-auto">
+          <img src={logo} className="" alt="Fundraisingtoobox" />
         </div>
       </Link>
       <div className={isLoggedIn ? 'self-center hidden md:block' : 'hidden'}>

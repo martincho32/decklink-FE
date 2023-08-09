@@ -1,5 +1,5 @@
 import { useContext } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Navigate, useNavigate } from 'react-router-dom';
 import styles from './landing.module.css';
 import Logotype from '../../assets/images/logo-on-type-bg.svg';
 import orangeTopRightArrow from '../../assets/images/OrangeArrowTopRight.svg';
@@ -19,18 +19,18 @@ function Landing() {
 
   return (
     <MainLayout>
-      <div className={styles.blockContainer}>
-        <img
-          className={styles.imgTopRight}
-          src={graphImageFlying}
-          alt="graphImageStanding"
-        />
-        <img
-          className={styles.imgBotLeft}
-          src={graphImageStanding}
-          alt="graphImageStanding"
-        />
-        {!isLoggedIn ? (
+      {!isLoggedIn ? (
+        <div className={styles.blockContainer}>
+          <img
+            className={styles.imgTopRight}
+            src={graphImageFlying}
+            alt="graphImageStanding"
+          />
+          <img
+            className={styles.imgBotLeft}
+            src={graphImageStanding}
+            alt="graphImageStanding"
+          />
           <div className={styles.mainContent}>
             <img className={styles.logotype} src={Logotype} alt="Logotype" />
             <h1 className={styles.h1}>
@@ -48,16 +48,10 @@ function Landing() {
               />
             </div>
           </div>
-        ) : (
-          <div className={styles.mainContent}>
-            <img className={styles.logotype} src={Logotype} alt="Logotype" />
-            <h1 className={styles.h1Small}>
-              Save your pitch decks with us, because sharing is caring, and we
-              care about your success!
-            </h1>
-          </div>
-        )}
-      </div>
+        </div>
+      ) : (
+        <Navigate to="/founder/decks" />
+      )}
     </MainLayout>
   );
 }

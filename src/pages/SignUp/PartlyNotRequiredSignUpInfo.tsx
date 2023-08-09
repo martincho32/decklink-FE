@@ -9,7 +9,6 @@ export interface RequiredSignUpInfoProps {
     confirmPassword,
     companyName,
     companyWebUrl,
-    companyLinkedInUrl,
   }: SignUpFormData) => void;
   companyNameInputClasses;
   companyNameIsInvalid;
@@ -35,9 +34,9 @@ function RequiredSignUpInfo({
     setFormData({ ...formData, companyWebUrl: value });
   };
 
-  const handleCompanyLinkedinChange = (value: string) => {
-    setFormData({ ...formData, companyLinkedInUrl: value });
-  };
+  // const handleCompanyLinkedinChange = (value: string) => {
+  //   setFormData({ ...formData, companyLinkedInUrl: value });
+  // };
 
   return (
     <>
@@ -66,7 +65,7 @@ function RequiredSignUpInfo({
         value={formData.companyWebUrl}
         onChange={handleCompanyWebsiteChange}
       />
-      <Input
+      {/* <Input
         required
         style="default"
         type="text"
@@ -75,7 +74,7 @@ function RequiredSignUpInfo({
         id="your-company-linkedin"
         value={formData.companyLinkedInUrl}
         onChange={handleCompanyLinkedinChange}
-      />
+      /> */}
     </>
   );
 }

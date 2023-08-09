@@ -60,8 +60,7 @@ export function AuthProvider({ children }: PropsWithChildren) {
     _firstName: string,
     _lastName: string,
     companyName: string,
-    companyWebUrl: string,
-    companyLinkedInUrl: string
+    companyWebUrl: string
   ): Promise<{
     hasError: boolean;
     message?: string;
@@ -75,7 +74,6 @@ export function AuthProvider({ children }: PropsWithChildren) {
         lastName: _lastName,
         companyName,
         companyWebUrl,
-        companyLinkedInUrl,
       });
       const { token, firstName, lastName, email, role } = data;
       setItem('token', token);
