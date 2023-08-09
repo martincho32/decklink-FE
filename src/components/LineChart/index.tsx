@@ -2,7 +2,6 @@
 /* eslint-disable prefer-template */
 /* eslint-disable object-shorthand */
 /* eslint-disable func-names */
-import { useEffect } from 'react';
 import { useMediaQuery } from 'react-responsive';
 import {
   Chart as ChartJS,
@@ -191,14 +190,8 @@ export default function LineChart({
     display: 'flex',
   };
 
-  let formattedLabels = labels;
-  let formattedData: any = data;
-  useEffect(() => {
-    formattedLabels?.unshift('');
-    formattedLabels?.push('');
-    formattedData?.unshift(null);
-    formattedData?.push(null);
-  }, [labels, data]);
+  const validLabels = labels || [];
+  const validData = data || [];
 
   return (
     <div className="">
@@ -298,11 +291,11 @@ export default function LineChart({
                 },
               }}
               data={{
-                labels: formattedLabels,
+                labels: ['', ...validLabels, ''],
                 datasets: [
                   {
                     label: 'Seconds',
-                    data: formattedData,
+                    data: [null, ...validData, null],
                     tension: 0.5,
                     borderColor: 'rgb(241, 81, 27)',
                     backgroundColor: 'rgba(241, 81, 27, 0.5)',
