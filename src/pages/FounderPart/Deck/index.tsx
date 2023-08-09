@@ -361,7 +361,7 @@ function Deck({ title = 'Create', deckId }: Props) {
             </span>
           </div>
           <h1 className="text-2xl leading-normal">{title} new Deck</h1>
-          {newFileChoosed ? (
+          {newFileChoosed && deckId ? (
             <AlertDialogComponent
               actionClassName="bg-persimmon"
               action={submitHandler}
