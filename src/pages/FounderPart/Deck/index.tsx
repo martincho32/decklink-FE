@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { pdfjs, Document, Thumbnail } from 'react-pdf'; /** File library */
 import type { PDFDocumentProxy } from 'pdfjs-dist'; /** File library */
@@ -18,6 +18,7 @@ import 'react-pdf/dist/esm/Page/TextLayer.css';
 import EmptyDeckPreview from '../../../components/FounderPart/DeckPreview/EmptyDeckPreview';
 import { deckService } from '../../../services';
 import Loading from '../../../components/PreloadingScreen';
+import { AuthContext } from '@/context';
 
 pdfjs.GlobalWorkerOptions.workerSrc = new URL(
   'pdfjs-dist/build/pdf.worker.min.js',
@@ -37,6 +38,7 @@ export interface Props {
 }
 
 function Deck({ title = 'Create', deckId }: Props) {
+  const { validateToken } = useContext(AuthContext);
   /** File Library */
   const [deckFile, setDeckFile] = useState<PDFFile>(null);
   const [enteredDeckFileTouched, setEnteredDeckFileTouched] =
@@ -262,6 +264,7 @@ function Deck({ title = 'Create', deckId }: Props) {
           },
         });
       }
+      validateToken();
       let msg = 'Deck successfully created';
       if (deckId) {
         msg = 'Deck successfully updated';
@@ -361,7 +364,7 @@ function Deck({ title = 'Create', deckId }: Props) {
             </span>
           </div>
           <h1 className="text-2xl leading-normal">{title} new Deck</h1>
-          {newFileChoosed ? (
+          {newFileChoosed && deckId ? (
             <AlertDialogComponent
               actionClassName="bg-persimmon"
               action={submitHandler}

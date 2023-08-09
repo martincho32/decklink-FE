@@ -3,7 +3,7 @@
 }
 
 .averageStatsPreview canvas {
-  width: 15rem !important;
+  width: 13rem !important;
   height: auto !important;
 }
 
@@ -25,10 +25,10 @@
 }
 
 @media (max-width: 576px) {
-  .averageStatsPreview canvas {
+  /* .averageStatsPreview canvas {
     width: 10rem !important;
     height: auto !important;
-  }
+  } */
 }
 
 @media (max-width: 320px) {

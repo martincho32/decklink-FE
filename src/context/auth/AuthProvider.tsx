@@ -35,7 +35,7 @@ export function AuthProvider({ children }: PropsWithChildren) {
         email: _email,
         password,
       });
-      const { token, email, role, firstName, lastName } = data;
+      const { token, email, role, firstName, lastName, hasCreatedDeck } = data;
       setItem('token', data.token);
       dispatch({
         type: '[Auth] - Login',
@@ -45,6 +45,7 @@ export function AuthProvider({ children }: PropsWithChildren) {
           token,
           firstName,
           lastName,
+          hasCreatedDeck,
         },
       });
       return true;
@@ -75,11 +76,11 @@ export function AuthProvider({ children }: PropsWithChildren) {
         companyName,
         companyWebUrl,
       });
-      const { token, firstName, lastName, email, role } = data;
+      const { token, firstName, lastName, email, role, hasCreatedDeck } = data;
       setItem('token', token);
       dispatch({
         type: '[Auth] - SignUp',
-        payload: { email, role, token, firstName, lastName },
+        payload: { email, role, token, firstName, lastName, hasCreatedDeck },
       });
       return {
         hasError: false,
@@ -109,11 +110,11 @@ export function AuthProvider({ children }: PropsWithChildren) {
           Authorization: `Bearer ${localStorage.getItem('token')}`,
         },
       });
-      const { token, email, role } = data;
+      const { token, email, role, hasCreatedDeck, firstName } = data;
       setItem('token', token);
       dispatch({
         type: '[Auth] - Validate',
-        payload: { email, role, token },
+        payload: { email, role, token, hasCreatedDeck, firstName },
       });
       return true;
     } catch (error: any) {
