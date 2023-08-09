@@ -141,7 +141,6 @@ function MyDecks() {
     setShowArrows(false);
   }, []);
 
-  // eslint-disable-next-line no-nested-ternary
   return isLoading ? (
     <Loading />
   ) : (
