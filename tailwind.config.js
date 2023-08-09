@@ -28,8 +28,12 @@ export const theme = {
       persimmon: '#F1511B',
       mirage: '#161A20',
     },
+    borderRadius: {
+      3: '3px',
+    },
     maxWidth: {
       '8xl': '90rem',
+      custom: '70rem',
     },
     gap: {
       0.7: '0.19rem',
@@ -47,6 +51,19 @@ export const theme = {
     animation: {
       'accordion-down': 'accordion-down 0.2s ease-out',
       'accordion-up': 'accordion-up 0.2s ease-out',
+    },
+    screens: {
+      mobilev: '320px',
+
+      mobileh: '480px',
+
+      tablet: '768px',
+
+      laptop: '1024px',
+
+      desktop: '1280px',
+
+      desktopxl: '1440px',
     },
   },
 };

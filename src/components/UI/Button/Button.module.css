@@ -2,11 +2,11 @@
 
 .button {
     font-family: "PowerGroteskTrial";
-    font-weight: 600;
+    font-weight: 400;
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 8px;
+    gap: 0.25rem;
     border-radius: 0.25rem;
     border: none;
     cursor: pointer;
