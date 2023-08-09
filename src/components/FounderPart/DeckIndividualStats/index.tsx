@@ -48,7 +48,7 @@ function DeckIndividualStats({ deck, deckViews }: Props) {
       {!!deckViews?.length &&
         deckViews.map((view) => {
           return (
-            <div className="mb-16">
+            <div key={view._id} className="mb-16">
               <Accordion
                 key={view._id}
                 type="single"

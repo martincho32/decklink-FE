@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import axios, { AxiosRequestConfig } from 'axios';
 
 const basePath = import.meta.env.DEV

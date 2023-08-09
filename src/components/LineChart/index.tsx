@@ -1,7 +1,4 @@
-/* eslint-disable prefer-const */
-/* eslint-disable prefer-template */
 /* eslint-disable object-shorthand */
-/* eslint-disable func-names */
 import { useMediaQuery } from 'react-responsive';
 import {
   Chart as ChartJS,
@@ -190,9 +187,6 @@ export default function LineChart({
     display: 'flex',
   };
 
-  const validLabels = labels || [];
-  const validData = data || [];
-
   return (
     <div className="">
       <div
@@ -291,11 +285,11 @@ export default function LineChart({
                 },
               }}
               data={{
-                labels: ['', ...validLabels, ''],
+                labels: ['', ...(labels as string[]), ''],
                 datasets: [
                   {
                     label: 'Seconds',
-                    data: [null, ...validData, null],
+                    data: [null, ...(data as number[]), null],
                     tension: 0.5,
                     borderColor: 'rgb(241, 81, 27)',
                     backgroundColor: 'rgba(241, 81, 27, 0.5)',
