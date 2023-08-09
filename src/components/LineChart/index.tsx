@@ -158,11 +158,13 @@ export default function LineChart({ deck, labels, data }: Props) {
   const widthStringMobile = `${widthNumberMobile}rem`;
 
   const desktopStyle = {
+    marginLeft: '7.5rem',
     width: widthStringDesktop,
     height: '12rem',
     display: 'flex',
   };
   const mobileStyle = {
+    marginLeft: '5rem',
     width: widthStringMobile,
     height: '12rem',
     display: 'flex',
@@ -189,7 +191,7 @@ export default function LineChart({ deck, labels, data }: Props) {
           labels: labels,
           datasets: [
             {
-              label: deck?.name ?? 'No name provided',
+              label: 'Seconds',
               data: data,
               tension: 0.5,
               borderColor: 'rgb(241, 81, 27)',

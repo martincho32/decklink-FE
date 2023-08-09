@@ -40,7 +40,6 @@ function Presentation() {
   };
 
   useEffect(() => {
-    // TODO GET deck service to get deck file
     if (!customDeckLink) {
       const errorMessage = `Error fetching deck's customDeckLink is undefined or null. Please contact support.`;
       enqueueSnackbar(errorMessage, {
@@ -69,6 +68,7 @@ function Presentation() {
                 horizontal: 'right',
               },
             });
+            navigate('/404');
             return;
           }
           setDeckFile(data.deckUrl);
