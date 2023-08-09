@@ -144,7 +144,7 @@ function Card({ deck, handleClickDelete, onClick }: Props) {
               onMouseEnter={handleMouseEnter}
               onMouseLeave={handleMouseLeave}
               onClick={handleCopyClick}
-              className={`${styles.buttonContainer} flex w-full gap-1 p-2 bg-gray-200 rounded`}
+              className={`${styles.buttonContainer} flex w-full gap-1 p-2 bg-gray-200 rounded justify-between`}
             >
               {/* <Button
                 type="button"
@@ -154,7 +154,7 @@ function Card({ deck, handleClickDelete, onClick }: Props) {
                 onMouserLeave={handleMouseLeave}
                 onClick={handleCopyClick}
               /> */}
-              <p className="w-full break-all truncate">{`fundraisingtoolbox.io/preview/${deck?.customDeckLink}`}</p>
+              <p className="break-all max-w-[12rem] truncate">{`fundraisingtoolbox.io/preview/${deck?.customDeckLink}`}</p>
               <img src={copyIcon} alt="" />
               {isPopupVisible && (
                 <div
