@@ -1,3 +1,4 @@
+/* eslint-disable no-unsafe-optional-chaining */
 import { useEffect, useState } from 'react';
 import { pdfjs } from 'react-pdf';
 import type { PDFDocumentProxy } from 'pdfjs-dist';
@@ -46,9 +47,9 @@ function DeckAverageStats({ deck, deckViews }: Props) {
   labels?.forEach((_slideName, index) => {
     (Object.values(rawData!) as [][]).forEach((slide: IDeckSlidesStats[]) => {
       if (auxMockedData[index]) {
-        auxMockedData[index] += slide[index].viewingTime;
+        auxMockedData[index] += slide[index]?.viewingTime;
       } else {
-        auxMockedData[index] = slide[index].viewingTime;
+        auxMockedData[index] = slide[index]?.viewingTime;
       }
     });
   });
