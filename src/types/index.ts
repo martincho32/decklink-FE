@@ -8,6 +8,7 @@ export interface IUser {
   websiteUrl?: string;
   linkedInUrl?: string;
   role?: string;
+  hasCreatedDeck?: boolean;
 }
 
 // export interface IAuthContext {

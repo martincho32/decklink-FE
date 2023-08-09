@@ -28,6 +28,7 @@ export const authReducer = (
       return {
         ...state,
         isLoggedIn: true,
+        user: action.payload,
       };
     case '[Auth] - Logout':
       return {
