@@ -15,7 +15,7 @@ import AskEmailPassword from '../../AskEmailPassword';
 import { UIContext } from '@/context';
 import { deckService, deckViewService } from '@/services';
 import { IDeckSlidesStats } from '@/types';
-import dummyImage from '../../../assets/images/Dummy Slide.svg';
+import Loading from '../../PreloadingScreen';
 // import { milisecondsToMinutesAndSeconds } from '@/utils';
 
 interface KeyboardEvent {
@@ -434,34 +434,14 @@ function DeckPreview({
           file={file}
           onLoadSuccess={onDocumentLoadSuccess}
           options={options}
-          noData={
-            <div
-              className={`${
-                type === 'deckUserPreview'
-                  ? 'pageWrapperFullScreen'
-                  : 'pageWrapper'
-              }`}
-            >
-              <img src={dummyImage} alt="Deck Slide" />
-            </div>
-          }
-          loading={
-            <div
-              className={`${
-                type === 'deckUserPreview'
-                  ? 'pageWrapperFullScreen'
-                  : 'pageWrapper'
-              }`}
-            >
-              <img src={dummyImage} alt="Deck Slide" />
-            </div>
-          }
+          noData={<Loading />}
+          loading={<Loading />}
           className={`document h-screen p-4 bg-mirage ${
             type === 'deckCreationPreview' ? ' rounded-lg' : 'md:rounded-none'
           }`}
         >
           <div
-            className={`flex items-center gap-4 justify-center${
+            className={`flex items-center gap-4 justify-between${
               type === 'deckUserPreview'
                 ? ' max-w-full max-h-full w-auto h-auto'
                 : ''
@@ -488,18 +468,10 @@ function DeckPreview({
                   : 'pageWrapper'
               }`}
               pageNumber={pageNumber}
-              loading={
-                <div
-                  className={`${
-                    type === 'deckUserPreview'
-                      ? 'pageWrapperFullScreen'
-                      : 'pageWrapper'
-                  }`}
-                >
-                  <img src={dummyImage} alt="Deck Slide" />
-                </div>
-              }
+              loading=""
+              noData=""
             />
+
             <Button
               type="button"
               icon={
