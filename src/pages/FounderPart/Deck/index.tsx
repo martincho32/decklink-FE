@@ -40,7 +40,6 @@ export interface Props {
 function Deck({ title = 'Create', deckId }: Props) {
   const { user } = useContext(AuthContext);
   const { validateToken } = useContext(AuthContext);
-  /** File Library */
   const [deckFile, setDeckFile] = useState<PDFFile>(null);
   const [enteredDeckFileTouched, setEnteredDeckFileTouched] =
     useState<boolean>(false);
@@ -61,15 +60,14 @@ function Deck({ title = 'Create', deckId }: Props) {
     useState<boolean>(false);
   const [passToogleChecked, setPassToogleChecked] = useState<boolean>(false);
   const [emailToogleChecked, setEmailToogleChecked] = useState<boolean>(false);
+  // const [downloadToogleChecked, setDownloadToogleChecked] = useState(false);
 
   const [deckPassword, setDeckPassword] = useState<string>('');
   const [enteredPasswordTouched, setEnteredPasswordTouched] =
     useState<boolean>(false);
   const [isLoading, setIsLoading] = useState(true);
   const [newFileChoosed, setNewFileChoosed] = useState(false);
-
-  // const [progress, setProgress] = useState({ started: false, pc: 0 });
-  // const [msg, setMsg] = useState<string | null>(null);
+  const [isButtonDisabled, setIsButtonDisabled] = useState(false);
 
   const handleOnClosePitchDeckSlidePreview = () => {
     document.body.style.overflow = 'auto';
@@ -100,7 +98,6 @@ function Deck({ title = 'Create', deckId }: Props) {
   }: PDFDocumentProxy): void => {
     setNumPages(nextNumPages);
   };
-  /** File Library */
 
   const enteredPasswordIsValid =
     deckPassword?.length >= 6 && deckPassword?.length <= 35;
@@ -137,6 +134,11 @@ function Deck({ title = 'Create', deckId }: Props) {
     setPassToogleChecked(!passToogleChecked);
     setIsEdited(true);
   };
+
+  // const handleDownloadToogleChange = () => {
+  //   setDownloadToogleChecked(!downloadToogleChecked);
+  //   setIsEdited(true);
+  // };
 
   const handleEmailToogleChange = () => {
     setEmailToogleChecked(!emailToogleChecked);
@@ -195,34 +197,23 @@ function Deck({ title = 'Create', deckId }: Props) {
 
   const submitHandler = async (event: React.FormEvent) => {
     event.preventDefault();
+    setIsButtonDisabled(true);
 
     setEnteredDeckNameTouched(true);
     setEnteredDeckLinkTouched(true);
     setEnteredPasswordTouched(true);
     setEnteredDeckFileTouched(true);
 
-    if (passToogleChecked) {
-      if (
-        !enteredDeckNameIsValid ||
-        !enteredDeckLinkIsValid ||
-        !enteredPasswordIsValid ||
-        !enteredDeckFileIsValid
-      ) {
-        handleError('Some of the fields is not valid');
-        return;
-      }
-    }
-
     if (
-      !enteredDeckNameIsValid ||
-      !enteredDeckLinkIsValid ||
-      !enteredDeckFileIsValid
+      (!enteredDeckNameIsValid ||
+        !enteredDeckLinkIsValid ||
+        !enteredDeckFileIsValid) &&
+      (passToogleChecked ? enteredPasswordIsValid : true)
     ) {
       handleError('Some of the fields is not valid');
       return;
     }
 
-    // setDeckLink();
     try {
       // TODO integrate this, for having dile upload progress bar
 
@@ -288,9 +279,11 @@ function Deck({ title = 'Create', deckId }: Props) {
       setEnteredDeckLinkTouched(false);
       setDeckPassword('');
       setEnteredPasswordTouched(false);
+      setIsButtonDisabled(false);
     } catch (error: any) {
       console.error('Error:', error);
       handleError(error);
+      setIsButtonDisabled(false);
     }
   };
 
@@ -380,6 +373,7 @@ function Deck({ title = 'Create', deckId }: Props) {
                 backgroundColor="#F1511B"
                 textColor="#ffffff"
                 className="xl:justify-self-end justify-self-center max-w-min"
+                disabled={isButtonDisabled}
               />
             </AlertDialogComponent>
           ) : (
@@ -390,6 +384,7 @@ function Deck({ title = 'Create', deckId }: Props) {
               backgroundColor="#F1511B"
               textColor="#ffffff"
               className="xl:justify-self-end justify-self-center max-w-min"
+              disabled={isButtonDisabled}
             />
           )}
         </div>
@@ -425,6 +420,15 @@ function Deck({ title = 'Create', deckId }: Props) {
               onBlur={deckLinkBlur}
             />
           </div>
+          {/* <Input
+            showExplanation
+            explanationMessage="Allow the user to download this deck file"
+            style="toggle"
+            label="Allow download"
+            id="allow-download"
+            onChange={handleDownloadToogleChange}
+            checked={downloadToogleChecked}
+          /> */}
         </div>
         <div className="w-full grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-7 max-h-fit justify-center mt-6">
           <div className="flex justify-between">
