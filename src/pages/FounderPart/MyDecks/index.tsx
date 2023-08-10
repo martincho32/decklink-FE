@@ -63,6 +63,8 @@ function MyDecks() {
         },
       });
       if (data) {
+        const updatedDeckList = deckList.filter((item) => item._id !== id);
+        setDeckList(updatedDeckList);
         setRefresh(!refresh);
       } else {
         throw new Error('Deck not found! Please contact support.');
