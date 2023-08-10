@@ -3,6 +3,7 @@ import React from 'react';
 import styles from './Button.module.css';
 
 export interface ButtonProps {
+  id?: string;
   type: 'button' | 'submit' | 'reset' | undefined;
   text?: string;
   icon?: React.ReactNode;
@@ -17,6 +18,7 @@ export interface ButtonProps {
 }
 
 function Button({
+  id,
   type,
   text,
   icon,
@@ -45,6 +47,7 @@ function Button({
 
   return (
     <button
+      id={id}
       type={type}
       className={`${buttonStyles} ${className}`}
       style={{ backgroundColor, borderColor, color: textColor }}

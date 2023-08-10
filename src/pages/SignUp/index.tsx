@@ -1,4 +1,4 @@
-import { useState, useContext } from 'react';
+import { useState, useContext, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useSnackbar } from 'notistack';
 import whiteTopRightArrow from '../../assets/images/ArrowTopRight.svg';
@@ -163,6 +163,25 @@ function SignUp() {
     ? `${styles.inputBlock} ${styles.inputBlockError}`
     : styles.inputBlock;
 
+  useEffect(() => {
+    const handleKeyPress = (event: KeyboardEvent) => {
+      if (event.key === 'Enter') {
+        event.preventDefault();
+        if (page === 0) {
+          document.getElementById('continue-button')?.click();
+        } else {
+          document.getElementById('signup-button')?.click();
+        }
+      }
+    };
+
+    document.addEventListener('keydown', handleKeyPress);
+
+    return () => {
+      document.removeEventListener('keydown', handleKeyPress);
+    };
+  }, [page]);
+
   return (
     <MainLayout>
       <div className={styles.blockContainer}>
@@ -205,6 +224,7 @@ function SignUp() {
                   }
                 />
                 <Button
+                  id="continue-button"
                   type="button"
                   text="Continue"
                   icon={<img src={whiteTopRightArrow} alt="Arrow" />}
@@ -224,6 +244,7 @@ function SignUp() {
                   setEnternedCompanyNameTouched={setEnternedCompanyNameTouched}
                 />
                 <Button
+                  id="signup-button"
                   type="button"
                   text="Sign up"
                   icon={<img src={whiteTopRightArrow} alt="Arrow" />}
