@@ -7,7 +7,7 @@ import {
   // pdfjs,
 } from 'react-pdf'; /** File library */
 import { enqueueSnackbar } from 'notistack';
-// import { Helmet } from 'react-helmet-async';
+import { Helmet } from 'react-helmet-async';
 import './DeckPreview.css';
 import Button from '../../UI/Button';
 import { CloseIcon, Logo } from '../..';
@@ -388,46 +388,48 @@ function DeckPreview({
       }`}
     >
       <AskEmailPassword onSubmit={handleModalSubmit} />
-      {/* <Document file={pdfUrl}>
-        <Page pageNumber={1} />
-      </Document>
-      {pdfImage && (
-        <Helmet>
-          <meta property="og:title" content="Custom Link Preview" />
-          <meta
-            property="og:description"
-            content="Check out this PDF link preview!"
-          />
-          <meta property="og:image" content={pdfImage} />
-        </Helmet>
-      )} */}
-      {/* <Document
-        file={file}
-        renderMode="svg"
-        onLoadSuccess={onDocumentLoadSuccess}
-        options={options}
-      >
-        <Helmet>
-          <meta property="og:title" content={deckName} />
-          <meta
-            property="og:description"
-            content={`This is pitch deck of ${deckName}.`}
-          />
-          <meta property="og:image" content={canvasRef.current?.toDataURL()} />
-          <meta property="og:image:width" content="1200" />{' '}
-          <meta property="og:image:height" content="630" />{' '}
-          <meta property="og:image:alt" content={`Preview for ${deckName}`} />
-          <meta property="og:type" content="website" />
-          <meta name="twitter:card" content="summary_large_image" />
-          <meta name="twitter:title" content={deckName} />
-          <meta
-            name="twitter:description"
-            content={`This is pitch deck of ${deckName}.`}
-          />
-          <meta name="twitter:image" content={canvasRef.current?.toDataURL()} />
-          <meta name="twitter:image:alt" content={`Preview for ${deckName}`} />
-        </Helmet>
-      </Document> */}
+      <Helmet>
+        <title>{deckName}</title>
+        <meta name="description" content={`Pitch Deck of ${deckName}`} />
+        <meta
+          name="keywords"
+          content={`fundraisingtoolbox, pitchdeck pitch deck, deck ${deckName}`}
+        />
+        <meta name="author" content={deckName} />
+
+        {/* Open Graph (OG) meta tags */}
+        <meta property="og:title" content={deckName} />
+        <meta property="og:description" content={`Pitch Deck of ${deckName}`} />
+        {/* <meta property="og:image" content="https://example.com/og-image.jpg" /> */}
+        <meta property="og:url" content={`/preview/${deckName}`} />
+        <meta property="og:type" content="website" />
+
+        {/* Twitter Card meta tags */}
+        {/* <meta name="twitter:card" content="summary_large_image" /> */}
+        <meta name="twitter:title" content={deckName} />
+        <meta
+          name="twitter:description"
+          content={`Pitch Deck of ${deckName}`}
+        />
+        {/* <meta
+          name="twitter:image"
+          content="https://example.com/twitter-card-image.jpg"
+        /> */}
+
+        {/* Other meta tags */}
+        <link rel="canonical" href={`/preview/${deckName}`} />
+        {/* <meta name="robots" content="index, follow" /> */}
+        <meta name="theme-color" content="#FFF" />
+
+        {/* Additional meta tags specific to Apple devices */}
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-title" content={deckName} />
+        <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+
+        {/* Microsoft application tile */}
+        {/* <meta name="msapplication-TileImage" content="/ms-tile.png" /> */}
+        <meta name="msapplication-TileColor" content="#FFF" />
+      </Helmet>
       {!isShowModal && (
         <Document
           file={file}
