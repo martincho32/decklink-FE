@@ -15,6 +15,7 @@ import AskEmailPassword from '../../AskEmailPassword';
 import { UIContext } from '@/context';
 import { deckService, deckViewService } from '@/services';
 import { IDeckSlidesStats } from '@/types';
+import dummyImage from '../../../assets/images/Dummy Slide.svg';
 // import { milisecondsToMinutesAndSeconds } from '@/utils';
 
 interface KeyboardEvent {
@@ -433,7 +434,28 @@ function DeckPreview({
           file={file}
           onLoadSuccess={onDocumentLoadSuccess}
           options={options}
-          noData={<h4 className="">No file selected</h4>}
+          noData={
+            <div
+              className={`${
+                type === 'deckUserPreview'
+                  ? 'pageWrapperFullScreen'
+                  : 'pageWrapper'
+              }`}
+            >
+              <img src={dummyImage} alt="Deck Slide" />
+            </div>
+          }
+          loading={
+            <div
+              className={`${
+                type === 'deckUserPreview'
+                  ? 'pageWrapperFullScreen'
+                  : 'pageWrapper'
+              }`}
+            >
+              <img src={dummyImage} alt="Deck Slide" />
+            </div>
+          }
           className={`document h-screen p-4 bg-mirage ${
             type === 'deckCreationPreview' ? ' rounded-lg' : 'md:rounded-none'
           }`}
@@ -466,6 +488,17 @@ function DeckPreview({
                   : 'pageWrapper'
               }`}
               pageNumber={pageNumber}
+              loading={
+                <div
+                  className={`${
+                    type === 'deckUserPreview'
+                      ? 'pageWrapperFullScreen'
+                      : 'pageWrapper'
+                  }`}
+                >
+                  <img src={dummyImage} alt="Deck Slide" />
+                </div>
+              }
             />
             <Button
               type="button"
