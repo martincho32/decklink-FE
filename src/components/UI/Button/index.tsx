@@ -5,6 +5,7 @@ import styles from './Button.module.css';
 export interface ButtonProps {
   type: 'button' | 'submit' | 'reset' | undefined;
   text?: string;
+  leftIcon?: React.ReactNode;
   icon?: React.ReactNode;
   backgroundColor?: string;
   borderColor?: string;
@@ -19,6 +20,7 @@ export interface ButtonProps {
 function Button({
   type,
   text,
+  leftIcon,
   icon,
   backgroundColor,
   borderColor,
@@ -53,6 +55,7 @@ function Button({
       onMouseLeave={onMouserLeave}
       disabled={disabled}
     >
+      {leftIcon && <span className={`${styles.icon} mr-2`}>{leftIcon}</span>}
       {text}
       {icon && <span className={styles.icon}>{icon}</span>}
     </button>
