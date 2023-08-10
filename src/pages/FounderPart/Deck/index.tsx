@@ -38,6 +38,7 @@ export interface Props {
 }
 
 function Deck({ title = 'Create', deckId }: Props) {
+  const { user } = useContext(AuthContext);
   const { validateToken } = useContext(AuthContext);
   /** File Library */
   const [deckFile, setDeckFile] = useState<PDFFile>(null);
@@ -277,7 +278,9 @@ function Deck({ title = 'Create', deckId }: Props) {
           horizontal: 'right',
         },
       });
-      navigate('/founder/decks');
+      navigate('/founder/decks', {
+        state: { isFirstDeck: !user?.hasCreatedDeck },
+      });
 
       setDeckName('');
       setEnteredDeckNameTouched(false);
