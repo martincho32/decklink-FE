@@ -144,7 +144,7 @@ function MyDecks() {
                 VC meetings as you want?
               </span>
             </h2>
-            <div className="flex justify-between mobileh:mb-[-7rem] mobilev:mb-[-3rem] items-start mb-[-10rem]">
+            <div className="flex justify-between items-start">
               <img
                 src={reviewStats}
                 className="desktopxl:max-h-[7rem] mobileh:max-h-[4rem] mobilev:max-h-[3rem] max-h-[5rem] h-auto"
@@ -158,10 +158,10 @@ function MyDecks() {
               />
             </div>
 
-            <div className="desktopxl:h-[20rem] mobilev:h-[6rem] mobileh:h-[15rem] w-full h-[15rem] mx-auto">
+            <div className="desktopxl:h-[20rem] mobilev:h-[6rem] mobilev:mt-[-7rem] mobilev:mb-24 mobileh:mb-2 desktop:mb-8 desktop:mt-[-5rem] mobileh:h-[15rem] w-full h-[15rem] mx-auto mb-12 mt-[-4rem]">
               <Carrousel
                 cards={cards}
-                height="500px"
+                height="15rem"
                 width="100%"
                 margin="0 auto"
                 offset={2}
