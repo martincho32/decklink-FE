@@ -53,7 +53,6 @@ function MyDecks() {
   const { enqueueSnackbar } = useSnackbar();
 
   const [deckList, setDeckList] = useState<IDeck[]>([]);
-  const [refresh, setRefresh] = useState(true);
 
   const handleClickDelete = async (id) => {
     try {
@@ -65,7 +64,6 @@ function MyDecks() {
       if (data) {
         const updatedDeckList = deckList.filter((item) => item._id !== id);
         setDeckList(updatedDeckList);
-        setRefresh(!refresh);
       } else {
         throw new Error('Deck not found! Please contact support.');
       }
