@@ -60,7 +60,7 @@ function Deck({ title = 'Create', deckId }: Props) {
     useState<boolean>(false);
   const [passToogleChecked, setPassToogleChecked] = useState<boolean>(false);
   const [emailToogleChecked, setEmailToogleChecked] = useState<boolean>(false);
-  const [downloadToogleChecked, setDownloadToogleChecked] = useState(false);
+  // const [downloadToogleChecked, setDownloadToogleChecked] = useState(false);
 
   const [deckPassword, setDeckPassword] = useState<string>('');
   const [enteredPasswordTouched, setEnteredPasswordTouched] =
@@ -135,10 +135,10 @@ function Deck({ title = 'Create', deckId }: Props) {
     setIsEdited(true);
   };
 
-  const handleDownloadToogleChange = () => {
-    setDownloadToogleChecked(!downloadToogleChecked);
-    setIsEdited(true);
-  };
+  // const handleDownloadToogleChange = () => {
+  //   setDownloadToogleChecked(!downloadToogleChecked);
+  //   setIsEdited(true);
+  // };
 
   const handleEmailToogleChange = () => {
     setEmailToogleChecked(!emailToogleChecked);
@@ -420,7 +420,7 @@ function Deck({ title = 'Create', deckId }: Props) {
               onBlur={deckLinkBlur}
             />
           </div>
-          <Input
+          {/* <Input
             showExplanation
             explanationMessage="Allow the user to download this deck file"
             style="toggle"
@@ -428,7 +428,7 @@ function Deck({ title = 'Create', deckId }: Props) {
             id="allow-download"
             onChange={handleDownloadToogleChange}
             checked={downloadToogleChecked}
-          />
+          /> */}
         </div>
         <div className="w-full grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-7 max-h-fit justify-center mt-6">
           <div className="flex justify-between">
