@@ -2,9 +2,15 @@ import * as React from 'react';
 import { useContext, useEffect, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { useSnackbar } from 'notistack';
-import Carousel from 'react-spring-3d-carousel'; // packages
-import { config } from 'react-spring'; // packages
-import { MainLayout, Button, DeckPreview, Logo } from '../../../components';
+import { v4 as uuidv4 } from 'uuid';
+import {
+  MainLayout,
+  Button,
+  DeckPreview,
+  Logo,
+  Carrousel,
+  CarouselCard,
+} from '@/components';
 import whiteTopRightArrow from '../../../assets/images/ArrowTopRight.svg';
 import styles from './MyDecks.module.css';
 import Card from '../../../components/FounderPart/MyDecks/Card';
@@ -103,43 +109,20 @@ function MyDecks() {
     document.body.style.overflow = 'auto';
   }, [showFirstTimeModal]);
 
-  const slides = [
+  const cards = [
     {
-      key: 'firstReview',
-      content: <img src={firstReview} alt="1" />,
+      key: uuidv4(),
+      content: <CarouselCard image={firstReview} />,
     },
     {
-      key: 'secondReview',
-      content: <img src={secondReview} alt="2" />,
+      key: uuidv4(),
+      content: <CarouselCard image={secondReview} />,
     },
     {
-      key: 'thirdReview',
-      content: <img src={thirdReview} alt="3" />,
-    },
-    {
-      key: '2',
-      content: <img src={thirdReview} alt="3" />,
-    },
-    {
-      key: '3',
-      content: <img src={thirdReview} alt="3" />,
+      key: uuidv4(),
+      content: <CarouselCard image={thirdReview} />,
     },
   ];
-
-  const [offsetRadius, setOffsetRadius] = useState(1.5);
-  const [showArrows, setShowArrows] = useState(false);
-  const [goToSlide, setGoToSlide] = useState(1);
-
-  const table = slides.map((element, index: any) => {
-    return { ...element, onClick: () => setGoToSlide(index) };
-  });
-
-  const [cards] = useState(table);
-
-  useEffect(() => {
-    setOffsetRadius(1);
-    setShowArrows(false);
-  }, []);
 
   return isLoading ? (
     <Loading />
@@ -176,12 +159,12 @@ function MyDecks() {
             </div>
 
             <div className="desktopxl:h-[20rem] mobilev:h-[6rem] mobileh:h-[15rem] w-full h-[15rem] mx-auto">
-              <Carousel
-                goToSlide={goToSlide !== null ? goToSlide : undefined}
-                offsetRadius={offsetRadius}
-                showNavigation={showArrows}
-                animationConfig={config.gentle}
-                slides={cards}
+              <Carrousel
+                cards={cards}
+                height="500px"
+                width="100%"
+                margin="0 auto"
+                offset={2}
               />
             </div>
 
@@ -195,7 +178,7 @@ function MyDecks() {
                 setShowFirstTimeModal(false);
                 setShowCalendly(true);
               }}
-              className="py-3 w-full mx-auto z-10"
+              className="py-3 w-full mx-auto relative z-10"
             />
           </div>
         </Popup>
