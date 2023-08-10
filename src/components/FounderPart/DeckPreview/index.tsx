@@ -327,7 +327,6 @@ function DeckPreview({
           className={`document h-screen p-4 bg-mirage ${
             type === 'deckCreationPreview' ? ' rounded-lg' : 'md:rounded-none'
           }`}
-          renderMode="svg"
         >
           <div
             className={`flex items-center gap-4 justify-center${
