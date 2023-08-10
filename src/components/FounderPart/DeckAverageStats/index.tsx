@@ -82,25 +82,6 @@ function DeckAverageStats({ deck, deckViews }: Props) {
             onLoadSuccess={onDocumentLoadSuccess}
             numPages={numPages}
           />
-          {/* <Document
-            file={pdfFile}
-            onLoadSuccess={onDocumentLoadSuccess}
-            options={options}
-            noData={<DeckThumbnail deck={deck} />}
-            className="averageStatsPreview w-full"
-          >
-            <div className="flex gap-2 overflow-hidden my-6 p-2 w-full">
-              {Array.from(new Array(numPages), (_el, index) => (
-                <Page
-                  renderTextLayer={false}
-                  renderAnnotationLayer={false}
-                  key={`page_${index + 1}`}
-                  pageNumber={index + 1}
-                  className="slidesPreview"
-                />
-              ))}
-            </div>
-          </Document> */}
         </div>
       </div>
     </div>

@@ -80,28 +80,6 @@ function DeckIndividualStats({ deck, deckViews }: Props) {
                           pdfFile={deck?.deckUrl}
                           numPages={deck?.slides as number}
                         />
-                        {/* <Document
-                          file={deck?.deckUrl}
-                          // onLoadSuccess={onDocumentLoadSuccess}
-                          options={options}
-                          noData={<DeckThumbnail deck={deck} />}
-                          className="averageStatsPreview w-full"
-                        >
-                          <div className="flex gap-2 overflow-hidden my-6 p-2 w-full">
-                            {Array.from(
-                              new Array(deck?.slides),
-                              (_el, index) => (
-                                <Page
-                                  renderTextLayer={false}
-                                  renderAnnotationLayer={false}
-                                  key={`page_${index + 1}`}
-                                  pageNumber={index + 1}
-                                  className="previewSlides"
-                                />
-                              )
-                            )}
-                          </div>
-                        </Document> */}
                       </div>
                     </div>
                   </AccordionContent>
