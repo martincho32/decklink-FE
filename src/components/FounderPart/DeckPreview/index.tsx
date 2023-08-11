@@ -324,12 +324,12 @@ function DeckPreview({
           onLoadSuccess={onDocumentLoadSuccess}
           options={options}
           noData={<h4 className="">No file selected</h4>}
-          className={`document h-screen p-4 bg-mirage ${
+          className={`document h-screen p-4 bg-mirage  ${
             type === 'deckCreationPreview' ? ' rounded-lg' : 'md:rounded-none'
           }`}
         >
           <div
-            className={`flex items-center gap-4 justify-center${
+            className={`flex relative items-center gap-4 justify-center${
               type === 'deckUserPreview'
                 ? ' max-w-full max-h-full w-auto h-auto'
                 : ''
@@ -374,6 +374,17 @@ function DeckPreview({
               onClick={onNext}
               disabled={pageNumber === numPages}
             />
+            <div
+              className={`${
+                type === 'deckCreationPreview'
+                  ? 'counter absolute flex flex-row bottom-2 letf-auto right-auto p-2  rounded-md text-persimmon/80 text-s'
+                  : 'absolute flex flex-row bottom-2 letf-auto right-auto p-2  rounded-md text-persimmon/80 text-s'
+              }`}
+            >
+              <p>{pageNumber}</p>
+              <p>/</p>
+              <p>{numPages}</p>
+            </div>
           </div>
           {type === 'deckCreationPreview' && (
             <div className="previewPagesWrapper">
@@ -404,18 +415,6 @@ function DeckPreview({
           onClick={onSaveDeck}
         />
       )}
-
-      <div
-        className={`${
-          type === 'deckCreationPreview'
-            ? 'counter fixed flex flex-row top-8 left-8 p-2 bg-persimmon rounded-md text-white text-xs'
-            : 'fixed flex flex-row top-8 left-8 p-2 bg-persimmon rounded-md text-white text-xs'
-        }`}
-      >
-        <p>{pageNumber}</p>
-        <p>/</p>
-        <p>{numPages}</p>
-      </div>
 
       {type === 'deckCreationPreview' && (
         <Button

@@ -35,7 +35,7 @@
   background-color: transparent !important;
 }
 
-.pageWrapperFullScreen {
+/* .pageWrapperFullScreen {
   display: flex !important;
   justify-content: center !important;
   background-color: transparent !important;
@@ -44,6 +44,19 @@
   width: auto !important;
   height: auto !important;
   border-radius: 0.5rem !important;
+} */
+
+.pageWrapperFullScreen{
+  background: transparent!important;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  max-width: 100%;
+  max-height: 100%; /* Limit the height to the viewport height */
+  height: 100%;
+  overflow: hidden; /* Hide any overflowing content */
+  min-width: auto!important;
+  min-height: auto!important;
 }
 
 .pageWrapper canvas {
@@ -51,19 +64,28 @@
   cursor: default !important;
   height: 60vh !important;
   width: auto !important;
-  border-radius: 0.5rem !important;
+  border-radius: 0.5rem;
 }
 
-.pageWrapperFullScreen canvas {
+/* .pageWrapperFullScreen canvas {
   display: flex !important;
-  cursor: default !important;
+  cursor: default !important; */
   /* width: 75vw !important;
   height: auto !important; */
-  max-width: 100% !important;
+  /* max-width: 100% !important;
   max-height: 100% !important;
   width: auto !important;
   height: auto !important;
   border-radius: 0.5rem !important;
+} */
+
+.pageWrapperFullScreen canvas {
+  cursor: default !important; 
+  max-width: 100%!important;
+  max-height: 100%!important;
+  width: auto!important;
+  height: auto!important;
+  border-radius: 0.5rem;
 }
 
 .previewPagesWrapper {
