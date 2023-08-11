@@ -1,6 +1,6 @@
 import { useSnackbar } from 'notistack';
 import { Link, useNavigate } from 'react-router-dom';
-import { useState, useContext, useEffect } from 'react';
+import { useState, useContext } from 'react';
 import whiteTopRightArrow from '../../assets/images/ArrowTopRight.svg';
 import styles from './LogIn.module.css';
 import graphImageFlying from '../../assets/images/graph-image-flying.png';
@@ -86,22 +86,6 @@ function LogIn() {
   const passwordInputClasses = passwordInputIsInvalid
     ? `${styles.inputBlock} ${styles.inputBlockError}`
     : styles.inputBlock;
-
-  useEffect(() => {
-    const handleKeyPress = (event: KeyboardEvent) => {
-      if (event.key === 'Enter') {
-        event.preventDefault();
-
-        document.getElementById('login-button')?.click();
-      }
-    };
-
-    document.addEventListener('keydown', handleKeyPress);
-
-    return () => {
-      document.removeEventListener('keydown', handleKeyPress);
-    };
-  }, []);
 
   return (
     <MainLayout>
