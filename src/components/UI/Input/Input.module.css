@@ -185,7 +185,7 @@ input[type='file'] {
 
 .errorMessage {
   color: rgb(226, 85, 85);
-  font-size: 0.75rem;
+  font-size: 1rem;
   font-weight: 300;
   text-align: left;
 }
