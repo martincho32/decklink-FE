@@ -1,4 +1,4 @@
-import { useState, useContext, useEffect } from 'react';
+import { useState, useContext } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useSnackbar } from 'notistack';
 import whiteTopRightArrow from '../../assets/images/ArrowTopRight.svg';
@@ -76,29 +76,29 @@ function SignUp() {
   const companyNameIsInvalid =
     !enteredCompanyNameIsValid && enternedCompanyNameTouched;
 
-  const continueHandler = (event: React.MouseEvent<HTMLButtonElement>) => {
-    event.preventDefault();
-    setEnteredEmailTouched(true);
-    setEnteredPasswordTouched(true);
-    setEnternedRepeatPasswordTouched(true);
-    setEnteredFirstNameTouched(true);
-    setEnteredLastNameTouched(true);
-
-    if (
-      !enteredEmailIsValid ||
-      !enteredPasswordIsValid ||
-      !enteredRepeatPasswordIsValid ||
-      !enteredFirstNameIsValid ||
-      !enteredLastNameIsValid
-    ) {
-      return;
-    }
-
-    setPage((currPage) => currPage + 1);
-  };
-
   const submitHandler = async (event: React.FormEvent) => {
     event.preventDefault();
+
+    if (page === 0) {
+      setEnteredEmailTouched(true);
+      setEnteredPasswordTouched(true);
+      setEnternedRepeatPasswordTouched(true);
+      setEnteredFirstNameTouched(true);
+      setEnteredLastNameTouched(true);
+
+      if (
+        !enteredEmailIsValid ||
+        !enteredPasswordIsValid ||
+        !enteredRepeatPasswordIsValid ||
+        !enteredFirstNameIsValid ||
+        !enteredLastNameIsValid
+      ) {
+        return;
+      }
+
+      setPage((currPage) => currPage + 1);
+      return;
+    }
 
     setEnternedCompanyNameTouched(true);
 
@@ -163,25 +163,6 @@ function SignUp() {
     ? `${styles.inputBlock} ${styles.inputBlockError}`
     : styles.inputBlock;
 
-  useEffect(() => {
-    const handleKeyPress = (event: KeyboardEvent) => {
-      if (event.key === 'Enter') {
-        event.preventDefault();
-        if (page === 0) {
-          document.getElementById('continue-button')?.click();
-        } else {
-          document.getElementById('signup-button')?.click();
-        }
-      }
-    };
-
-    document.addEventListener('keydown', handleKeyPress);
-
-    return () => {
-      document.removeEventListener('keydown', handleKeyPress);
-    };
-  }, [page]);
-
   return (
     <MainLayout>
       <div className={styles.blockContainer}>
@@ -198,7 +179,7 @@ function SignUp() {
         <div className={styles.formWrapper}>
           {/* set title from props here */}
           <h1 className={styles.headingStyle}>{formTitles[page]}</h1>
-          <form className={styles.form}>
+          <form onSubmit={submitHandler} className={styles.form}>
             {/* <PageDisplay /> */}
             {page === 0 ? (
               <>
@@ -225,13 +206,13 @@ function SignUp() {
                 />
                 <Button
                   id="continue-button"
-                  type="button"
+                  type="submit"
                   text="Continue"
                   icon={<img src={whiteTopRightArrow} alt="Arrow" />}
                   backgroundColor="#F1511B"
                   textColor="#FFF"
                   className="w-full"
-                  onClick={continueHandler}
+                  // onClick={continueHandler}
                 />
               </>
             ) : (
@@ -245,20 +226,20 @@ function SignUp() {
                 />
                 <Button
                   id="signup-button"
-                  type="button"
+                  type="submit"
                   text="Sign up"
                   icon={<img src={whiteTopRightArrow} alt="Arrow" />}
                   backgroundColor="#F1511B"
                   textColor="#FFF"
                   className="w-full"
-                  onClick={submitHandler}
+                  // onClick={submitHandler}
                 />
 
                 <Button
-                  type="button"
+                  type="submit"
                   text="Continue without this information"
                   textColor="#161a2088"
-                  onClick={submitHandler}
+                  // onClick={submitHandler}
                 />
 
                 <Button
