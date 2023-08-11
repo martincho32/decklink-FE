@@ -289,7 +289,7 @@ function DeckPreview({
           initializeCounting();
         })
         .catch((error: any) => {
-          console.error('Presentation page error: ', error);
+          console.error('DeckPreview error: ', error);
         });
     }
   }, [deckSlidesNumber]);
@@ -308,76 +308,6 @@ function DeckPreview({
     };
   }, [type]);
 
-  // const canvasRef: any = useRef(null);
-
-  // useEffect(() => {
-  //   const renderPdfAsImage = async () => {
-  //     try {
-  //       // Load the PDF document using pdf.js
-  //       const loadingTask = pdfjs.getDocument(file);
-  //       const pdfDocument = await loadingTask.promise;
-
-  //       // Get the first page of the PDF
-  //       const slideNumber = 1;
-  //       const page = await pdfDocument.getPage(slideNumber);
-
-  //       // Set the scale for the image rendering (adjust as needed)
-  //       const scale = 1.5;
-  //       const viewport = page.getViewport({ scale });
-
-  //       // Prepare the canvas
-  //       const canvas: any = canvasRef.current;
-
-  //       const context = canvas?.getContext('2d');
-  //       canvas.width = viewport.width;
-  //       canvas.height = viewport.height;
-
-  //       // Render the PDF page as an image
-  //       const renderContext = {
-  //         canvasContext: context,
-  //         viewport,
-  //       };
-  //       await page.render(renderContext).promise;
-
-  //       // Now you can use the canvas as an image
-  //     } catch (error) {
-  //       console.error('Error rendering PDF:', error);
-  //     }
-  //   };
-
-  //   renderPdfAsImage();
-  // }, [file]);
-
-  // const pdfUrl = file;
-  // const [pdfImage, setPDFImage] = useState<string | null>(null);
-
-  // const generatePDFImage = async () => {
-  //   const pdfDocument = await pdfjs.getDocument(pdfUrl).promise;
-  //   const pdfPage = await pdfDocument.getPage(1);
-  //   const viewport = pdfPage.getViewport({ scale: 1 });
-  //   const canvas = document.createElement('canvas');
-  //   const context = canvas.getContext('2d');
-
-  //   if (context) {
-  //     canvas.width = viewport.width;
-  //     canvas.height = viewport.height;
-
-  //     const renderContext = {
-  //       canvasContext: context,
-  //       viewport,
-  //     };
-
-  //     await pdfPage.render(renderContext).promise;
-
-  //     const imageDataURL = canvas.toDataURL('image/png');
-  //     setPDFImage(imageDataURL);
-  //   }
-  // };
-
-  // useEffect(() => {
-  //   generatePDFImage();
-  // }, []);
-
   return (
     <div
       id="container"
@@ -389,46 +319,6 @@ function DeckPreview({
       }`}
     >
       <AskEmailPassword onSubmit={handleModalSubmit} />
-      {/* <Document file={pdfUrl}>
-        <Page pageNumber={1} />
-      </Document>
-      {pdfImage && (
-        <Helmet>
-          <meta property="og:title" content="Custom Link Preview" />
-          <meta
-            property="og:description"
-            content="Check out this PDF link preview!"
-          />
-          <meta property="og:image" content={pdfImage} />
-        </Helmet>
-      )} */}
-      {/* <Document
-        file={file}
-        renderMode="svg"
-        onLoadSuccess={onDocumentLoadSuccess}
-        options={options}
-      >
-        <Helmet>
-          <meta property="og:title" content={deckName} />
-          <meta
-            property="og:description"
-            content={`This is pitch deck of ${deckName}.`}
-          />
-          <meta property="og:image" content={canvasRef.current?.toDataURL()} />
-          <meta property="og:image:width" content="1200" />{' '}
-          <meta property="og:image:height" content="630" />{' '}
-          <meta property="og:image:alt" content={`Preview for ${deckName}`} />
-          <meta property="og:type" content="website" />
-          <meta name="twitter:card" content="summary_large_image" />
-          <meta name="twitter:title" content={deckName} />
-          <meta
-            name="twitter:description"
-            content={`This is pitch deck of ${deckName}.`}
-          />
-          <meta name="twitter:image" content={canvasRef.current?.toDataURL()} />
-          <meta name="twitter:image:alt" content={`Preview for ${deckName}`} />
-        </Helmet>
-      </Document> */}
       {!isShowModal && (
         <Document
           file={file}
@@ -441,7 +331,7 @@ function DeckPreview({
           }`}
         >
           <div
-            className={`flex items-center gap-4 justify-between${
+            className={`flex relative items-center gap-4 justify-center${
               type === 'deckUserPreview'
                 ? ' max-w-full max-h-full w-auto h-auto'
                 : ''
@@ -489,6 +379,17 @@ function DeckPreview({
               onClick={onNext}
               disabled={pageNumber === numPages}
             />
+            <div
+              className={`${
+                type === 'deckCreationPreview'
+                  ? 'counter absolute flex flex-row bottom-2 letf-auto right-auto p-2  rounded-md text-persimmon/80 text-s'
+                  : 'absolute flex flex-row bottom-2 letf-auto right-auto p-2  rounded-md text-persimmon/80 text-s'
+              }`}
+            >
+              <p>{pageNumber}</p>
+              <p>/</p>
+              <p>{numPages}</p>
+            </div>
           </div>
           {type === 'deckCreationPreview' && (
             <div className="previewPagesWrapper">
@@ -519,18 +420,6 @@ function DeckPreview({
           onClick={onSaveDeck}
         />
       )}
-
-      <div
-        className={`${
-          type === 'deckCreationPreview'
-            ? 'counter fixed flex flex-row top-8 left-8 p-2 bg-persimmon rounded-md text-white text-xs'
-            : 'fixed flex flex-row top-8 left-8 p-2 bg-persimmon rounded-md text-white text-xs'
-        }`}
-      >
-        <p>{pageNumber}</p>
-        <p>/</p>
-        <p>{numPages}</p>
-      </div>
 
       {type === 'deckCreationPreview' && (
         <Button

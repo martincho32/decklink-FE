@@ -45,8 +45,8 @@
   max-height: 100%; /* Limit the height to the viewport height */
   height: 100%;
   overflow: hidden; /* Hide any overflowing content */
-  min-width: auto !important;
-  min-height: auto !important;
+  min-width: auto!important;
+  min-height: auto!important;
 }
 
 .pageWrapper canvas,
@@ -55,7 +55,7 @@
   cursor: default !important;
   height: 60vh !important;
   width: auto !important;
-  border-radius: 0.5rem !important;
+  border-radius: 0.5rem;
 }
 
 .pageWrapperFullScreen canvas,

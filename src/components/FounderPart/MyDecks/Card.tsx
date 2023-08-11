@@ -12,6 +12,7 @@ import deleteIcon from '../../../assets/images/Delete.png';
 import { IDeck, IDeckView } from '../../../types';
 import loadingImage from '../../../assets/images/Dummy Slide.svg';
 import copyIcon from '../../../assets/images/CopyIcon.svg';
+import chartIcon from '../../../assets/images/ChartIcon.svg';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -200,6 +201,7 @@ function Card({ deck, handleClickDelete, onClick }: Props) {
             <Button
               type="button"
               text="See Detailed Info"
+              leftIcon={<img src={chartIcon} alt="Arrow" />}
               icon={<img src={whiteTopRightArrow} alt="Arrow" />}
               backgroundColor="#F1511B"
               textColor="#FFF"
