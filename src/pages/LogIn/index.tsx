@@ -141,6 +141,7 @@ function LogIn() {
               />
             </div>
             <Button
+              id="login-button"
               type="submit"
               text="Log In"
               icon={<img src={whiteTopRightArrow} alt="Arrow" />}
