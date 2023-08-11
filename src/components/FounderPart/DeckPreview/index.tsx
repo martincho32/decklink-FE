@@ -15,6 +15,7 @@ import AskEmailPassword from '../../AskEmailPassword';
 import { UIContext } from '@/context';
 import { deckService, deckViewService } from '@/services';
 import { IDeckSlidesStats } from '@/types';
+import Loading from '../../PreloadingScreen';
 // import { milisecondsToMinutesAndSeconds } from '@/utils';
 
 interface KeyboardEvent {
@@ -323,8 +324,9 @@ function DeckPreview({
           file={file}
           onLoadSuccess={onDocumentLoadSuccess}
           options={options}
-          noData={<h4 className="">No file selected</h4>}
-          className={`document h-screen p-4 bg-mirage  ${
+          noData={<Loading />}
+          loading={<Loading />}
+          className={`document h-screen p-4 bg-mirage ${
             type === 'deckCreationPreview' ? ' rounded-lg' : 'md:rounded-none'
           }`}
         >
@@ -356,7 +358,10 @@ function DeckPreview({
                   : 'pageWrapper'
               }`}
               pageNumber={pageNumber}
+              loading=""
+              noData=""
             />
+
             <Button
               type="button"
               icon={
