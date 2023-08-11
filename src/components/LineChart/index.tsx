@@ -190,10 +190,10 @@ export default function LineChart({
   return (
     <div className="">
       <div
-        className="chartWrapper flex !w-full !h-auto ml-[-0.75rem]"
+        className="chartWrapper flex !w-full !h-auto mt-4"
         style={isMobile ? mobileStyle : desktopStyle}
       >
-        <div className="w-8 h-[12rem] [&>*]:!w-auto [&>*]:!h-[12rem] z-10 bg-white">
+        <div className="w-9 h-[12rem] [&>*]:!w-9 [&>*]:!h-[12rem] z-10 bg-white">
           <Line
             options={{
               plugins: {
@@ -216,6 +216,10 @@ export default function LineChart({
                   afterFit: (ctx) => {
                     ctx.width = 32;
                   },
+                  grid: {
+                    drawTicks: false,
+                    // display: false,
+                  },
                 },
                 x: {
                   beginAtZero: true,
@@ -224,6 +228,7 @@ export default function LineChart({
                   },
                   grid: {
                     drawTicks: false,
+                    display: false,
                   },
                 },
               },
