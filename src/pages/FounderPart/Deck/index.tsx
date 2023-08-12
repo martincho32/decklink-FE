@@ -1,7 +1,9 @@
 import { useContext, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { pdfjs, Document, Thumbnail } from 'react-pdf'; /** File library */
+import { pdfjs } from 'react-pdf'; /** File library */
 import type { PDFDocumentProxy } from 'pdfjs-dist'; /** File library */
+import { Viewer, Worker, ScrollMode, PageLayout } from '@react-pdf-viewer/core';
+import { scrollModePlugin } from '@react-pdf-viewer/scroll-mode';
 import axios from 'axios';
 import { useSnackbar } from 'notistack';
 import './DeckCreation.css';
@@ -38,6 +40,21 @@ export interface Props {
 }
 
 function Deck({ title = 'Create', deckId }: Props) {
+  const scrollModePluginInstance = scrollModePlugin();
+  scrollModePluginInstance.switchScrollMode(ScrollMode.Horizontal);
+
+  const pageLayout: PageLayout = {
+    buildPageStyles: () => ({
+      alignItems: 'center',
+      display: 'flex',
+      justifyContent: 'center',
+    }),
+    transformSize: ({ size }) => ({
+      height: size.height,
+      width: size.width + 5,
+    }),
+  };
+
   const { user } = useContext(AuthContext);
   const { validateToken } = useContext(AuthContext);
   const [deckFile, setDeckFile] = useState<PDFFile>(null);
@@ -324,6 +341,31 @@ function Deck({ title = 'Create', deckId }: Props) {
     }
   }, [deckId]);
 
+  const [clickedSlideIndex, setClickedSlideIndex] = useState<number | null>(
+    null
+  );
+
+  useEffect(() => {
+    const handleDocumentClick = (e) => {
+      const { target } = e;
+      const canvas = target.closest('.rpv-core__page-layer');
+
+      if (canvas) {
+        const pageIndex = Number(canvas.getAttribute('data-virtual-index'));
+        setClickedSlideIndex(pageIndex);
+        document.body.style.overflow = 'hidden';
+        setPreviewPickDeckSlide(true);
+        setPageNumber(clickedSlideIndex + 1);
+      }
+    };
+
+    document.addEventListener('click', handleDocumentClick);
+
+    return () => {
+      document.removeEventListener('click', handleDocumentClick);
+    };
+  }, []);
+
   return isLoading ? (
     <Loading />
   ) : (
@@ -482,10 +524,33 @@ function Deck({ title = 'Create', deckId }: Props) {
       </form>
 
       {/* PDF thumbnail */}
-      <div className="Example ">
+      {/* <div className="Example ">
         <div className="Example__container">
-          <div className="Example__container__document">
-            <Document
+          <div className="Example__container__document"> */}
+      {deckFile && deckFile !== null ? (
+        <div
+          style={{ height: '11rem', marginTop: '1rem', marginBottom: '1rem' }}
+        >
+          <Worker workerUrl="https://unpkg.com/pdfjs-dist@3.6.172/build/pdf.worker.min.js">
+            <Viewer
+              scrollMode={ScrollMode.Horizontal}
+              fileUrl={URL.createObjectURL(new Blob([deckFile]))} // Pass the PDF file URL to Viewer
+              initialPage={pageNumber - 1} // Subtract 1 to convert to zero-based index
+              enableSmoothScroll={false}
+              pageLayout={pageLayout}
+              defaultScale={0.14}
+              characterMap={{
+                isCompressed: true,
+                url: 'https://unpkg.com/pdfjs-dist@3.6.172/build/pdf.worker.min.js',
+              }}
+            />
+          </Worker>
+        </div>
+      ) : (
+        <EmptyDeckPreview />
+      )}
+
+      {/* <Document
               file={deckFile}
               onLoadSuccess={onDocumentLoadSuccess}
               options={options}
@@ -504,10 +569,10 @@ function Deck({ title = 'Create', deckId }: Props) {
                   />
                 ))}
               </div>
-            </Document>
-          </div>
+            </Document> */}
+      {/* </div>
         </div>
-      </div>
+      </div> */}
       {previewPickDeckSlide && (
         <DeckPreview
           type="deckCreationPreview"

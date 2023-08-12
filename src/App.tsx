@@ -14,7 +14,7 @@ import {
 } from './pages';
 import ProtectedRoute from './components/ProtectedRoute';
 import { AuthProvider, UIProvider } from './context';
-import Test from './pages/FounderPart/Test';
+import Test from './pages/FounderPart/Deck/test';
 
 function App() {
   return (
