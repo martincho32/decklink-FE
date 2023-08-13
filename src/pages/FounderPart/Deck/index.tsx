@@ -74,10 +74,45 @@ function Deck({ title = 'Create', deckId }: Props) {
   const [isLoading, setIsLoading] = useState(true);
   const [newFileChoosed, setNewFileChoosed] = useState(false);
   const [isButtonDisabled, setIsButtonDisabled] = useState(false);
+  const [fileInputErrorMessage, setFileInputErrorMessage] = useState(
+    'You need to add a PDF file'
+  );
+
+  // const [progress, setProgress] = useState({ started: false, pc: 0 });
+  // const [msg, setMsg] = useState<string | null>(null);
 
   const handleOnClosePitchDeckSlidePreview = () => {
     document.body.style.overflow = 'auto';
     setPreviewPickDeckSlide(false);
+  };
+
+  const handleError = (error: Error | string) => {
+    let errorMessage: string =
+      'Whoops! Something went wrong. Please contact support. Error: ';
+    if (axios.isAxiosError(error)) {
+      errorMessage +=
+        error.response?.data?.message ??
+        error.response?.data ??
+        'Server error.';
+      enqueueSnackbar(errorMessage, {
+        variant: 'error',
+        autoHideDuration: 10000,
+        anchorOrigin: {
+          vertical: 'top',
+          horizontal: 'right',
+        },
+      });
+    } else {
+      errorMessage += (error as Error).message ?? error;
+      enqueueSnackbar(errorMessage, {
+        variant: 'error',
+        autoHideDuration: 10000,
+        anchorOrigin: {
+          vertical: 'top',
+          horizontal: 'right',
+        },
+      });
+    }
   };
 
   const onFileChange = (target): void => {
@@ -86,6 +121,10 @@ function Deck({ title = 'Create', deckId }: Props) {
     if (files && files[0]) {
       const allowedTypes = ['application/pdf'];
       const selectedFile = files[0];
+      if (selectedFile.size > 25 * 1024 * 1024) {
+        handleError('File must be smaller than 25mb');
+        setFileInputErrorMessage('File must be smaller than 25mb');
+      }
 
       if (!allowedTypes.includes(selectedFile.type)) {
         setDeckFile(null); // Reset the selected file
@@ -106,7 +145,8 @@ function Deck({ title = 'Create', deckId }: Props) {
   const enteredDeckLinkIsValid = deckLink.trim() !== '' && deckLink.length >= 3;
   const enteredDeckFileIsValid =
     deckFile !== null &&
-    (typeof deckFile === 'string' || deckFile.type === 'application/pdf');
+    (typeof deckFile === 'string' || deckFile.type === 'application/pdf') &&
+    (deckFile as any).size <= 25 * 1024 * 1024;
 
   const passwordInputIsInvalid =
     !enteredPasswordIsValid && enteredPasswordTouched;
@@ -165,35 +205,6 @@ function Deck({ title = 'Create', deckId }: Props) {
 
   const passwordInputBlur = () => {
     setEnteredPasswordTouched(true);
-  };
-
-  const handleError = (error: Error | string) => {
-    let errorMessage: string =
-      'Whoops! Something went wrong. Please contact support. Error: ';
-    if (axios.isAxiosError(error)) {
-      errorMessage +=
-        error.response?.data?.message ??
-        error.response?.data ??
-        'Server error.';
-      enqueueSnackbar(errorMessage, {
-        variant: 'error',
-        autoHideDuration: 10000,
-        anchorOrigin: {
-          vertical: 'top',
-          horizontal: 'right',
-        },
-      });
-    } else {
-      errorMessage += (error as Error).message ?? error;
-      enqueueSnackbar(errorMessage, {
-        variant: 'error',
-        autoHideDuration: 10000,
-        anchorOrigin: {
-          vertical: 'top',
-          horizontal: 'right',
-        },
-      });
-    }
   };
 
   const submitHandler = async (event: React.FormEvent) => {
@@ -503,7 +514,7 @@ function Deck({ title = 'Create', deckId }: Props) {
             label={uploadInputFileLabel}
             id="deck-upload"
             inputIsInvalid={deckFileInputIsInvalid}
-            errorMessage="You need to add a PDF file"
+            errorMessage={fileInputErrorMessage}
             onChange={onFileChange}
             onBlur={deckFileBlur}
           />
