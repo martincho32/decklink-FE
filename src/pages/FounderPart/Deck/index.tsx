@@ -1,6 +1,6 @@
+/* eslint-disable no-nested-ternary */
 import { useContext, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { pdfjs } from 'react-pdf'; /** File library */
 import { Viewer, Worker, ScrollMode, PageLayout } from '@react-pdf-viewer/core';
 import { scrollModePlugin } from '@react-pdf-viewer/scroll-mode';
 import axios from 'axios';
@@ -20,11 +20,6 @@ import EmptyDeckPreview from '../../../components/FounderPart/DeckPreview/EmptyD
 import { deckService } from '../../../services';
 import Loading from '../../../components/PreloadingScreen';
 import { AuthContext } from '@/context';
-
-pdfjs.GlobalWorkerOptions.workerSrc = new URL(
-  'pdfjs-dist/build/pdf.worker.min.js',
-  import.meta.url
-).toString();
 
 type PDFFile = string | File | null;
 
@@ -97,7 +92,7 @@ function Deck({ title = 'Create', deckId }: Props) {
         setUploadInputFileLabel('Upload File (.pdf)'); // Reset the label to the default state
       } else {
         setEnteredDeckFileTouched(true);
-        setDeckFile(selectedFile);
+        setDeckFile(URL.createObjectURL(new Blob([selectedFile])));
         setUploadInputFileLabel('Change File (.pdf)');
         setIsEdited(true);
         setNewFileChoosed(true);
@@ -287,7 +282,6 @@ function Deck({ title = 'Create', deckId }: Props) {
       setEnteredPasswordTouched(false);
       setIsButtonDisabled(false);
     } catch (error: any) {
-      console.error('Error:', error);
       handleError(error);
       setIsButtonDisabled(false);
     }
@@ -319,7 +313,6 @@ function Deck({ title = 'Create', deckId }: Props) {
           }, 1000);
         })
         .catch((error) => {
-          console.error('Error: ', error);
           handleError(error);
           setTimeout(() => {
             setIsLoading(false); // Set isLoading to false once data is fetched
@@ -330,19 +323,13 @@ function Deck({ title = 'Create', deckId }: Props) {
     }
   }, [deckId]);
 
-  const [clickedSlideIndex, setClickedSlideIndex] = useState<number | null>(
-    null
-  );
-
   useEffect(() => {
     const handleDocumentClick = (e) => {
       const { target } = e;
       const container = document.querySelector('.deckWorkingPreview');
       const canvas = target.closest('.rpv-core__page-layer');
-      console.log(container?.contains(canvas));
       if (container?.contains(canvas)) {
         const pageIndex = Number(canvas.getAttribute('data-virtual-index'));
-        setClickedSlideIndex(pageIndex);
         document.body.style.overflow = 'hidden';
         setPreviewPickDeckSlide(true);
         setPageNumber(pageIndex + 1); // Updated this line to use pageIndex directly
@@ -355,6 +342,16 @@ function Deck({ title = 'Create', deckId }: Props) {
       document.removeEventListener('click', handleDocumentClick);
     };
   }, []);
+
+  let finalDeckUrl = '';
+
+  if (title === 'Create' && deckFile) {
+    finalDeckUrl = URL.createObjectURL(new Blob([deckFile]));
+  }
+
+  if (title === 'Update' && deckFile && typeof deckFile === 'string') {
+    finalDeckUrl = deckFile;
+  }
 
   return isLoading ? (
     <Loading />
@@ -521,9 +518,8 @@ function Deck({ title = 'Create', deckId }: Props) {
           <Worker workerUrl="https://unpkg.com/pdfjs-dist@3.6.172/build/pdf.worker.min.js">
             <Viewer
               scrollMode={ScrollMode.Horizontal}
-              fileUrl={URL.createObjectURL(new Blob([deckFile]))} // Pass the PDF file URL to Viewer
-              initialPage={pageNumber - 1} // Subtract 1 to convert to zero-based index
-              enableSmoothScroll={false}
+              fileUrl={finalDeckUrl} // Pass the PDF file URL to Viewer
+              enableSmoothScroll
               pageLayout={pageLayout}
               defaultScale={0.14}
               characterMap={{
@@ -536,33 +532,12 @@ function Deck({ title = 'Create', deckId }: Props) {
       ) : (
         <EmptyDeckPreview />
       )}
-
-      {/* <Document
-              file={deckFile}
-              onLoadSuccess={onDocumentLoadSuccess}
-              options={options}
-              noData={<EmptyDeckPreview />}
-            >
-              <div className="flex gap-3 overflow-x-auto my-6 p-2">
-                {Array.from(new Array(numPages), (_el, index) => (
-                  <Thumbnail
-                    onItemClick={() => {
-                      document.body.style.overflow = 'hidden';
-                      setPreviewPickDeckSlide(true);
-                      setPageNumber(index + 1);
-                    }}
-                    key={`page_${index + 1}`}
-                    pageNumber={index + 1}
-                  />
-                ))}
-              </div>
-            </Document> */}
       {previewPickDeckSlide && (
         <DeckPreview
           type="deckCreationPreview"
           onClose={handleOnClosePitchDeckSlidePreview}
           pageNumber={pageNumber}
-          file={deckFile ? URL.createObjectURL(new Blob([deckFile])) : ''}
+          file={finalDeckUrl}
           numPages={numPages}
           setPageNumber={setPageNumber}
           deckId={null}

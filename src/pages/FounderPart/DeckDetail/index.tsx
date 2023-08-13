@@ -90,6 +90,8 @@ function DeclkDetail() {
       );
   };
 
+  console.log(deckViews, deck);
+
   return isLoading ? (
     <Loading />
   ) : (

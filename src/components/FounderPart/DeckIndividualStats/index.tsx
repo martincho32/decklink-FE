@@ -78,7 +78,6 @@ function DeckIndividualStats({ deck, deckViews }: Props) {
                           )}
                           deck={deck}
                           pdfFile={deck?.deckUrl}
-                          numPages={deck?.slides as number}
                         />
                       </div>
                     </div>

@@ -10,10 +10,11 @@ import {
   Tooltip,
   Legend,
 } from 'chart.js';
-import { Document, Page, pdfjs } from 'react-pdf';
+import { Viewer, Worker, ScrollMode, PageLayout } from '@react-pdf-viewer/core';
+// import { Document, Page, pdfjs } from 'react-pdf';
 import { Line } from 'react-chartjs-2';
 import { IDeck } from '../../types';
-import DeckThumbnail from '../FounderPart/DeckThumbnail';
+// import DeckThumbnail from '../FounderPart/DeckThumbnail';
 
 ChartJS.register(
   CategoryScale,
@@ -30,28 +31,21 @@ interface Props {
   labels: string[] | undefined;
   data: number[] | undefined;
   pdfFile: any;
-  onLoadSuccess?;
-  numPages: number;
 }
 
-pdfjs.GlobalWorkerOptions.workerSrc = new URL(
-  'pdfjs-dist/build/pdf.worker.min.js',
-  import.meta.url
-).toString();
+export default function LineChart({ deck, labels, data, pdfFile }: Props) {
+  const pageLayout: PageLayout = {
+    buildPageStyles: () => ({
+      alignItems: 'center',
+      display: 'flex',
+      justifyContent: 'center',
+    }),
+    transformSize: ({ size }) => ({
+      height: size.height,
+      width: size.width + 5,
+    }),
+  };
 
-const options = {
-  cMapUrl: 'cmaps/',
-  standardFontDataUrl: 'standard_fonts/',
-};
-
-export default function LineChart({
-  deck,
-  labels,
-  data,
-  pdfFile,
-  onLoadSuccess,
-  numPages,
-}: Props) {
   // const getOrCreateTooltip = (chart, slideTitle: string) => {
   //   let tooltipEl = chart.canvas.parentNode.querySelector('div');
 
@@ -306,7 +300,25 @@ export default function LineChart({
               }}
             />
           </div>
-          <Document
+          <div
+            className="deckWorkingPreview"
+            style={{ height: '11rem', marginTop: '1rem', marginBottom: '1rem' }}
+          >
+            <Worker workerUrl="https://unpkg.com/pdfjs-dist@3.6.172/build/pdf.worker.min.js">
+              <Viewer
+                scrollMode={ScrollMode.Horizontal}
+                fileUrl={pdfFile} // Pass the PDF file URL to Viewer
+                enableSmoothScroll={false}
+                pageLayout={pageLayout}
+                defaultScale={0.14}
+                characterMap={{
+                  isCompressed: true,
+                  url: 'https://unpkg.com/pdfjs-dist@3.6.172/build/pdf.worker.min.js',
+                }}
+              />
+            </Worker>
+          </div>
+          {/* <Document
             file={pdfFile}
             onLoadSuccess={onLoadSuccess}
             options={options}
@@ -324,7 +336,7 @@ export default function LineChart({
                 />
               ))}
             </div>
-          </Document>
+          </Document> */}
         </div>
       </div>
     </div>
