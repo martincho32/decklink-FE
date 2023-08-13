@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useSnackbar } from 'notistack';
 // import { Page, Document } from 'react-pdf'; /** File library */
 import { Viewer, Worker } from '@react-pdf-viewer/core';
@@ -106,13 +106,8 @@ function Card({ deck, handleClickDelete, onClick }: Props) {
       });
   }, []);
 
-  return (
-    <div
-      onClick={onClick}
-      tabIndex={0}
-      role="button"
-      className={styles.deckBlock}
-    >
+  const viewer = useMemo(
+    () => (
       <Worker workerUrl="https://unpkg.com/pdfjs-dist@3.6.172/build/pdf.worker.min.js">
         <div className="">
           <Viewer
@@ -122,6 +117,28 @@ function Card({ deck, handleClickDelete, onClick }: Props) {
           />
         </div>
       </Worker>
+    ),
+    [deck.deckUrl]
+  );
+
+  return (
+    <div
+      onClick={onClick}
+      tabIndex={0}
+      role="button"
+      className={styles.deckBlock}
+    >
+      {/* <Worker workerUrl="https://unpkg.com/pdfjs-dist@3.6.172/build/pdf.worker.min.js">
+        <div className="">
+          <Viewer
+            defaultScale={10}
+            fileUrl={deck.deckUrl}
+            plugins={[pageThumbnailPluginInstance, thumbnailPluginInstance]}
+          />
+        </div>
+      </Worker> */}
+
+      {viewer}
 
       <div className={styles.deckMainContentWrapper}>
         <div className={styles.deckMainInfoAndButtons}>

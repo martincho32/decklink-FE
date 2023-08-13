@@ -1,5 +1,4 @@
 /* eslint-disable object-shorthand */
-import { useMediaQuery } from 'react-responsive';
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -10,11 +9,16 @@ import {
   Tooltip,
   Legend,
 } from 'chart.js';
-import { Viewer, Worker, ScrollMode, PageLayout } from '@react-pdf-viewer/core';
-// import { Document, Page, pdfjs } from 'react-pdf';
+import {
+  Viewer,
+  Worker,
+  ScrollMode,
+  PageLayout,
+  SpecialZoomLevel,
+} from '@react-pdf-viewer/core';
 import { Line } from 'react-chartjs-2';
 import { IDeck } from '../../types';
-// import DeckThumbnail from '../FounderPart/DeckThumbnail';
+import './LineChart.css';
 
 ChartJS.register(
   CategoryScale,
@@ -162,30 +166,22 @@ export default function LineChart({ deck, labels, data, pdfFile }: Props) {
   //     tooltip.options.padding + 'px ' + tooltip.options.padding + 'px';
   // };
 
-  const isMobile = useMediaQuery({ maxWidth: 576 });
+  const widthNumberDesktop = deck && deck.slides && deck.slides * 300.5;
 
-  const widthNumberDesktop = deck && deck.slides && deck.slides * 15 - 5;
-  const widthNumberMobile = deck && deck.slides && deck.slides * 10;
-
-  const widthStringDesktop = `${widthNumberDesktop}rem`;
-  const widthStringMobile = `${widthNumberMobile}rem`;
+  const widthStringDesktop = `${widthNumberDesktop}px`;
 
   const desktopStyle = {
     width: widthStringDesktop,
     height: '12rem',
     display: 'flex',
   };
-  const mobileStyle = {
-    width: widthStringMobile,
-    height: '12rem',
-    display: 'flex',
-  };
+  const previewDeckWidthNumber = deck && deck.slides && deck.slides * 300 + 100;
 
   return (
     <div className="">
       <div
         className="chartWrapper flex !w-full !h-auto mt-4"
-        style={isMobile ? mobileStyle : desktopStyle}
+        style={desktopStyle}
       >
         <div className="w-9 h-[12rem] [&>*]:!w-9 [&>*]:!h-[12rem] z-10 bg-white">
           <Line
@@ -243,11 +239,11 @@ export default function LineChart({ deck, labels, data, pdfFile }: Props) {
           />
         </div>
         <div
-          style={{ maxWidth: widthStringMobile }}
+          style={{ maxWidth: widthStringDesktop }}
           className="overflow-x-scroll h-auto ml-[-1rem] z-0"
         >
           <div
-            style={{ width: `calc(${widthNumberDesktop}rem - 4rem)` }} // Perform the subtraction with a numerical value
+            style={{ width: `calc(${widthNumberDesktop}px + 100px)` }} // Perform the subtraction with a numerical value
             className="h-[12rem] [&>*]:!h-[12rem]"
           >
             <Line
@@ -301,8 +297,15 @@ export default function LineChart({ deck, labels, data, pdfFile }: Props) {
             />
           </div>
           <div
-            className="deckWorkingPreview"
-            style={{ height: '11rem', marginTop: '1rem', marginBottom: '1rem' }}
+            className="deckLineChartPreview"
+            style={{
+              height: '11rem',
+              marginTop: '1rem',
+              marginBottom: '1rem',
+              marginLeft: '150px',
+              width: `${previewDeckWidthNumber}px`,
+              overflowX: 'hidden',
+            }}
           >
             <Worker workerUrl="https://unpkg.com/pdfjs-dist@3.6.172/build/pdf.worker.min.js">
               <Viewer
@@ -310,7 +313,7 @@ export default function LineChart({ deck, labels, data, pdfFile }: Props) {
                 fileUrl={pdfFile} // Pass the PDF file URL to Viewer
                 enableSmoothScroll={false}
                 pageLayout={pageLayout}
-                defaultScale={0.14}
+                defaultScale={SpecialZoomLevel.PageFit}
                 characterMap={{
                   isCompressed: true,
                   url: 'https://unpkg.com/pdfjs-dist@3.6.172/build/pdf.worker.min.js',
@@ -318,25 +321,6 @@ export default function LineChart({ deck, labels, data, pdfFile }: Props) {
               />
             </Worker>
           </div>
-          {/* <Document
-            file={pdfFile}
-            onLoadSuccess={onLoadSuccess}
-            options={options}
-            noData={<DeckThumbnail deck={deck} />}
-            className="averageStatsPreview w-full"
-          >
-            <div className="flex gap-2 pl-32 overflow-hidden my-2 p-2 w-full min-w-min">
-              {Array.from(new Array(numPages), (_el, index) => (
-                <Page
-                  renderTextLayer={false}
-                  renderAnnotationLayer={false}
-                  key={`page_${index + 1}`}
-                  pageNumber={index + 1}
-                  className="slidesPreview"
-                />
-              ))}
-            </div>
-          </Document> */}
         </div>
       </div>
     </div>

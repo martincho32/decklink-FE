@@ -16,11 +16,6 @@ pdfjs.GlobalWorkerOptions.workerSrc = new URL(
   import.meta.url
 ).toString();
 
-// const options = {
-//   cMapUrl: 'cmaps/',
-//   standardFontDataUrl: 'standard_fonts/',
-// };
-
 interface Props {
   deck: Partial<IDeck> | null;
   deckViews: IDeckView[] | null;

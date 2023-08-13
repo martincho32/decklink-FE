@@ -20,6 +20,8 @@ function DeckAverageStats({ deck, deckViews }: Props) {
     (_el, index) => `Slide ${index + 1}`
   );
 
+  console.log(labels);
+
   const rawData =
     deckViews &&
     deckViews.reduce((accumulator, currentValue, currentIndex) => {
@@ -28,6 +30,8 @@ function DeckAverageStats({ deck, deckViews }: Props) {
         [currentIndex]: currentValue.deckSlidesStats,
       };
     }, {});
+
+  console.log(rawData);
 
   const auxMockedData: number[] = [];
   labels?.forEach((_slideName, index) => {
@@ -40,12 +44,16 @@ function DeckAverageStats({ deck, deckViews }: Props) {
     });
   });
 
+  console.log(auxMockedData);
+
   // this will be the view time in seconds of each slide
   // TODO maybe do this but in the last iteration of labels.forEach
   const data = auxMockedData.map(
     (totalMiliseconds) =>
       totalMiliseconds / 1000 / Object.values(rawData!).length
   );
+
+  console.log(data);
 
   return (
     <div>
