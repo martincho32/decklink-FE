@@ -4,13 +4,21 @@
   height: 100% !important;
   width: 100% !important;
   z-index: 1;
-  overflow-y: auto !important;
   cursor: default !important;
   justify-content: center !important;
 }
 
-.hide-tawk-chat {
-  display: none !important;
+/* .deckUserPreview .rpv-core__page-layer {
+  pointer-events: none;
+  user-select: text;
+} */
+
+.rpv-thumbnail__container img {
+  height: 100%;
+}
+
+.rpv-core__inner-page {
+  background-color: transparent !important;
 }
 
 .buttonClose {
@@ -24,15 +32,9 @@
   gap: 1.5rem !important;
 }
 
-.react-pdf__Thumbnail canvas {
-  width: 100% !important;
-  height: auto !important;
-}
-
 .pageWrapper {
-  display: flex !important;
-  justify-content: center !important;
-  background-color: transparent !important;
+  width: 100%;
+  height: 100%;
 }
 
 .pageWrapperFullScreen,
@@ -45,17 +47,8 @@
   max-height: 100%; /* Limit the height to the viewport height */
   height: 100%;
   overflow: hidden; /* Hide any overflowing content */
-  min-width: auto!important;
-  min-height: auto!important;
-}
-
-.pageWrapper canvas,
-.pageWrapper img {
-  display: flex !important;
-  cursor: default !important;
-  height: 60vh !important;
-  width: auto !important;
-  border-radius: 0.5rem;
+  min-width: auto !important;
+  min-height: auto !important;
 }
 
 .pageWrapperFullScreen canvas,
@@ -69,45 +62,8 @@
 }
 
 .previewPagesWrapper {
-  height: 100% !important;
-  margin-top: 1rem !important;
-  padding-bottom: 0.5rem !important;
   overflow-x: auto !important;
   overflow-y: hidden !important;
-  display: flex !important;
-  gap: 1rem !important;
-  background-color: transparent !important;
-}
-
-.previewPageWrapper .react-pdf__Thumbnail__page {
-  display: flex !important;
-  height: 100% !important;
-  width: auto !important;
-  background-color: transparent !important;
-}
-
-.bigSizePreivew .react-pdf__Thumbnail__page {
-  height: auto !important;
-  width: 100% !important;
-  background-color: transparent !important;
-}
-
-.previewPageWrapper canvas {
-  display: flex !important;
-  height: 100% !important;
-  width: auto !important;
-  border-radius: 0.5rem !important;
-}
-
-.bigSizePreivew canvas {
-  display: flex !important;
-  height: auto !important;
-  width: 100% !important;
-  border-radius: 0.5rem !important;
-}
-
-.fixedContainer {
-  height: 100% !important;
 }
 
 @media (max-width: 1536px) {
@@ -143,12 +99,6 @@
     display: flex !important;
     flex-flow: column !important;
     gap: 1rem !important;
-    background-color: transparent !important;
-  }
-
-  .previewPageWrapper .react-pdf__Thumbnail__page {
-    display: flex !important;
-    width: 100% !important;
     background-color: transparent !important;
   }
 

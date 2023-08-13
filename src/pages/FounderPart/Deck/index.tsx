@@ -1,7 +1,6 @@
 import { useContext, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { pdfjs } from 'react-pdf'; /** File library */
-import type { PDFDocumentProxy } from 'pdfjs-dist'; /** File library */
 import { Viewer, Worker, ScrollMode, PageLayout } from '@react-pdf-viewer/core';
 import { scrollModePlugin } from '@react-pdf-viewer/scroll-mode';
 import axios from 'axios';
@@ -26,11 +25,6 @@ pdfjs.GlobalWorkerOptions.workerSrc = new URL(
   'pdfjs-dist/build/pdf.worker.min.js',
   import.meta.url
 ).toString();
-
-const options = {
-  cMapUrl: 'cmaps/',
-  standardFontDataUrl: 'standard_fonts/',
-};
 
 type PDFFile = string | File | null;
 
@@ -60,7 +54,7 @@ function Deck({ title = 'Create', deckId }: Props) {
   const [deckFile, setDeckFile] = useState<PDFFile>(null);
   const [enteredDeckFileTouched, setEnteredDeckFileTouched] =
     useState<boolean>(false);
-  const [numPages, setNumPages] = useState<number>();
+  const [numPages] = useState<number>();
   const [pageNumber, setPageNumber] = useState(1);
   const [previewPickDeckSlide, setPreviewPickDeckSlide] = useState(false);
   const [uploadInputFileLabel, setUploadInputFileLabel] =
@@ -109,11 +103,6 @@ function Deck({ title = 'Create', deckId }: Props) {
         setNewFileChoosed(true);
       }
     }
-  };
-  const onDocumentLoadSuccess = ({
-    numPages: nextNumPages,
-  }: PDFDocumentProxy): void => {
-    setNumPages(nextNumPages);
   };
 
   const enteredPasswordIsValid =
@@ -348,14 +337,15 @@ function Deck({ title = 'Create', deckId }: Props) {
   useEffect(() => {
     const handleDocumentClick = (e) => {
       const { target } = e;
+      const container = document.querySelector('.deckWorkingPreview');
       const canvas = target.closest('.rpv-core__page-layer');
-
-      if (canvas) {
+      console.log(container?.contains(canvas));
+      if (container?.contains(canvas)) {
         const pageIndex = Number(canvas.getAttribute('data-virtual-index'));
         setClickedSlideIndex(pageIndex);
         document.body.style.overflow = 'hidden';
         setPreviewPickDeckSlide(true);
-        setPageNumber(clickedSlideIndex + 1);
+        setPageNumber(pageIndex + 1); // Updated this line to use pageIndex directly
       }
     };
 
@@ -523,12 +513,9 @@ function Deck({ title = 'Create', deckId }: Props) {
         </div>
       </form>
 
-      {/* PDF thumbnail */}
-      {/* <div className="Example ">
-        <div className="Example__container">
-          <div className="Example__container__document"> */}
       {deckFile && deckFile !== null ? (
         <div
+          className="deckWorkingPreview"
           style={{ height: '11rem', marginTop: '1rem', marginBottom: '1rem' }}
         >
           <Worker workerUrl="https://unpkg.com/pdfjs-dist@3.6.172/build/pdf.worker.min.js">
@@ -570,19 +557,13 @@ function Deck({ title = 'Create', deckId }: Props) {
                 ))}
               </div>
             </Document> */}
-      {/* </div>
-        </div>
-      </div> */}
       {previewPickDeckSlide && (
         <DeckPreview
           type="deckCreationPreview"
           onClose={handleOnClosePitchDeckSlidePreview}
           pageNumber={pageNumber}
-          file={deckFile}
-          onDocumentLoadSuccess={onDocumentLoadSuccess}
-          options={options}
+          file={deckFile ? URL.createObjectURL(new Blob([deckFile])) : ''}
           numPages={numPages}
-          setPreviewPickDeckSlide={setPreviewPickDeckSlide}
           setPageNumber={setPageNumber}
           deckId={null}
         />

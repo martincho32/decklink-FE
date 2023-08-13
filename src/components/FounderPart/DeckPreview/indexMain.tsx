@@ -1,23 +1,17 @@
-/* eslint-disable no-nested-ternary */
-/* eslint-disable jsx-a11y/no-static-element-interactions */
 import { useContext, useEffect, useState } from 'react';
 import {
+  Icon,
   MinimalButton,
-  ViewMode,
-  ScrollMode,
+  Position,
   SpecialZoomLevel,
+  Tooltip,
   Viewer,
   Worker,
+  ScrollMode,
 } from '@react-pdf-viewer/core';
 import {
-  RenderThumbnailItemProps,
-  ThumbnailDirection,
-  thumbnailPlugin,
-} from '@react-pdf-viewer/thumbnail';
-import {
-  NextIcon,
   pageNavigationPlugin,
-  PreviousIcon,
+  RenderGoToPageProps,
 } from '@react-pdf-viewer/page-navigation';
 
 import '@react-pdf-viewer/core/lib/styles/index.css';
@@ -35,6 +29,7 @@ import { UIContext } from '@/context';
 import { deckService, deckViewService } from '@/services';
 import { IDeckSlidesStats } from '@/types';
 // import Loading from '../../PreloadingScreen';
+import disableScrollPlugin from './disableScrollPlugin';
 
 // import { milisecondsToMinutesAndSeconds } from '@/utils';
 
@@ -65,14 +60,9 @@ function DeckPreview({
   deckSlidesNumber,
   userId,
 }: Props) {
+  const disableScrollPluginInstance = disableScrollPlugin();
   const pageNavigationPluginInstance = pageNavigationPlugin();
-  const { jumpToNextPage, jumpToPreviousPage } = pageNavigationPluginInstance;
-
-  const thumbnailPluginInstance = thumbnailPlugin({
-    thumbnailWidth: 200,
-  });
-  const { Thumbnails } = thumbnailPluginInstance;
-
+  const { GoToNextPage, GoToPreviousPage } = pageNavigationPluginInstance;
   const { isShowModal, setShowModal, hasPasswordRequired, hasEmailRequired } =
     useContext(UIContext);
   const [currentSlideStartTime, setCurrentSlideStartTime] = useState(0);
@@ -330,47 +320,6 @@ function DeckPreview({
     };
   }, [type]);
 
-  const renderThumbnailItem = (props: RenderThumbnailItemProps) => (
-    <div
-      key={props.pageIndex}
-      className="custom-thumbnail-item"
-      data-testid={`thumbnail-${props.pageIndex}`}
-      style={{
-        backgroundColor:
-          props.pageIndex === props.currentPage
-            ? 'rgb(241, 81, 27)'
-            : 'transparent',
-        cursor: 'pointer',
-        height: '100%',
-        marginRight: '1rem',
-      }}
-    >
-      <div style={{ margin: '0.25rem' }} onClick={props.onJumpToPage}>
-        {props.renderPageThumbnail}
-      </div>
-    </div>
-  );
-
-  useEffect(() => {
-    const handleDocumentClick = (event: MouseEvent) => {
-      const container = document.querySelector('.deckUserPreview');
-      const pageLayer = document.querySelector('.rpv-core__page-layer');
-
-      if (pageLayer && container?.contains(pageLayer)) {
-        // The click occurred on or inside the .rpv-core__page-layer element
-        event.stopPropagation();
-      }
-    };
-
-    document.addEventListener('click', handleDocumentClick);
-
-    return () => {
-      document.removeEventListener('click', handleDocumentClick);
-    };
-  }, []);
-
-  console.log(pageNumber);
-
   return (
     <div
       id="container"
@@ -380,143 +329,97 @@ function DeckPreview({
       className="fixed !h-full inset-0 bg-black bg-opacity-80 backdrop-blur-sm p-2"
     >
       <AskEmailPassword onSubmit={handleModalSubmit} />
-      {!isShowModal && type === 'deckCreationPreview' ? (
+      {!isShowModal && (
         <div className="flex flex-col gap-4 !w-full !h-full p-4 bg-mirage rounded-lg md:rounded-none justify-between">
           <div
             style={{
-              display: 'flex',
-              height: '100%',
-              width: '100%',
-              flexDirection: 'column',
+              left: 0,
+              position: 'absolute',
+              top: '50%',
+              transform: 'translate(24px, -50%)',
+              zIndex: 1,
             }}
           >
-            <div
-              style={{
-                height: '70%',
-                position: 'relative',
-              }}
-            >
-              <div
-                style={{
-                  position: 'absolute',
-                  top: '50%',
-                  left: '1rem',
-                  transform: 'translate(0, -100%) rotate(-90deg)',
-                  zIndex: '1',
-                }}
-              >
-                <MinimalButton onClick={jumpToPreviousPage}>
-                  <PreviousIcon />
-                </MinimalButton>
-              </div>
-              <Worker workerUrl="https://unpkg.com/pdfjs-dist@3.6.172/build/pdf.worker.min.js">
-                <Viewer
-                  defaultScale={SpecialZoomLevel.PageFit}
-                  initialPage={pageNumber - 1}
-                  scrollMode={ScrollMode.Page}
-                  viewMode={ViewMode.SinglePage}
-                  fileUrl={file}
-                  plugins={[
-                    pageNavigationPluginInstance,
-                    thumbnailPluginInstance,
-                  ]}
+            <GoToPreviousPage>
+              {(props: RenderGoToPageProps) => (
+                <Tooltip
+                  position={Position.BottomCenter}
+                  target={
+                    <MinimalButton onClick={props.onClick}>
+                      <Icon size={16}>
+                        <path d="M18.4.5,5.825,11.626a.5.5,0,0,0,0,.748L18.4,23.5" />
+                      </Icon>
+                    </MinimalButton>
+                  }
+                  content={() => 'Previous page'}
+                  offset={{ left: 0, top: 8 }}
                 />
-              </Worker>
-              <div
-                style={{
-                  position: 'absolute',
-                  top: '50%',
-                  right: '1rem',
-                  transform: 'translate(0, -100%) rotate(-90deg)',
-                  zIndex: '1',
-                }}
-              >
-                <MinimalButton onClick={jumpToNextPage}>
-                  <NextIcon />
-                </MinimalButton>
-              </div>
-            </div>
-            <div
-              style={{
-                height: '30%',
-                overflow: 'auto',
-              }}
-            >
-              <Thumbnails
-                thumbnailDirection={ThumbnailDirection.Horizontal}
-                renderThumbnailItem={renderThumbnailItem}
-              />
-            </div>
+              )}
+            </GoToPreviousPage>
           </div>
-        </div>
-      ) : !isShowModal && type === 'deckUserPreview' ? (
-        <div
-          id="deckUserPreview"
-          className="flex flex-col gap-4 !w-full !h-full p-4 bg-mirage rounded-lg md:rounded-none justify-between"
-        >
+
           <div
             style={{
-              display: 'flex',
-              height: '100%',
-              width: '100%',
-              flexDirection: 'column',
+              position: 'absolute',
+              right: 0,
+              top: '50%',
+              transform: 'translate(-24px, -50%)',
+              zIndex: 1,
             }}
           >
-            <div
-              style={{
-                position: 'absolute',
-                top: '50%',
-                left: '3rem',
-                transform: 'translate(0, -100%) rotate(-90deg)',
-                zIndex: '1',
-                background: '#fff',
-                borderRadius: '4px',
-              }}
-            >
-              <MinimalButton onClick={jumpToPreviousPage}>
-                <PreviousIcon />
-              </MinimalButton>
-            </div>
-            <div
-              className="deckUserPreview"
-              style={{
-                height: '100%',
-                position: 'relative',
-              }}
-            >
+            <GoToNextPage>
+              {(props: RenderGoToPageProps) => (
+                <Tooltip
+                  position={Position.BottomCenter}
+                  target={
+                    <MinimalButton onClick={props.onClick}>
+                      <Icon size={16}>
+                        <path d="M5.651,23.5,18.227,12.374a.5.5,0,0,0,0-.748L5.651.5" />
+                      </Icon>
+                    </MinimalButton>
+                  }
+                  content={() => 'Next page'}
+                  offset={{ left: 0, top: 8 }}
+                />
+              )}
+            </GoToNextPage>
+          </div>
+
+          <div className="flex-none h-[70%]">
+            <Viewer
+              fileUrl={URL.createObjectURL(new Blob([file]))} // Pass the PDF file URL to Viewer
+              plugins={[
+                disableScrollPluginInstance,
+                pageNavigationPluginInstance,
+              ]}
+              defaultScale={SpecialZoomLevel.PageFit}
+              scrollMode={ScrollMode.Horizontal}
+            />
+          </div>
+          {type === 'deckCreationPreview' && (
+            <div className="flex-grow">
               <Worker workerUrl="https://unpkg.com/pdfjs-dist@3.6.172/build/pdf.worker.min.js">
                 <Viewer
-                  initialPage={pageNumber - 1}
-                  defaultScale={SpecialZoomLevel.PageFit}
-                  scrollMode={ScrollMode.Page}
-                  viewMode={ViewMode.SinglePage}
-                  fileUrl={file}
-                  plugins={[
-                    pageNavigationPluginInstance,
-                    thumbnailPluginInstance,
-                  ]}
+                  scrollMode={ScrollMode.Horizontal}
+                  fileUrl={URL.createObjectURL(new Blob([file]))} // Pass the PDF file URL to Viewer
+                  initialPage={pageNumber - 1} // Subtract 1 to convert to zero-based index
+                  enableSmoothScroll={false}
+                  defaultScale={0.13}
+                  characterMap={{
+                    isCompressed: true,
+                    url: 'https://unpkg.com/pdfjs-dist@3.6.172/build/pdf.worker.min.js',
+                  }}
+                  pageLayout={{
+                    transformSize: ({ size }) => ({
+                      height: size.height,
+                      width: size.width + 5,
+                    }),
+                  }}
                 />
               </Worker>
             </div>
-            <div
-              style={{
-                position: 'absolute',
-                top: '50%',
-                right: '3rem',
-                transform: 'translate(0, -100%) rotate(-90deg)',
-                zIndex: '1',
-                background: '#fff',
-                borderRadius: '4px',
-              }}
-            >
-              <MinimalButton onClick={jumpToNextPage}>
-                <NextIcon />
-              </MinimalButton>
-            </div>
-          </div>
+          )}
         </div>
-      ) : (
-        <div>Something went wrong, please contact support</div>
       )}
 
       {type === 'deckUserPreview' && (
