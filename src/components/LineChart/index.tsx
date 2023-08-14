@@ -44,13 +44,13 @@ export default function LineChart({ deck, labels, data, pdfFile }: Props) {
       display: 'flex',
       justifyContent: 'center',
     }),
-    transformSize: ({ size }) => ({
-      height: size.height,
-      width: size.width + 5,
+    transformSize: () => ({
+      height: 176,
+      width: 300,
     }),
   };
 
-  const widthNumberDesktop = deck && deck.slides && deck.slides * 300.5;
+  const widthNumberDesktop = deck && deck.slides && (deck.slides + 1) * 300;
 
   const widthStringDesktop = `${widthNumberDesktop}px`;
 
@@ -59,7 +59,7 @@ export default function LineChart({ deck, labels, data, pdfFile }: Props) {
     height: '12rem',
     display: 'flex',
   };
-  const previewDeckWidthNumber = deck && deck.slides && deck.slides * 300 + 100;
+  const previewDeckWidthNumber = deck && deck.slides && deck.slides * 300;
 
   return (
     <div className="">
@@ -127,7 +127,7 @@ export default function LineChart({ deck, labels, data, pdfFile }: Props) {
           className="overflow-x-scroll h-auto ml-[-1rem] z-0"
         >
           <div
-            style={{ width: `calc(${widthNumberDesktop}px + 100px)` }} // Perform the subtraction with a numerical value
+            style={{ width: `${widthNumberDesktop}px` }} // Perform the subtraction with a numerical value
             className="h-[12rem] [&>*]:!h-[12rem]"
           >
             <Line
@@ -195,7 +195,7 @@ export default function LineChart({ deck, labels, data, pdfFile }: Props) {
               <Viewer
                 scrollMode={ScrollMode.Horizontal}
                 fileUrl={pdfFile} // Pass the PDF file URL to Viewer
-                enableSmoothScroll={false}
+                enableSmoothScroll
                 pageLayout={pageLayout}
                 defaultScale={SpecialZoomLevel.PageFit}
                 characterMap={{
