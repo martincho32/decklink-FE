@@ -53,6 +53,7 @@ function Deck({ title = 'Create', deckId }: Props) {
   const { user } = useContext(AuthContext);
   const { validateToken } = useContext(AuthContext);
   const [deckFile, setDeckFile] = useState<PDFFile>(null);
+  const [finalDeckUrl, setFinalDeckUrl] = useState<string>();
   const [enteredDeckFileTouched, setEnteredDeckFileTouched] =
     useState<boolean>(false);
   const [numPages] = useState<number>();
@@ -137,7 +138,7 @@ function Deck({ title = 'Create', deckId }: Props) {
         setUploadInputFileLabel('Upload File (.pdf)'); // Reset the label to the default state
       } else {
         setEnteredDeckFileTouched(true);
-        setDeckFile(URL.createObjectURL(new Blob([selectedFile])));
+        setDeckFile(selectedFile);
         setUploadInputFileLabel('Change File (.pdf)');
         setIsEdited(true);
         setNewFileChoosed(true);
@@ -360,15 +361,19 @@ function Deck({ title = 'Create', deckId }: Props) {
     };
   }, []);
 
-  let finalDeckUrl = '';
+  useEffect(() => {
+    if (title === 'Create' && deckFile) {
+      setFinalDeckUrl(URL.createObjectURL(new Blob([deckFile])));
+    }
 
-  if (title === 'Create' && deckFile) {
-    finalDeckUrl = URL.createObjectURL(new Blob([deckFile]));
-  }
+    if (title === 'Update' && deckFile && typeof deckFile === 'string') {
+      setFinalDeckUrl(deckFile);
+    }
 
-  if (title === 'Update' && deckFile && typeof deckFile === 'string') {
-    finalDeckUrl = deckFile;
-  }
+    if (title === 'Update' && deckFile && deckFile instanceof File) {
+      setFinalDeckUrl(URL.createObjectURL(new Blob([deckFile])));
+    }
+  }, [deckFile]);
 
   return isLoading ? (
     <Loading />
@@ -535,7 +540,7 @@ function Deck({ title = 'Create', deckId }: Props) {
           <Worker workerUrl="https://unpkg.com/pdfjs-dist@3.6.172/build/pdf.worker.min.js">
             <Viewer
               scrollMode={ScrollMode.Horizontal}
-              fileUrl={finalDeckUrl} // Pass the PDF file URL to Viewer
+              fileUrl={finalDeckUrl as string} // Pass the PDF file URL to Viewer
               enableSmoothScroll
               pageLayout={pageLayout}
               defaultScale={SpecialZoomLevel.PageFit}

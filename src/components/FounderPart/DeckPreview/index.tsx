@@ -134,11 +134,6 @@ function DeckPreview({
         const elapsedTime = currentTime - currentSlideStartTime;
         const auxSlidesStats = JSON.parse(JSON.stringify(slidesStats));
         auxSlidesStats[pageNumber - 1].viewingTime += elapsedTime;
-        // console.log(
-        //   `El usuario ${userId} miró la slide ${pageNumber} durante ${
-        //     auxSlidesStats[pageNumber - 1].viewingTime
-        //   }`
-        // );
         setSlidesStats([...auxSlidesStats]);
         setCurrentSlideStartTime(Date.now());
       }
@@ -157,10 +152,18 @@ function DeckPreview({
 
   const handleKeyDown = (event: KeyboardEvent) => {
     if (event.key === 'ArrowLeft') {
+      updateSlideTime();
       jumpToPreviousPage();
+      if (pageNumber > 1) {
+        setPageNumber(pageNumber - 1);
+      }
     }
     if (event.key === 'ArrowRight') {
+      updateSlideTime();
       jumpToNextPage();
+      if (pageNumber !== numPages) {
+        setPageNumber(pageNumber + 1);
+      }
     }
   };
 
@@ -232,6 +235,9 @@ function DeckPreview({
           },
         }
       );
+
+      console.log(data);
+
       setShowModal(false);
       setDeckViewId(data._id);
       initializeCounting();

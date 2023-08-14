@@ -14,7 +14,6 @@ import {
 } from './pages';
 import ProtectedRoute from './components/ProtectedRoute';
 import { AuthProvider, UIProvider } from './context';
-import Test from './pages/FounderPart/Deck/test';
 
 function App() {
   return (
@@ -27,7 +26,6 @@ function App() {
               <Route path="/landing" element={<Landing />} />
               <Route path="/login" element={<LogIn />} />
               <Route path="/signup" element={<SignUp />} />
-              <Route path="/test" element={<Test />} />
               <Route element={<ProtectedRoute />}>
                 <Route path="/founder/decks" element={<MyDecks />} />
                 <Route path="/founder/deck/create" element={<DeckCreation />} />
