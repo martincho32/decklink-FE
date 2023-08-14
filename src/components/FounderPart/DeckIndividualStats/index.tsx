@@ -7,7 +7,6 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from '@/components/UI/Accordion';
-// import DeckThumbnail from '../DeckThumbnail';
 import './DeckIndividualStats.css';
 import { getTotalViewingTime } from '@/utils';
 
