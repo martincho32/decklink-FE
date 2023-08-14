@@ -1,3 +1,4 @@
+/* eslint-disable react/no-unused-prop-types */
 /* eslint-disable no-nested-ternary */
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 import { useContext, useEffect, useState } from 'react';
@@ -8,6 +9,7 @@ import {
   SpecialZoomLevel,
   Viewer,
   Worker,
+  PageChangeEvent,
 } from '@react-pdf-viewer/core';
 import {
   RenderThumbnailItemProps,
@@ -45,10 +47,10 @@ interface KeyboardEvent {
 export interface Props {
   type: 'deckCreationPreview' | 'deckUserPreview';
   onClose: () => void;
-  pageNumber: number;
+  pageIndex: number;
   file;
   numPages?;
-  setPageNumber?;
+  setPageIndex?;
   deckId: string | null;
   deckSlidesNumber?: number | null;
   userId?: string | null;
@@ -57,10 +59,9 @@ export interface Props {
 function DeckPreview({
   type,
   onClose,
-  pageNumber,
+  pageIndex,
   file,
-  numPages,
-  setPageNumber,
+  setPageIndex,
   deckId,
   deckSlidesNumber,
   userId,
@@ -133,7 +134,8 @@ function DeckPreview({
         const currentTime = Date.now();
         const elapsedTime = currentTime - currentSlideStartTime;
         const auxSlidesStats = JSON.parse(JSON.stringify(slidesStats));
-        auxSlidesStats[pageNumber - 1].viewingTime += elapsedTime;
+        if (auxSlidesStats[pageIndex].viewingTime >= 120000) return; // Set the limit in 2 minutes
+        auxSlidesStats[pageIndex].viewingTime += elapsedTime;
         setSlidesStats([...auxSlidesStats]);
         setCurrentSlideStartTime(Date.now());
       }
@@ -154,16 +156,10 @@ function DeckPreview({
     if (event.key === 'ArrowLeft') {
       updateSlideTime();
       jumpToPreviousPage();
-      if (pageNumber > 1) {
-        setPageNumber(pageNumber - 1);
-      }
     }
     if (event.key === 'ArrowRight') {
       updateSlideTime();
       jumpToNextPage();
-      if (pageNumber !== numPages) {
-        setPageNumber(pageNumber + 1);
-      }
     }
   };
 
@@ -172,7 +168,7 @@ function DeckPreview({
     return () => {
       document.removeEventListener('keydown', handleKeyDown);
     };
-  }, [pageNumber]);
+  }, [pageIndex]);
 
   function initializeArrayOfSLidesStats(count): IDeckSlidesStats[] {
     const arrayOfEmptyObjects: { slideNumber: number; viewingTime: number }[] =
@@ -344,6 +340,11 @@ function DeckPreview({
     </div>
   );
 
+  const handlePageChange = (e: PageChangeEvent) => {
+    setPageIndex(e.currentPage);
+    updateSlideTime();
+  };
+
   return (
     <div
       id="container"
@@ -387,8 +388,9 @@ function DeckPreview({
               </div>
               <Worker workerUrl="https://unpkg.com/pdfjs-dist@3.6.172/build/pdf.worker.min.js">
                 <Viewer
+                  onPageChange={handlePageChange}
                   defaultScale={SpecialZoomLevel.PageFit}
-                  initialPage={pageNumber - 1}
+                  initialPage={pageIndex}
                   scrollMode={ScrollMode.Page}
                   viewMode={ViewMode.SinglePage}
                   fileUrl={file}
@@ -466,7 +468,8 @@ function DeckPreview({
             >
               <Worker workerUrl="https://unpkg.com/pdfjs-dist@3.6.172/build/pdf.worker.min.js">
                 <Viewer
-                  initialPage={pageNumber - 1}
+                  onPageChange={handlePageChange}
+                  initialPage={pageIndex}
                   defaultScale={SpecialZoomLevel.PageFit}
                   scrollMode={ScrollMode.Page}
                   viewMode={ViewMode.SinglePage}
