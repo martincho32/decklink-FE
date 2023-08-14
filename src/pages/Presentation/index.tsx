@@ -14,7 +14,7 @@ function Presentation() {
   const { enqueueSnackbar } = useSnackbar();
 
   const [deckFile, setDeckFile] = useState<string>();
-  const [pageNumber, setPageNumber] = useState(1);
+  const [pageIndex, setPageIndex] = useState(0);
   const [deckId, setDeckId] = useState<string | null>(null);
   const [deckSlidesNumber, setDeckSlidesNumber] = useState<number | null>(null);
   const [userId, setUserId] = useState<string | null>(null);
@@ -72,9 +72,9 @@ function Presentation() {
         <DeckPreview
           file={deckFile}
           type="deckUserPreview"
-          pageNumber={pageNumber}
+          pageIndex={pageIndex}
           onClose={() => {}}
-          setPageNumber={setPageNumber}
+          setPageIndex={setPageIndex}
           deckId={deckId}
           deckSlidesNumber={deckSlidesNumber}
           userId={userId}

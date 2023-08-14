@@ -34,7 +34,7 @@ function MyDecks() {
   const location = useLocation();
   const isFirstDeck = location.state?.isFirstDeck;
   const [previewPickDeckSlide, setPreviewPickDeckSlide] = useState(false);
-  const [pageNumber] = useState(1);
+  const [pageIndex] = useState(0);
   const [showFirstTimeModal, setShowFirstTimeModal] =
     useState<boolean>(isFirstDeck);
   const [showCalendly, setShowCalendly] = useState<boolean>(false);
@@ -229,7 +229,7 @@ function MyDecks() {
                     <DeckPreview
                       type="deckCreationPreview"
                       onClose={handleOnClosePitchDeckSlidePreview}
-                      pageNumber={pageNumber}
+                      pageIndex={pageIndex}
                       file={deck.deckUrl}
                       numPages={deck.slides}
                       deckId={null}

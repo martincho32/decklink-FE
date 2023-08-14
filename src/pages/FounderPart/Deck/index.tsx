@@ -18,6 +18,7 @@ import {
   Input,
   DeckPreview,
   AlertDialogComponent,
+  AnimatedLoader,
 } from '../../../components';
 /** File library */
 import 'react-pdf/dist/esm/Page/AnnotationLayer.css';
@@ -57,7 +58,7 @@ function Deck({ title = 'Create', deckId }: Props) {
   const [enteredDeckFileTouched, setEnteredDeckFileTouched] =
     useState<boolean>(false);
   const [numPages] = useState<number>();
-  const [pageNumber, setPageNumber] = useState(1);
+  const [pageIndex, setPageIndex] = useState(0);
   const [previewPickDeckSlide, setPreviewPickDeckSlide] = useState(false);
   const [uploadInputFileLabel, setUploadInputFileLabel] =
     useState('Upload File (.pdf)');
@@ -129,8 +130,12 @@ function Deck({ title = 'Create', deckId }: Props) {
       const allowedTypes = ['application/pdf'];
       const selectedFile = files[0];
       if (selectedFile.size > 25 * 1024 * 1024) {
-        handleError('File must be smaller than 25mb');
-        setFileInputErrorMessage('File must be smaller than 25mb');
+        handleError(
+          'File must be smaller than 25mb. Try compressing the file in: ilovepdf.com'
+        );
+        setFileInputErrorMessage(
+          'File must be smaller than 25mb. Try compressing the file in: ilovepdf.com'
+        );
       }
 
       if (!allowedTypes.includes(selectedFile.type)) {
@@ -153,7 +158,7 @@ function Deck({ title = 'Create', deckId }: Props) {
   const enteredDeckFileIsValid =
     deckFile !== null &&
     (typeof deckFile === 'string' || deckFile.type === 'application/pdf') &&
-    (deckFile as any).size <= 25 * 1024 * 1024;
+    (deckId ? true : (deckFile as any).size <= 25 * 1024 * 1024);
 
   const passwordInputIsInvalid =
     !enteredPasswordIsValid && enteredPasswordTouched;
@@ -216,7 +221,6 @@ function Deck({ title = 'Create', deckId }: Props) {
 
   const submitHandler = async (event: React.FormEvent) => {
     event.preventDefault();
-    setIsButtonDisabled(true);
 
     setEnteredDeckNameTouched(true);
     setEnteredDeckLinkTouched(true);
@@ -232,6 +236,7 @@ function Deck({ title = 'Create', deckId }: Props) {
       handleError('Some of the fields is not valid');
       return;
     }
+    setIsButtonDisabled(true);
 
     try {
       // TODO integrate this, for having dile upload progress bar
@@ -347,10 +352,10 @@ function Deck({ title = 'Create', deckId }: Props) {
       const container = document.querySelector('.deckWorkingPreview');
       const canvas = target.closest('.rpv-core__page-layer');
       if (container?.contains(canvas)) {
-        const pageIndex = Number(canvas.getAttribute('data-virtual-index'));
+        const auxPageIndex = Number(canvas.getAttribute('data-virtual-index'));
         document.body.style.overflow = 'hidden';
+        setPageIndex(auxPageIndex); // Updated this line to use pageIndex directly
         setPreviewPickDeckSlide(true);
-        setPageNumber(pageIndex + 1); // Updated this line to use pageIndex directly
       }
     };
 
@@ -417,16 +422,31 @@ function Deck({ title = 'Create', deckId }: Props) {
               action={submitHandler}
               alertDescription="All your pitch-deck stats will be lost if you change the file."
             >
-              <Button
-                icon={<Logo color="white" />}
-                type="button"
-                text={title}
-                backgroundColor="#F1511B"
-                textColor="#ffffff"
-                className="xl:justify-self-end justify-self-center max-w-min"
-                disabled={isButtonDisabled}
-              />
+              {isButtonDisabled ? (
+                <Button
+                  icon={<AnimatedLoader />}
+                  type="button"
+                  className="bg-persimmon p-2"
+                  disabled
+                />
+              ) : (
+                <Button
+                  icon={<Logo color="white" />}
+                  type="submit"
+                  text={title}
+                  backgroundColor="#F1511B"
+                  textColor="#ffffff"
+                  className="xl:justify-self-end justify-self-center max-w-min"
+                />
+              )}
             </AlertDialogComponent>
+          ) : isButtonDisabled ? (
+            <Button
+              icon={<AnimatedLoader />}
+              type="button"
+              className="bg-persimmon p-2"
+              disabled
+            />
           ) : (
             <Button
               icon={<Logo color="white" />}
@@ -435,7 +455,6 @@ function Deck({ title = 'Create', deckId }: Props) {
               backgroundColor="#F1511B"
               textColor="#ffffff"
               className="xl:justify-self-end justify-self-center max-w-min"
-              disabled={isButtonDisabled}
             />
           )}
         </div>
@@ -558,10 +577,10 @@ function Deck({ title = 'Create', deckId }: Props) {
         <DeckPreview
           type="deckCreationPreview"
           onClose={handleOnClosePitchDeckSlidePreview}
-          pageNumber={pageNumber}
+          pageIndex={pageIndex}
           file={finalDeckUrl}
           numPages={numPages}
-          setPageNumber={setPageNumber}
+          setPageIndex={setPageIndex}
           deckId={null}
         />
       )}
