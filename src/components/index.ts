@@ -29,3 +29,4 @@ export { buttonVariants } from './UI/ShadcnButton';
 export { default as Preloading } from './PreloadingScreen';
 export { default as Carrousel } from './Carousel';
 export { default as CarouselCard } from './CarouselCard';
+export { default as AnimatedLoader } from './AnimatedLoader';
