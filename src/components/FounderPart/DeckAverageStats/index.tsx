@@ -1,4 +1,3 @@
-/* eslint-disable no-unsafe-optional-chaining */
 import { useEffect, useState } from 'react';
 import { LineChart } from '../..'; // Replace this with the correct path to your LineChart component
 import { IDeck, IDeckSlidesStats, IDeckView } from '../../../types';
@@ -10,17 +9,16 @@ interface Props {
 }
 
 function DeckAverageStats({ deck, deckViews }: Props) {
-  const [pdfFile, setPdfFile] = useState<string | null>(null);
+  const [pdfFile, setPdfFile] = useState<string>('');
+
   useEffect(() => {
-    setPdfFile(deck?.deckUrl || null);
+    setPdfFile(deck?.deckUrl || '');
   }, [deck]);
 
   const labels = Array.from(
-    new Array(deck?.slides),
+    new Array(deck?.slides || 0),
     (_el, index) => `Slide ${index + 1}`
   );
-
-  console.log(labels);
 
   const rawData =
     deckViews &&
@@ -31,20 +29,16 @@ function DeckAverageStats({ deck, deckViews }: Props) {
       };
     }, {});
 
-  console.log(rawData);
-
   const auxMockedData: number[] = [];
   labels?.forEach((_slideName, index) => {
     (Object.values(rawData!) as [][]).forEach((slide: IDeckSlidesStats[]) => {
       if (auxMockedData[index]) {
-        auxMockedData[index] += slide[index]?.viewingTime;
+        auxMockedData[index] += slide[index]?.viewingTime || 0;
       } else {
-        auxMockedData[index] = slide[index]?.viewingTime;
+        auxMockedData[index] = slide[index]?.viewingTime || 0;
       }
     });
   });
-
-  console.log(auxMockedData);
 
   // this will be the view time in seconds of each slide
   // TODO maybe do this but in the last iteration of labels.forEach
@@ -52,8 +46,6 @@ function DeckAverageStats({ deck, deckViews }: Props) {
     (totalMiliseconds) =>
       totalMiliseconds / 1000 / Object.values(rawData!).length
   );
-
-  console.log(data);
 
   return (
     <div>

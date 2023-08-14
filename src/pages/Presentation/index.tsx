@@ -1,23 +1,10 @@
 import { useContext, useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { pdfjs } from 'react-pdf';
-import type { PDFDocumentProxy } from 'pdfjs-dist';
 import { useSnackbar } from 'notistack';
 import { DeckPreview, MainLayout } from '@/components';
 import { deckService } from '../../services';
 import { UIContext } from '@/context';
-
-pdfjs.GlobalWorkerOptions.workerSrc = new URL(
-  'pdfjs-dist/build/pdf.worker.min.js',
-  import.meta.url
-).toString();
-
-const options = {
-  cMapUrl: 'cmaps/',
-  standardFontDataUrl: 'standard_fonts/',
-};
-
-type PDFFile = string | File | null;
+import Loading from '../../components/PreloadingScreen';
 
 function Presentation() {
   const { setShowModal, setRequireEmail, setRequirePassword } =
@@ -26,18 +13,11 @@ function Presentation() {
   const { customDeckLink } = useParams();
   const { enqueueSnackbar } = useSnackbar();
 
-  const [deckFile, setDeckFile] = useState<PDFFile>(null);
-  const [numPages, setNumPages] = useState<number>();
+  const [deckFile, setDeckFile] = useState<string>();
   const [pageNumber, setPageNumber] = useState(1);
   const [deckId, setDeckId] = useState<string | null>(null);
   const [deckSlidesNumber, setDeckSlidesNumber] = useState<number | null>(null);
   const [userId, setUserId] = useState<string | null>(null);
-
-  const onDocumentLoadSuccess = ({
-    numPages: nextNumPages,
-  }: PDFDocumentProxy): void => {
-    setNumPages(nextNumPages);
-  };
 
   useEffect(() => {
     if (!customDeckLink) {
@@ -71,7 +51,8 @@ function Presentation() {
             navigate('/404');
             return;
           }
-          setDeckFile(data.deckUrl);
+
+          setDeckFile(data.deckUrl || '');
           setDeckId(data._id);
           setShowModal(data.requestEmail || data.requestPassword);
           setRequireEmail(data.requestEmail);
@@ -87,20 +68,20 @@ function Presentation() {
 
   return (
     <MainLayout>
-      <DeckPreview
-        file={deckFile}
-        type="deckUserPreview"
-        pageNumber={pageNumber}
-        onClose={() => {}}
-        onDocumentLoadSuccess={onDocumentLoadSuccess}
-        options={options}
-        numPages={numPages}
-        setPreviewPickDeckSlide={() => {}}
-        setPageNumber={setPageNumber}
-        deckId={deckId}
-        deckSlidesNumber={deckSlidesNumber}
-        userId={userId}
-      />
+      {deckFile ? ( // Check if deckFile is truthy
+        <DeckPreview
+          file={deckFile}
+          type="deckUserPreview"
+          pageNumber={pageNumber}
+          onClose={() => {}}
+          setPageNumber={setPageNumber}
+          deckId={deckId}
+          deckSlidesNumber={deckSlidesNumber}
+          userId={userId}
+        />
+      ) : (
+        <Loading />
+      )}
     </MainLayout>
   );
 }

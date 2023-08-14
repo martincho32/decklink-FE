@@ -177,6 +177,8 @@ export default function LineChart({ deck, labels, data, pdfFile }: Props) {
   };
   const previewDeckWidthNumber = deck && deck.slides && deck.slides * 300 + 100;
 
+  console.log(pdfFile);
+
   return (
     <div className="">
       <div

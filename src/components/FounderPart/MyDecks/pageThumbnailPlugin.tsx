@@ -20,7 +20,6 @@ export const pageThumbnailPlugin = (
       // eslint-disable-next-line react/jsx-no-useless-fragment
       slot.subSlot.children = <></>;
 
-      console.log(slot);
       return slot;
     },
   };

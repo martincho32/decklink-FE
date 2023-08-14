@@ -1,7 +1,13 @@
 /* eslint-disable no-nested-ternary */
 import { useContext, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Viewer, Worker, ScrollMode, PageLayout } from '@react-pdf-viewer/core';
+import {
+  Viewer,
+  Worker,
+  ScrollMode,
+  PageLayout,
+  SpecialZoomLevel,
+} from '@react-pdf-viewer/core';
 import { scrollModePlugin } from '@react-pdf-viewer/scroll-mode';
 import axios from 'axios';
 import { useSnackbar } from 'notistack';
@@ -532,7 +538,7 @@ function Deck({ title = 'Create', deckId }: Props) {
               fileUrl={finalDeckUrl} // Pass the PDF file URL to Viewer
               enableSmoothScroll
               pageLayout={pageLayout}
-              defaultScale={0.14}
+              defaultScale={SpecialZoomLevel.PageFit}
               characterMap={{
                 isCompressed: true,
                 url: 'https://unpkg.com/pdfjs-dist@3.6.172/build/pdf.worker.min.js',

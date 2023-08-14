@@ -47,7 +47,7 @@ export interface Props {
   onClose: () => void;
   pageNumber: number;
   file;
-  numPages;
+  numPages?;
   setPageNumber?;
   deckId: string | null;
   deckSlidesNumber?: number | null;
@@ -155,25 +155,12 @@ function DeckPreview({
     window.location.href = 'https://tally.so/r/w2a4dM';
   };
 
-  const onPrev = () => {
-    updateSlideTime();
-    if (pageNumber > 1) {
-      setPageNumber(pageNumber - 1);
-    }
-  };
-
-  const onNext = () => {
-    updateSlideTime();
-    if (pageNumber !== numPages) {
-      setPageNumber(pageNumber + 1);
-    }
-  };
-
   const handleKeyDown = (event: KeyboardEvent) => {
+    if (event.key === 'ArrowLeft') {
+      jumpToPreviousPage();
+    }
     if (event.key === 'ArrowRight') {
-      onNext();
-    } else if (event.key === 'ArrowLeft') {
-      onPrev();
+      jumpToNextPage();
     }
   };
 
@@ -351,26 +338,6 @@ function DeckPreview({
     </div>
   );
 
-  useEffect(() => {
-    const handleDocumentClick = (event: MouseEvent) => {
-      const container = document.querySelector('.deckUserPreview');
-      const pageLayer = document.querySelector('.rpv-core__page-layer');
-
-      if (pageLayer && container?.contains(pageLayer)) {
-        // The click occurred on or inside the .rpv-core__page-layer element
-        event.stopPropagation();
-      }
-    };
-
-    document.addEventListener('click', handleDocumentClick);
-
-    return () => {
-      document.removeEventListener('click', handleDocumentClick);
-    };
-  }, []);
-
-  console.log(pageNumber);
-
   return (
     <div
       id="container"
@@ -381,7 +348,7 @@ function DeckPreview({
     >
       <AskEmailPassword onSubmit={handleModalSubmit} />
       {!isShowModal && type === 'deckCreationPreview' ? (
-        <div className="flex flex-col gap-4 !w-full !h-full p-4 bg-mirage rounded-lg md:rounded-none justify-between">
+        <div className="flex cursor-default flex-col gap-4 !w-full !h-full p-4 bg-mirage rounded-lg md:rounded-none justify-between">
           <div
             style={{
               display: 'flex',
@@ -397,12 +364,15 @@ function DeckPreview({
               }}
             >
               <div
+                className="prev"
                 style={{
                   position: 'absolute',
                   top: '50%',
-                  left: '1rem',
+                  left: '3rem',
                   transform: 'translate(0, -100%) rotate(-90deg)',
                   zIndex: '1',
+                  background: '#fff',
+                  borderRadius: '4px',
                 }}
               >
                 <MinimalButton onClick={jumpToPreviousPage}>
@@ -423,12 +393,15 @@ function DeckPreview({
                 />
               </Worker>
               <div
+                className="next"
                 style={{
                   position: 'absolute',
                   top: '50%',
-                  right: '1rem',
+                  right: '3rem',
                   transform: 'translate(0, -100%) rotate(-90deg)',
                   zIndex: '1',
+                  background: '#fff',
+                  borderRadius: '4px',
                 }}
               >
                 <MinimalButton onClick={jumpToNextPage}>
@@ -463,6 +436,7 @@ function DeckPreview({
             }}
           >
             <div
+              className="prev"
               style={{
                 position: 'absolute',
                 top: '50%',
@@ -499,6 +473,7 @@ function DeckPreview({
               </Worker>
             </div>
             <div
+              className="next"
               style={{
                 position: 'absolute',
                 top: '50%',
