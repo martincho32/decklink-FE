@@ -37,10 +37,12 @@ function Navbar() {
           <img src={logo} className="" alt="Fundraisingtoobox" />
         </div>
       </Link>
-      <div className={isLoggedIn ? 'self-center hidden md:block' : 'hidden'}>
+      <div
+        className={isLoggedIn ? 'self-center hidden desktop:block' : 'hidden'}
+      >
         <NavLinks />
       </div>
-      <div className="hidden md:block">
+      <div className="hidden desktop:block">
         <AuthActions handleActions={handleActions} isUserLogged={isLoggedIn} />
       </div>
       <HamburguerMenu
