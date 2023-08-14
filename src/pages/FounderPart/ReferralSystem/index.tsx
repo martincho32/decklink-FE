@@ -5,7 +5,7 @@ import contactImg from '../../../assets/images/Contacts.png';
 import copyIcon from '../../../assets/images/CopyIcon.svg';
 
 export default function Referral() {
-  const [referralIsFull, setReferralIsFull] = useState<boolean>(true);
+  const [referralIsFull] = useState<boolean>(true);
   const { enqueueSnackbar } = useSnackbar();
 
   const handleCopyClick = () => {
