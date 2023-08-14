@@ -11,6 +11,7 @@ import {
   DeckEdit,
   DeckDetail,
   Presentation,
+  Referrals,
 } from './pages';
 import ProtectedRoute from './components/ProtectedRoute';
 import { AuthProvider, UIProvider } from './context';
@@ -28,6 +29,7 @@ function App() {
               <Route path="/signup" element={<SignUp />} />
               <Route element={<ProtectedRoute />}>
                 <Route path="/founder/decks" element={<MyDecks />} />
+                <Route path="/founder/referrals" element={<Referrals />} />
                 <Route path="/founder/deck/create" element={<DeckCreation />} />
                 <Route path="/founder/deck/edit/:id" element={<DeckEdit />} />
                 <Route path="/founder/deck/:id" element={<DeckDetail />} />

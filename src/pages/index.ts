@@ -7,3 +7,4 @@ export { default as DeckCreation } from './FounderPart/DeckCreation';
 export { default as DeckEdit } from './FounderPart/DeckEdit';
 export { default as DeckDetail } from './FounderPart/DeckDetail';
 export { default as Presentation } from './Presentation';
+export { default as Referrals } from './FounderPart/ReferralSystem';

@@ -23,7 +23,7 @@ function HamburguerMenu({
   handleActions,
 }: Props) {
   return (
-    <div className="block tablet:hidden w-11 h-11">
+    <div className="block desktop:hidden w-11 h-11">
       {!isOpen ? (
         <button type="button" onClick={onClickHamburguer}>
           <Hamburguer />
