@@ -1,7 +1,14 @@
+/* eslint-disable no-nested-ternary */
 import { useContext, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { pdfjs, Document, Thumbnail } from 'react-pdf'; /** File library */
-import type { PDFDocumentProxy } from 'pdfjs-dist'; /** File library */
+import {
+  Viewer,
+  Worker,
+  ScrollMode,
+  PageLayout,
+  SpecialZoomLevel,
+} from '@react-pdf-viewer/core';
+import { scrollModePlugin } from '@react-pdf-viewer/scroll-mode';
 import axios from 'axios';
 import { useSnackbar } from 'notistack';
 import './DeckCreation.css';
@@ -11,6 +18,7 @@ import {
   Input,
   DeckPreview,
   AlertDialogComponent,
+  AnimatedLoader,
 } from '../../../components';
 /** File library */
 import 'react-pdf/dist/esm/Page/AnnotationLayer.css';
@@ -20,16 +28,6 @@ import { deckService } from '../../../services';
 import Loading from '../../../components/PreloadingScreen';
 import { AuthContext } from '@/context';
 
-pdfjs.GlobalWorkerOptions.workerSrc = new URL(
-  'pdfjs-dist/build/pdf.worker.min.js',
-  import.meta.url
-).toString();
-
-const options = {
-  cMapUrl: 'cmaps/',
-  standardFontDataUrl: 'standard_fonts/',
-};
-
 type PDFFile = string | File | null;
 
 export interface Props {
@@ -38,13 +36,29 @@ export interface Props {
 }
 
 function Deck({ title = 'Create', deckId }: Props) {
+  const scrollModePluginInstance = scrollModePlugin();
+  scrollModePluginInstance.switchScrollMode(ScrollMode.Horizontal);
+
+  const pageLayout: PageLayout = {
+    buildPageStyles: () => ({
+      alignItems: 'center',
+      display: 'flex',
+      justifyContent: 'center',
+    }),
+    transformSize: ({ size }) => ({
+      height: size.height,
+      width: size.width + 5,
+    }),
+  };
+
   const { user } = useContext(AuthContext);
   const { validateToken } = useContext(AuthContext);
   const [deckFile, setDeckFile] = useState<PDFFile>(null);
+  const [finalDeckUrl, setFinalDeckUrl] = useState<string>();
   const [enteredDeckFileTouched, setEnteredDeckFileTouched] =
     useState<boolean>(false);
-  const [numPages, setNumPages] = useState<number>();
-  const [pageNumber, setPageNumber] = useState(1);
+  const [numPages] = useState<number>();
+  const [pageIndex, setPageIndex] = useState(0);
   const [previewPickDeckSlide, setPreviewPickDeckSlide] = useState(false);
   const [uploadInputFileLabel, setUploadInputFileLabel] =
     useState('Upload File (.pdf)');
@@ -116,8 +130,12 @@ function Deck({ title = 'Create', deckId }: Props) {
       const allowedTypes = ['application/pdf'];
       const selectedFile = files[0];
       if (selectedFile.size > 25 * 1024 * 1024) {
-        handleError('File must be smaller than 25mb');
-        setFileInputErrorMessage('File must be smaller than 25mb');
+        handleError(
+          'File must be smaller than 25mb. Try compressing the file in: ilovepdf.com'
+        );
+        setFileInputErrorMessage(
+          'File must be smaller than 25mb. Try compressing the file in: ilovepdf.com'
+        );
       }
 
       if (!allowedTypes.includes(selectedFile.type)) {
@@ -132,11 +150,6 @@ function Deck({ title = 'Create', deckId }: Props) {
       }
     }
   };
-  const onDocumentLoadSuccess = ({
-    numPages: nextNumPages,
-  }: PDFDocumentProxy): void => {
-    setNumPages(nextNumPages);
-  };
 
   const enteredPasswordIsValid =
     deckPassword?.length >= 6 && deckPassword?.length <= 35;
@@ -145,7 +158,7 @@ function Deck({ title = 'Create', deckId }: Props) {
   const enteredDeckFileIsValid =
     deckFile !== null &&
     (typeof deckFile === 'string' || deckFile.type === 'application/pdf') &&
-    (deckFile as any).size <= 25 * 1024 * 1024;
+    (deckId ? true : (deckFile as any).size <= 25 * 1024 * 1024);
 
   const passwordInputIsInvalid =
     !enteredPasswordIsValid && enteredPasswordTouched;
@@ -208,7 +221,6 @@ function Deck({ title = 'Create', deckId }: Props) {
 
   const submitHandler = async (event: React.FormEvent) => {
     event.preventDefault();
-    setIsButtonDisabled(true);
 
     setEnteredDeckNameTouched(true);
     setEnteredDeckLinkTouched(true);
@@ -224,6 +236,7 @@ function Deck({ title = 'Create', deckId }: Props) {
       handleError('Some of the fields is not valid');
       return;
     }
+    setIsButtonDisabled(true);
 
     try {
       // TODO integrate this, for having dile upload progress bar
@@ -292,7 +305,6 @@ function Deck({ title = 'Create', deckId }: Props) {
       setEnteredPasswordTouched(false);
       setIsButtonDisabled(false);
     } catch (error: any) {
-      console.error('Error:', error);
       handleError(error);
       setIsButtonDisabled(false);
     }
@@ -324,7 +336,6 @@ function Deck({ title = 'Create', deckId }: Props) {
           }, 1000);
         })
         .catch((error) => {
-          console.error('Error: ', error);
           handleError(error);
           setTimeout(() => {
             setIsLoading(false); // Set isLoading to false once data is fetched
@@ -334,6 +345,40 @@ function Deck({ title = 'Create', deckId }: Props) {
       setIsLoading(false); // Set isLoading to false for the create page
     }
   }, [deckId]);
+
+  useEffect(() => {
+    const handleDocumentClick = (e) => {
+      const { target } = e;
+      const container = document.querySelector('.deckWorkingPreview');
+      const canvas = target.closest('.rpv-core__page-layer');
+      if (container?.contains(canvas)) {
+        const auxPageIndex = Number(canvas.getAttribute('data-virtual-index'));
+        document.body.style.overflow = 'hidden';
+        setPageIndex(auxPageIndex); // Updated this line to use pageIndex directly
+        setPreviewPickDeckSlide(true);
+      }
+    };
+
+    document.addEventListener('click', handleDocumentClick);
+
+    return () => {
+      document.removeEventListener('click', handleDocumentClick);
+    };
+  }, []);
+
+  useEffect(() => {
+    if (title === 'Create' && deckFile) {
+      setFinalDeckUrl(URL.createObjectURL(new Blob([deckFile])));
+    }
+
+    if (title === 'Update' && deckFile && typeof deckFile === 'string') {
+      setFinalDeckUrl(deckFile);
+    }
+
+    if (title === 'Update' && deckFile && deckFile instanceof File) {
+      setFinalDeckUrl(URL.createObjectURL(new Blob([deckFile])));
+    }
+  }, [deckFile]);
 
   return isLoading ? (
     <Loading />
@@ -377,16 +422,31 @@ function Deck({ title = 'Create', deckId }: Props) {
               action={submitHandler}
               alertDescription="All your pitch-deck stats will be lost if you change the file."
             >
-              <Button
-                icon={<Logo color="white" />}
-                type="button"
-                text={title}
-                backgroundColor="#F1511B"
-                textColor="#ffffff"
-                className="xl:justify-self-end justify-self-center max-w-min"
-                disabled={isButtonDisabled}
-              />
+              {isButtonDisabled ? (
+                <Button
+                  icon={<AnimatedLoader />}
+                  type="button"
+                  className="bg-persimmon p-2"
+                  disabled
+                />
+              ) : (
+                <Button
+                  icon={<Logo color="white" />}
+                  type="submit"
+                  text={title}
+                  backgroundColor="#F1511B"
+                  textColor="#ffffff"
+                  className="xl:justify-self-end justify-self-center max-w-min"
+                />
+              )}
             </AlertDialogComponent>
+          ) : isButtonDisabled ? (
+            <Button
+              icon={<AnimatedLoader />}
+              type="button"
+              className="bg-persimmon p-2"
+              disabled
+            />
           ) : (
             <Button
               icon={<Logo color="white" />}
@@ -395,7 +455,6 @@ function Deck({ title = 'Create', deckId }: Props) {
               backgroundColor="#F1511B"
               textColor="#ffffff"
               className="xl:justify-self-end justify-self-center max-w-min"
-              disabled={isButtonDisabled}
             />
           )}
         </div>
@@ -492,44 +551,36 @@ function Deck({ title = 'Create', deckId }: Props) {
         </div>
       </form>
 
-      {/* PDF thumbnail */}
-      <div className="Example ">
-        <div className="Example__container">
-          <div className="Example__container__document">
-            <Document
-              file={deckFile}
-              onLoadSuccess={onDocumentLoadSuccess}
-              options={options}
-              noData={<EmptyDeckPreview />}
-            >
-              <div className="flex gap-3 overflow-x-auto my-6 p-2">
-                {Array.from(new Array(numPages), (_el, index) => (
-                  <Thumbnail
-                    onItemClick={() => {
-                      document.body.style.overflow = 'hidden';
-                      setPreviewPickDeckSlide(true);
-                      setPageNumber(index + 1);
-                    }}
-                    key={`page_${index + 1}`}
-                    pageNumber={index + 1}
-                  />
-                ))}
-              </div>
-            </Document>
-          </div>
+      {deckFile && deckFile !== null ? (
+        <div
+          className="deckWorkingPreview"
+          style={{ height: '11rem', marginTop: '1rem', marginBottom: '1rem' }}
+        >
+          <Worker workerUrl="https://unpkg.com/pdfjs-dist@3.6.172/build/pdf.worker.min.js">
+            <Viewer
+              scrollMode={ScrollMode.Horizontal}
+              fileUrl={finalDeckUrl as string} // Pass the PDF file URL to Viewer
+              enableSmoothScroll
+              pageLayout={pageLayout}
+              defaultScale={SpecialZoomLevel.PageFit}
+              characterMap={{
+                isCompressed: true,
+                url: 'https://unpkg.com/pdfjs-dist@3.6.172/build/pdf.worker.min.js',
+              }}
+            />
+          </Worker>
         </div>
-      </div>
+      ) : (
+        <EmptyDeckPreview />
+      )}
       {previewPickDeckSlide && (
         <DeckPreview
           type="deckCreationPreview"
           onClose={handleOnClosePitchDeckSlidePreview}
-          pageNumber={pageNumber}
-          file={deckFile}
-          onDocumentLoadSuccess={onDocumentLoadSuccess}
-          options={options}
+          pageIndex={pageIndex}
+          file={finalDeckUrl}
           numPages={numPages}
-          setPreviewPickDeckSlide={setPreviewPickDeckSlide}
-          setPageNumber={setPageNumber}
+          setPageIndex={setPageIndex}
           deckId={null}
         />
       )}

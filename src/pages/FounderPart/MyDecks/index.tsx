@@ -30,16 +30,11 @@ import { AuthContext } from '@/context';
 import Popup from '@/components/UI/Popup';
 import CalendlyIntegration from '@/components/CalendlyIntegration';
 
-const options = {
-  cMapUrl: 'cmaps/',
-  standardFontDataUrl: 'standard_fonts/',
-};
-
 function MyDecks() {
   const location = useLocation();
   const isFirstDeck = location.state?.isFirstDeck;
   const [previewPickDeckSlide, setPreviewPickDeckSlide] = useState(false);
-  const [pageNumber, setPageNumber] = useState(1);
+  const [pageIndex] = useState(0);
   const [showFirstTimeModal, setShowFirstTimeModal] =
     useState<boolean>(isFirstDeck);
   const [showCalendly, setShowCalendly] = useState<boolean>(false);
@@ -234,12 +229,9 @@ function MyDecks() {
                     <DeckPreview
                       type="deckCreationPreview"
                       onClose={handleOnClosePitchDeckSlidePreview}
-                      pageNumber={pageNumber}
+                      pageIndex={pageIndex}
                       file={deck.deckUrl}
-                      options={options}
                       numPages={deck.slides}
-                      setPreviewPickDeckSlide={setPreviewPickDeckSlide}
-                      setPageNumber={setPageNumber}
                       deckId={null}
                     />
                   )}

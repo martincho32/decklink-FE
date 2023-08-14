@@ -1,21 +1,7 @@
-/* eslint-disable no-unsafe-optional-chaining */
 import { useEffect, useState } from 'react';
-import { pdfjs } from 'react-pdf';
-import type { PDFDocumentProxy } from 'pdfjs-dist';
 import { LineChart } from '../..'; // Replace this with the correct path to your LineChart component
 import { IDeck, IDeckSlidesStats, IDeckView } from '../../../types';
-// import DeckThumbnail from '../DeckThumbnail';
 import './DeckAverageStats.css';
-
-pdfjs.GlobalWorkerOptions.workerSrc = new URL(
-  'pdfjs-dist/build/pdf.worker.min.js',
-  import.meta.url
-).toString();
-
-// const options = {
-//   cMapUrl: 'cmaps/',
-//   standardFontDataUrl: 'standard_fonts/',
-// };
 
 interface Props {
   deck: Partial<IDeck> | null;
@@ -23,14 +9,14 @@ interface Props {
 }
 
 function DeckAverageStats({ deck, deckViews }: Props) {
-  const [numPages, setNumPages] = useState<number>(0);
-  const [pdfFile, setPdfFile] = useState<string | null>(null);
+  const [pdfFile, setPdfFile] = useState<string>('');
+
   useEffect(() => {
-    setPdfFile(deck?.deckUrl || null);
+    setPdfFile(deck?.deckUrl || '');
   }, [deck]);
 
   const labels = Array.from(
-    new Array(deck?.slides),
+    new Array(deck?.slides || 0),
     (_el, index) => `Slide ${index + 1}`
   );
 
@@ -47,9 +33,9 @@ function DeckAverageStats({ deck, deckViews }: Props) {
   labels?.forEach((_slideName, index) => {
     (Object.values(rawData!) as [][]).forEach((slide: IDeckSlidesStats[]) => {
       if (auxMockedData[index]) {
-        auxMockedData[index] += slide[index]?.viewingTime;
+        auxMockedData[index] += slide[index]?.viewingTime || 0;
       } else {
-        auxMockedData[index] = slide[index]?.viewingTime;
+        auxMockedData[index] = slide[index]?.viewingTime || 0;
       }
     });
   });
@@ -60,12 +46,6 @@ function DeckAverageStats({ deck, deckViews }: Props) {
     (totalMiliseconds) =>
       totalMiliseconds / 1000 / Object.values(rawData!).length
   );
-
-  const onDocumentLoadSuccess = ({
-    numPages: nextNumPages,
-  }: PDFDocumentProxy): void => {
-    setNumPages(nextNumPages);
-  };
 
   return (
     <div>
@@ -79,8 +59,6 @@ function DeckAverageStats({ deck, deckViews }: Props) {
             data={data}
             deck={deck}
             pdfFile={pdfFile}
-            onLoadSuccess={onDocumentLoadSuccess}
-            numPages={numPages}
           />
         </div>
       </div>

@@ -1,11 +1,32 @@
+/* eslint-disable react/no-unused-prop-types */
+/* eslint-disable no-nested-ternary */
+/* eslint-disable jsx-a11y/no-static-element-interactions */
 import { useContext, useEffect, useState } from 'react';
-import axios from 'axios';
 import {
-  Page,
-  Document,
-  Thumbnail,
-  // pdfjs,
-} from 'react-pdf'; /** File library */
+  MinimalButton,
+  ViewMode,
+  ScrollMode,
+  SpecialZoomLevel,
+  Viewer,
+  Worker,
+  PageChangeEvent,
+} from '@react-pdf-viewer/core';
+import {
+  RenderThumbnailItemProps,
+  ThumbnailDirection,
+  thumbnailPlugin,
+} from '@react-pdf-viewer/thumbnail';
+import {
+  NextIcon,
+  pageNavigationPlugin,
+  PreviousIcon,
+} from '@react-pdf-viewer/page-navigation';
+
+import '@react-pdf-viewer/core/lib/styles/index.css';
+import '@react-pdf-viewer/page-navigation/lib/styles/index.css';
+import '@react-pdf-viewer/default-layout/lib/styles/index.css';
+import '@react-pdf-viewer/thumbnail/lib/styles/index.css';
+import axios from 'axios';
 import { enqueueSnackbar } from 'notistack';
 // import { Helmet } from 'react-helmet-async';
 import './DeckPreview.css';
@@ -15,7 +36,8 @@ import AskEmailPassword from '../../AskEmailPassword';
 import { UIContext } from '@/context';
 import { deckService, deckViewService } from '@/services';
 import { IDeckSlidesStats } from '@/types';
-import Loading from '../../PreloadingScreen';
+// import Loading from '../../PreloadingScreen';
+
 // import { milisecondsToMinutesAndSeconds } from '@/utils';
 
 interface KeyboardEvent {
@@ -25,13 +47,10 @@ interface KeyboardEvent {
 export interface Props {
   type: 'deckCreationPreview' | 'deckUserPreview';
   onClose: () => void;
-  pageNumber: number;
+  pageIndex: number;
   file;
-  onDocumentLoadSuccess?;
-  options?;
-  numPages;
-  setPreviewPickDeckSlide;
-  setPageNumber?;
+  numPages?;
+  setPageIndex?;
   deckId: string | null;
   deckSlidesNumber?: number | null;
   userId?: string | null;
@@ -40,17 +59,21 @@ export interface Props {
 function DeckPreview({
   type,
   onClose,
-  pageNumber,
+  pageIndex,
   file,
-  onDocumentLoadSuccess,
-  options,
-  numPages,
-  setPreviewPickDeckSlide,
-  setPageNumber,
+  setPageIndex,
   deckId,
   deckSlidesNumber,
   userId,
 }: Props) {
+  const pageNavigationPluginInstance = pageNavigationPlugin();
+  const { jumpToNextPage, jumpToPreviousPage } = pageNavigationPluginInstance;
+
+  const thumbnailPluginInstance = thumbnailPlugin({
+    thumbnailWidth: 200,
+  });
+  const { Thumbnails } = thumbnailPluginInstance;
+
   const { isShowModal, setShowModal, hasPasswordRequired, hasEmailRequired } =
     useContext(UIContext);
   const [currentSlideStartTime, setCurrentSlideStartTime] = useState(0);
@@ -111,12 +134,8 @@ function DeckPreview({
         const currentTime = Date.now();
         const elapsedTime = currentTime - currentSlideStartTime;
         const auxSlidesStats = JSON.parse(JSON.stringify(slidesStats));
-        auxSlidesStats[pageNumber - 1].viewingTime += elapsedTime;
-        // console.log(
-        //   `El usuario ${userId} miró la slide ${pageNumber} durante ${
-        //     auxSlidesStats[pageNumber - 1].viewingTime
-        //   }`
-        // );
+        if (auxSlidesStats[pageIndex].viewingTime >= 120000) return; // Set the limit in 2 minutes
+        auxSlidesStats[pageIndex].viewingTime += elapsedTime;
         setSlidesStats([...auxSlidesStats]);
         setCurrentSlideStartTime(Date.now());
       }
@@ -133,25 +152,14 @@ function DeckPreview({
     window.location.href = 'https://tally.so/r/w2a4dM';
   };
 
-  const onPrev = () => {
-    updateSlideTime();
-    if (pageNumber > 1) {
-      setPageNumber(pageNumber - 1);
-    }
-  };
-
-  const onNext = () => {
-    updateSlideTime();
-    if (pageNumber !== numPages) {
-      setPageNumber(pageNumber + 1);
-    }
-  };
-
   const handleKeyDown = (event: KeyboardEvent) => {
+    if (event.key === 'ArrowLeft') {
+      updateSlideTime();
+      jumpToPreviousPage();
+    }
     if (event.key === 'ArrowRight') {
-      onNext();
-    } else if (event.key === 'ArrowLeft') {
-      onPrev();
+      updateSlideTime();
+      jumpToNextPage();
     }
   };
 
@@ -160,7 +168,7 @@ function DeckPreview({
     return () => {
       document.removeEventListener('keydown', handleKeyDown);
     };
-  }, [pageNumber]);
+  }, [pageIndex]);
 
   function initializeArrayOfSLidesStats(count): IDeckSlidesStats[] {
     const arrayOfEmptyObjects: { slideNumber: number; viewingTime: number }[] =
@@ -223,6 +231,9 @@ function DeckPreview({
           },
         }
       );
+
+      console.log(data);
+
       setShowModal(false);
       setDeckViewId(data._id);
       initializeCounting();
@@ -308,105 +319,188 @@ function DeckPreview({
     };
   }, [type]);
 
+  const renderThumbnailItem = (props: RenderThumbnailItemProps) => (
+    <div
+      key={props.pageIndex}
+      className="custom-thumbnail-item"
+      data-testid={`thumbnail-${props.pageIndex}`}
+      style={{
+        backgroundColor:
+          props.pageIndex === props.currentPage
+            ? 'rgb(241, 81, 27)'
+            : 'transparent',
+        cursor: 'pointer',
+        height: '100%',
+        marginRight: '1rem',
+      }}
+    >
+      <div style={{ margin: '0.25rem' }} onClick={props.onJumpToPage}>
+        {props.renderPageThumbnail}
+      </div>
+    </div>
+  );
+
+  const handlePageChange = (e: PageChangeEvent) => {
+    setPageIndex(e.currentPage);
+    updateSlideTime();
+  };
+
   return (
     <div
       id="container"
       role="button"
       tabIndex={0}
       onClick={handleOnClose}
-      className={`fixedContainer fixed overflow-y-scroll h-screen inset-0 bg-black bg-opacity-80 backdrop-blur-sm ${
-        type === 'deckUserPreview' ? 'p-2' : 'p-2'
-      }`}
+      className="fixed !h-full inset-0 bg-black bg-opacity-80 backdrop-blur-sm p-2"
     >
       <AskEmailPassword onSubmit={handleModalSubmit} />
-      {!isShowModal && (
-        <Document
-          file={file}
-          onLoadSuccess={onDocumentLoadSuccess}
-          options={options}
-          noData={<Loading />}
-          loading={<Loading />}
-          className={`document h-screen p-4 bg-mirage ${
-            type === 'deckCreationPreview' ? ' rounded-lg' : 'md:rounded-none'
-          }`}
-        >
+      {!isShowModal && type === 'deckCreationPreview' ? (
+        <div className="flex cursor-default flex-col gap-4 !w-full !h-full p-4 bg-mirage rounded-lg md:rounded-none justify-between">
           <div
-            className={`flex relative items-center gap-4 justify-center${
-              type === 'deckUserPreview'
-                ? ' max-w-full max-h-full w-auto h-auto'
-                : ''
-            }`}
+            style={{
+              display: 'flex',
+              height: '100%',
+              width: '100%',
+              flexDirection: 'column',
+            }}
           >
-            <Button
-              className={`${
-                type === 'deckCreationPreview' ? 'prev' : ''
-              } p-4 bg-white w-8 h-8 ${
-                pageNumber === 1 ? 'opacity-50 bg-transparent' : 'opacity-100'
-              }`}
-              type="button"
-              icon={<Logo color="#F1511B" topLeft />}
-              onClick={onPrev}
-              disabled={pageNumber === 1}
-            />
-
-            <Page
-              renderTextLayer={false}
-              renderAnnotationLayer={false}
-              className={`${
-                type === 'deckUserPreview'
-                  ? 'pageWrapperFullScreen'
-                  : 'pageWrapper'
-              }`}
-              pageNumber={pageNumber}
-              loading=""
-              noData=""
-            />
-
-            <Button
-              type="button"
-              icon={
-                <Logo
-                  color={pageNumber === numPages ? '#f1511b2e' : '#F1511B'}
-                />
-              }
-              className={`${
-                type === 'deckCreationPreview' ? 'next' : ''
-              } p-4 bg-white w-8 h-8 ${
-                pageNumber === numPages
-                  ? 'opacity-50 bg-transparent'
-                  : 'opacity-100'
-              }`}
-              onClick={onNext}
-              disabled={pageNumber === numPages}
-            />
             <div
-              className={`${
-                type === 'deckCreationPreview'
-                  ? 'counter absolute flex flex-row bottom-2 letf-auto right-auto p-2  rounded-md text-persimmon/80 text-s'
-                  : 'absolute flex flex-row bottom-2 letf-auto right-auto p-2  rounded-md text-persimmon/80 text-s'
-              }`}
+              style={{
+                height: '70%',
+                position: 'relative',
+              }}
             >
-              <p>{pageNumber}</p>
-              <p>/</p>
-              <p>{numPages}</p>
+              <div
+                className="prev"
+                style={{
+                  position: 'absolute',
+                  top: '50%',
+                  left: '3rem',
+                  transform: 'translate(0, -100%) rotate(-90deg)',
+                  zIndex: '1',
+                  background: '#fff',
+                  borderRadius: '4px',
+                }}
+              >
+                <MinimalButton onClick={jumpToPreviousPage}>
+                  <PreviousIcon />
+                </MinimalButton>
+              </div>
+              <Worker workerUrl="https://unpkg.com/pdfjs-dist@3.6.172/build/pdf.worker.min.js">
+                <Viewer
+                  onPageChange={handlePageChange}
+                  defaultScale={SpecialZoomLevel.PageFit}
+                  initialPage={pageIndex}
+                  scrollMode={ScrollMode.Page}
+                  viewMode={ViewMode.SinglePage}
+                  fileUrl={file}
+                  plugins={[
+                    pageNavigationPluginInstance,
+                    thumbnailPluginInstance,
+                  ]}
+                />
+              </Worker>
+              <div
+                className="next"
+                style={{
+                  position: 'absolute',
+                  top: '50%',
+                  right: '3rem',
+                  transform: 'translate(0, -100%) rotate(-90deg)',
+                  zIndex: '1',
+                  background: '#fff',
+                  borderRadius: '4px',
+                }}
+              >
+                <MinimalButton onClick={jumpToNextPage}>
+                  <NextIcon />
+                </MinimalButton>
+              </div>
+            </div>
+            <div
+              style={{
+                height: '30%',
+                overflow: 'auto',
+              }}
+            >
+              <Thumbnails
+                thumbnailDirection={ThumbnailDirection.Horizontal}
+                renderThumbnailItem={renderThumbnailItem}
+              />
             </div>
           </div>
-          {type === 'deckCreationPreview' && (
-            <div className="previewPagesWrapper">
-              {Array.from(new Array(numPages), (_el, index) => (
-                <Thumbnail
-                  onItemClick={() => {
-                    setPreviewPickDeckSlide(true);
-                    setPageNumber(index + 1);
-                  }}
-                  key={`page_${index + 1}`}
-                  pageNumber={index + 1}
-                  className="previewPageWrapper"
-                />
-              ))}
+        </div>
+      ) : !isShowModal && type === 'deckUserPreview' ? (
+        <div
+          id="deckUserPreview"
+          className="flex flex-col gap-4 !w-full !h-full p-4 bg-mirage rounded-lg md:rounded-none justify-between"
+        >
+          <div
+            style={{
+              display: 'flex',
+              height: '100%',
+              width: '100%',
+              flexDirection: 'column',
+            }}
+          >
+            <div
+              className="prev"
+              style={{
+                position: 'absolute',
+                top: '50%',
+                left: '3rem',
+                transform: 'translate(0, -100%) rotate(-90deg)',
+                zIndex: '1',
+                background: '#fff',
+                borderRadius: '4px',
+              }}
+            >
+              <MinimalButton onClick={jumpToPreviousPage}>
+                <PreviousIcon />
+              </MinimalButton>
             </div>
-          )}
-        </Document>
+            <div
+              className="deckUserPreview"
+              style={{
+                height: '100%',
+                position: 'relative',
+              }}
+            >
+              <Worker workerUrl="https://unpkg.com/pdfjs-dist@3.6.172/build/pdf.worker.min.js">
+                <Viewer
+                  onPageChange={handlePageChange}
+                  initialPage={pageIndex}
+                  defaultScale={SpecialZoomLevel.PageFit}
+                  scrollMode={ScrollMode.Page}
+                  viewMode={ViewMode.SinglePage}
+                  fileUrl={file}
+                  plugins={[
+                    pageNavigationPluginInstance,
+                    thumbnailPluginInstance,
+                  ]}
+                />
+              </Worker>
+            </div>
+            <div
+              className="next"
+              style={{
+                position: 'absolute',
+                top: '50%',
+                right: '3rem',
+                transform: 'translate(0, -100%) rotate(-90deg)',
+                zIndex: '1',
+                background: '#fff',
+                borderRadius: '4px',
+              }}
+            >
+              <MinimalButton onClick={jumpToNextPage}>
+                <NextIcon />
+              </MinimalButton>
+            </div>
+          </div>
+        </div>
+      ) : (
+        <div>Something went wrong, please contact support</div>
       )}
 
       {type === 'deckUserPreview' && (

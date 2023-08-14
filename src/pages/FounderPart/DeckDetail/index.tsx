@@ -21,7 +21,6 @@ function DeclkDetail() {
   const isLoading = useLoading(async () => {
     if (!id) {
       // TODO Handle this, maybe use Snackbar to show error
-      console.error('Error: There is no deck id to get.');
       navigate('/founder/decks');
     } else {
       try {
