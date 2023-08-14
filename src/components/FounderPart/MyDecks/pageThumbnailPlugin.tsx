@@ -16,9 +16,13 @@ export const pageThumbnailPlugin = (
       slot.children = PageThumbnail;
 
       // Reset the sub slot
-      slot.subSlot.attrs = {};
-      // eslint-disable-next-line react/jsx-no-useless-fragment
-      slot.subSlot.children = <></>;
+      if (slot.subSlot) {
+        slot.subSlot.attrs = {};
+        // eslint-disable-next-line react/jsx-no-useless-fragment
+        slot.subSlot.children = <></>;
+      } else {
+        console.log('slot.subSlot is undefined');
+      }
 
       return slot;
     },
