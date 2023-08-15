@@ -21,10 +21,6 @@ export default function Popup({ isOpen, onClose, children }: PopupProps) {
     }
   };
 
-  if (!isOpen) {
-    return null;
-  }
-
   return (
     <div
       id="container"
