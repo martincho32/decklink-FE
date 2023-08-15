@@ -519,7 +519,7 @@ function DeckPreview({
               type="button"
               text="Download Deck"
               icon={<Logo color="white" />}
-              className="bg-persimmon text-white fixed bottom-4 right-[15%]  py-3 px-3"
+              className="bg-persimmon text-white fixed bottom-4 left-[5%]  py-3 px-3"
               textColor="#FFF"
               onClick={props.onClick}
             />
