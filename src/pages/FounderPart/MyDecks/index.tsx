@@ -29,13 +29,15 @@ import useLoading from '../../../hooks/useLoading';
 import { AuthContext } from '@/context';
 import Popup from '@/components/UI/Popup';
 import CalendlyIntegration from '@/components/CalendlyIntegration';
+import { useLocalStorage } from '@/hooks/useLocalStorage';
 
 function MyDecks() {
   const location = useLocation();
+  const { getItem, setItem } = useLocalStorage();
   const isFirstDeck = location.state?.isFirstDeck;
   const [previewPickDeckSlide, setPreviewPickDeckSlide] = useState(false);
   const [pageIndex, setPageIndex] = useState(0);
-  const [showFirstTimeModal, setShowFirstTimeModal] =
+  const [showFreePitchDeckModal, setShowFreePitchDeckModal] =
     useState<boolean>(isFirstDeck);
   const [showCalendly, setShowCalendly] = useState<boolean>(false);
 
@@ -74,6 +76,27 @@ function MyDecks() {
     }
   };
 
+  function checkIfShowFreePitchDeckModal(data: IDeck[]) {
+    const localStorageShowModal = JSON.parse(
+      getItem('showFreePitchDeckModal')! ?? true
+    );
+    if (
+      (!!data.length && data.length % 5 === 0 && !!localStorageShowModal) ||
+      (isFirstDeck && !!localStorageShowModal)
+    ) {
+      setShowFreePitchDeckModal(true);
+    } else {
+      setShowFreePitchDeckModal(false);
+    }
+  }
+
+  function handleOnCloseModal() {
+    document.body.style.overflow = 'auto';
+    setShowFreePitchDeckModal(false);
+    setShowCalendly(false);
+    setItem('showFreePitchDeckModal', JSON.stringify(false));
+  }
+
   // Use the useLoading hook with the actual backend request function
   const isLoading = useLoading(() => {
     return deckService
@@ -84,7 +107,7 @@ function MyDecks() {
       })
       .then(({ data }) => {
         setDeckList(data);
-        if (data.length % 5 === 0) setShowFirstTimeModal(true);
+        checkIfShowFreePitchDeckModal(data);
       })
       .catch(() => {
         enqueueSnackbar(`Couldn't load decks. Please contact support.`, {
@@ -99,11 +122,11 @@ function MyDecks() {
   });
 
   useEffect(() => {
-    if (showFirstTimeModal) {
+    if (showFreePitchDeckModal) {
       document.body.style.overflow = 'hidden';
     }
     document.body.style.overflow = 'auto';
-  }, [showFirstTimeModal, showCalendly]);
+  }, [showFreePitchDeckModal, showCalendly]);
 
   const cards = [
     {
@@ -124,12 +147,11 @@ function MyDecks() {
     <Loading />
   ) : (
     <>
-      {showFirstTimeModal && (
+      {showFreePitchDeckModal && (
         <Popup
           isOpen
           onClose={() => {
-            document.body.style.overflow = 'auto';
-            setShowFirstTimeModal(false);
+            handleOnCloseModal();
           }}
         >
           <div className="">
@@ -171,7 +193,7 @@ function MyDecks() {
               backgroundColor="#F1511B"
               textColor="#FFF"
               onClick={() => {
-                setShowFirstTimeModal(false);
+                setShowFreePitchDeckModal(false);
                 setShowCalendly(true);
               }}
               className="py-3 w-full mx-auto relative z-10"
@@ -183,8 +205,7 @@ function MyDecks() {
         <Popup
           isOpen={showCalendly}
           onClose={() => {
-            document.body.style.overflow = 'auto';
-            setShowCalendly(false);
+            handleOnCloseModal();
           }}
         >
           <div className="">
