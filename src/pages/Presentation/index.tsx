@@ -1,11 +1,11 @@
 import { useContext, useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useSnackbar } from 'notistack';
-import { Helmet } from 'react-helmet-async';
 import { DeckPreview, MainLayout } from '@/components';
 import { deckService } from '../../services';
 import { UIContext } from '@/context';
 import Loading from '../../components/PreloadingScreen';
+import SEO from '@/components/SEO';
 
 function Presentation() {
   const { setShowModal, setRequireEmail, setRequirePassword } =
@@ -71,13 +71,12 @@ function Presentation() {
 
   return (
     <MainLayout>
-      <Helmet>
-        <title>Learning React Helmet!</title>
-        <meta
-          name="description"
-          content="Beginner friendly page for learning React Helmet."
-        />
-      </Helmet>
+      <SEO
+        title="Learning React Helmet!"
+        description="Beginner friendly page for learning React Helmet."
+        name="Company name."
+        type="article"
+      />
       {deckFile ? ( // Check if deckFile is truthy
         <DeckPreview
           file={deckFile}
