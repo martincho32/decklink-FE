@@ -84,6 +84,7 @@ function MyDecks() {
       })
       .then(({ data }) => {
         setDeckList(data);
+        if (data.length % 5 === 0) setShowFirstTimeModal(true);
       })
       .catch(() => {
         enqueueSnackbar(`Couldn't load decks. Please contact support.`, {
@@ -102,7 +103,7 @@ function MyDecks() {
       document.body.style.overflow = 'hidden';
     }
     document.body.style.overflow = 'auto';
-  }, [showFirstTimeModal]);
+  }, [showFirstTimeModal, showCalendly]);
 
   const cards = [
     {
@@ -178,7 +179,7 @@ function MyDecks() {
           </div>
         </Popup>
       )}
-      {showCalendly && (
+      {/* {showCalendly && (
         <Popup
           isOpen
           onClose={() => {
@@ -190,7 +191,20 @@ function MyDecks() {
             <CalendlyIntegration />
           </div>
         </Popup>
-      )}
+      )} */}
+      <div className={`${showCalendly ? 'block' : 'hidden'}`}>
+        <Popup
+          isOpen
+          onClose={() => {
+            document.body.style.overflow = 'auto';
+            setShowCalendly(false);
+          }}
+        >
+          <div className="">
+            <CalendlyIntegration />
+          </div>
+        </Popup>
+      </div>
       <MainLayout>
         {/* Display the loading screen if the backend request is still loading */}
         {!!deckList.length ? (
