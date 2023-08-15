@@ -316,16 +316,16 @@ function DeckPreview({
     }
   }, [deckSlidesNumber]);
 
-  useEffect(() => {
-    if (type === 'deckUserPreview') {
-      document.title = deckName;
-    }
+  // useEffect(() => {
+  //   if (type === 'deckUserPreview') {
+  //     document.title = deckName;
+  //   }
 
-    // Cleanup function to reset the document title when the component unmounts
-    return () => {
-      document.title = 'Fundraisingtoolbox'; // Replace with default tab name
-    };
-  }, [type]);
+  //   // Cleanup function to reset the document title when the component unmounts
+  //   return () => {
+  //     document.title = 'Fundraisingtoolbox'; // Replace with default tab name
+  //   };
+  // }, [type]);
 
   const renderThumbnailItem = (props: RenderThumbnailItemProps) => (
     <div
