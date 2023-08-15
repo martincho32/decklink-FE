@@ -54,6 +54,7 @@ export interface Props {
   deckId: string | null;
   deckSlidesNumber?: number | null;
   userId?: string | null;
+  deckDownloadUrl?: string | null;
 }
 
 function DeckPreview({
@@ -65,6 +66,7 @@ function DeckPreview({
   deckId,
   deckSlidesNumber,
   userId,
+  deckDownloadUrl,
 }: Props) {
   const pageNavigationPluginInstance = pageNavigationPlugin();
   const { jumpToNextPage, jumpToPreviousPage } = pageNavigationPluginInstance;
@@ -345,6 +347,15 @@ function DeckPreview({
     updateSlideTime();
   };
 
+  const handleDownload = () => {
+    const link = document.createElement('a');
+    link.download = 'download-PDF-file';
+
+    link.href = deckDownloadUrl!;
+
+    link.click();
+  };
+
   return (
     <div
       id="container"
@@ -503,13 +514,23 @@ function DeckPreview({
         <div>Something went wrong, please contact support</div>
       )}
 
+      {type === 'deckUserPreview' && deckDownloadUrl && (
+        <Button
+          type="button"
+          text="Download Deck"
+          icon={<Logo color="white" />}
+          className="bg-persimmon text-white fixed bottom-4 right-[15%]  py-3 px-3"
+          textColor="#FFF"
+          onClick={handleDownload}
+        />
+      )}
+
       {type === 'deckUserPreview' && (
         <Button
           type="button"
           text="Join DeckLink"
           icon={<Logo color="white" />}
           className="bg-persimmon/25 text-white fixed bottom-4 right-[7%]  py-3 px-3"
-          // backgroundColor="#F1511B"
           textColor="#FFF"
           onClick={onSaveDeck}
         />
