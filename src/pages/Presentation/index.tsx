@@ -72,9 +72,9 @@ function Presentation() {
   return (
     <MainLayout>
       <SEO
-        title="Learning React Helmet!"
-        description="Beginner friendly page for learning React Helmet."
-        name="Company name."
+        title="DeckLink presentation Page!!"
+        description="Friendly page for sharing deck links."
+        name="DeckLink."
         type="article"
       />
       {deckFile ? ( // Check if deckFile is truthy
