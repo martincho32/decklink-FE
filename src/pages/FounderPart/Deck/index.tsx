@@ -432,7 +432,7 @@ function Deck({ title = 'Create', deckId }: Props) {
               ) : (
                 <Button
                   icon={<Logo color="white" />}
-                  type="submit"
+                  type="button"
                   text={title}
                   backgroundColor="#F1511B"
                   textColor="#ffffff"
