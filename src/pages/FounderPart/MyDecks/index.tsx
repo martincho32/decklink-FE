@@ -34,7 +34,7 @@ function MyDecks() {
   const location = useLocation();
   const isFirstDeck = location.state?.isFirstDeck;
   const [previewPickDeckSlide, setPreviewPickDeckSlide] = useState(false);
-  const [pageIndex] = useState(0);
+  const [pageIndex, setPageIndex] = useState(0);
   const [showFirstTimeModal, setShowFirstTimeModal] =
     useState<boolean>(isFirstDeck);
   const [showCalendly, setShowCalendly] = useState<boolean>(false);
@@ -233,6 +233,7 @@ function MyDecks() {
                       file={deck.deckUrl}
                       numPages={deck.slides}
                       deckId={null}
+                      setPageIndex={setPageIndex}
                     />
                   )}
                 </React.Fragment>
