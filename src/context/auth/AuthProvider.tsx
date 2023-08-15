@@ -21,6 +21,7 @@ export function AuthProvider({ children }: PropsWithChildren) {
 
   const logoutUser = () => {
     removeItem('token');
+    removeItem('showFreePitchDeckModal');
     dispatch({
       type: '[Auth] - Logout',
     });
