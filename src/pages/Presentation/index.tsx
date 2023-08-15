@@ -1,6 +1,7 @@
 import { useContext, useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useSnackbar } from 'notistack';
+import { Helmet } from 'react-helmet-async';
 import { DeckPreview, MainLayout } from '@/components';
 import { deckService } from '../../services';
 import { UIContext } from '@/context';
@@ -70,6 +71,13 @@ function Presentation() {
 
   return (
     <MainLayout>
+      <Helmet>
+        <title>Learning React Helmet!</title>
+        <meta
+          name="description"
+          content="Beginner friendly page for learning React Helmet."
+        />
+      </Helmet>
       {deckFile ? ( // Check if deckFile is truthy
         <DeckPreview
           file={deckFile}
