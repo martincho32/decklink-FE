@@ -13,6 +13,7 @@ function SEO({ title, description, name, type }: Props) {
       {/* Standard metadata tags */}
       <title>{title}</title>
       <meta name="description" content={description} />
+      <link rel="canonical" href="https://www.tacobell.com/" />
       {/* End standard metadata tags */}
       {/* Facebook tags */}
       <meta property="og:type" content={type} />
