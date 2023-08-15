@@ -18,6 +18,7 @@ function Presentation() {
   const [deckId, setDeckId] = useState<string | null>(null);
   const [deckSlidesNumber, setDeckSlidesNumber] = useState<number | null>(null);
   const [userId, setUserId] = useState<string | null>(null);
+  const [deckDownloadURL, setDeckDownloadURL] = useState<string | null>(null);
 
   useEffect(() => {
     if (!customDeckLink) {
@@ -59,6 +60,7 @@ function Presentation() {
           setRequirePassword(data.requestPassword);
           setDeckSlidesNumber(data.slides);
           setUserId(data.userId);
+          if (data.isDownloadable) setDeckDownloadURL(data.deckUrl);
         })
         .catch((error) => {
           console.error('Presentation page error: ', error.message);
@@ -78,6 +80,7 @@ function Presentation() {
           deckId={deckId}
           deckSlidesNumber={deckSlidesNumber}
           userId={userId}
+          deckDownloadUrl={deckDownloadURL}
         />
       ) : (
         <Loading />

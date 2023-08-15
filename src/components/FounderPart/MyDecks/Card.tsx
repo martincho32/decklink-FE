@@ -1,6 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
 import { useSnackbar } from 'notistack';
-// import { Page, Document } from 'react-pdf'; /** File library */
 import { Viewer, Worker } from '@react-pdf-viewer/core';
 import '@react-pdf-viewer/default-layout/lib/styles/index.css';
 

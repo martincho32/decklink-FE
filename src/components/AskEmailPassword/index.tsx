@@ -58,7 +58,6 @@ function AskEmailPassword({ onSubmit }: AskEmailPasswordProps) {
 
   const handleFormSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    console.log('handleFormSubmit????');
 
     setEnteredEmailTouched(true);
     setEnteredPasswordTouched(true);

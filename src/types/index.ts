@@ -23,6 +23,7 @@ export interface IDeck {
   customDeckLink: string;
   requestEmail: boolean;
   requestPassword: boolean;
+  isDownloadable: boolean;
   password: string;
   slides: number;
   userId: string;
