@@ -10,6 +10,7 @@ import {
   Viewer,
   Worker,
   PageChangeEvent,
+  OpenFile,
 } from '@react-pdf-viewer/core';
 import {
   RenderThumbnailItemProps,
@@ -21,6 +22,7 @@ import {
   pageNavigationPlugin,
   PreviousIcon,
 } from '@react-pdf-viewer/page-navigation';
+import { getFilePlugin, RenderDownloadProps } from '@react-pdf-viewer/get-file';
 
 import '@react-pdf-viewer/core/lib/styles/index.css';
 import '@react-pdf-viewer/page-navigation/lib/styles/index.css';
@@ -54,6 +56,7 @@ export interface Props {
   deckId: string | null;
   deckSlidesNumber?: number | null;
   userId?: string | null;
+  deckDownloadUrl?: string | null;
 }
 
 function DeckPreview({
@@ -65,10 +68,10 @@ function DeckPreview({
   deckId,
   deckSlidesNumber,
   userId,
+  deckDownloadUrl,
 }: Props) {
   const pageNavigationPluginInstance = pageNavigationPlugin();
   const { jumpToNextPage, jumpToPreviousPage } = pageNavigationPluginInstance;
-
   const thumbnailPluginInstance = thumbnailPlugin({
     thumbnailWidth: 200,
   });
@@ -80,6 +83,16 @@ function DeckPreview({
   const [isPageActive, setIsPageActive] = useState(true);
   const [slidesStats, setSlidesStats] = useState<IDeckSlidesStats[]>([]);
   const [deckViewId, setDeckViewId] = useState<string | null>(null);
+
+  const urlParts = window.location.pathname.split('/');
+  const deckName = urlParts[urlParts.length - 1];
+
+  const getFilePluginInstance = getFilePlugin({
+    fileNameGenerator: (pdfFile: OpenFile) => {
+      return deckName ?? pdfFile;
+    },
+  });
+  const { Download } = getFilePluginInstance;
 
   const handleError = (error: Error | string) => {
     let errorMessage: string = 'Whoops! Something went wrong. Error: ';
@@ -232,8 +245,6 @@ function DeckPreview({
         }
       );
 
-      console.log(data);
-
       setShowModal(false);
       setDeckViewId(data._id);
       initializeCounting();
@@ -304,9 +315,6 @@ function DeckPreview({
         });
     }
   }, [deckSlidesNumber]);
-
-  const urlParts = window.location.pathname.split('/');
-  const deckName = urlParts[urlParts.length - 1];
 
   useEffect(() => {
     if (type === 'deckUserPreview') {
@@ -477,6 +485,7 @@ function DeckPreview({
                   plugins={[
                     pageNavigationPluginInstance,
                     thumbnailPluginInstance,
+                    getFilePluginInstance,
                   ]}
                 />
               </Worker>
@@ -503,13 +512,27 @@ function DeckPreview({
         <div>Something went wrong, please contact support</div>
       )}
 
+      {type === 'deckUserPreview' && deckDownloadUrl && (
+        <Download>
+          {(props: RenderDownloadProps) => (
+            <Button
+              type="button"
+              text="Download Deck"
+              icon={<Logo color="white" />}
+              className="bg-persimmon text-white fixed bottom-4 left-[5%]  py-3 px-3"
+              textColor="#FFF"
+              onClick={props.onClick}
+            />
+          )}
+        </Download>
+      )}
+
       {type === 'deckUserPreview' && (
         <Button
           type="button"
           text="Join DeckLink"
           icon={<Logo color="white" />}
           className="bg-persimmon/25 text-white fixed bottom-4 right-[7%]  py-3 px-3"
-          // backgroundColor="#F1511B"
           textColor="#FFF"
           onClick={onSaveDeck}
         />
