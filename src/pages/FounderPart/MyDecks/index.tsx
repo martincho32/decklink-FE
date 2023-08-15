@@ -181,7 +181,7 @@ function MyDecks() {
       )}
       <div className={`${showCalendly ? 'block' : 'hidden'}`}>
         <Popup
-          isOpen
+          isOpen={showCalendly}
           onClose={() => {
             document.body.style.overflow = 'auto';
             setShowCalendly(false);
