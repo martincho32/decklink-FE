@@ -10,6 +10,7 @@ import {
   Viewer,
   Worker,
   PageChangeEvent,
+  OpenFile,
 } from '@react-pdf-viewer/core';
 import {
   RenderThumbnailItemProps,
@@ -21,6 +22,7 @@ import {
   pageNavigationPlugin,
   PreviousIcon,
 } from '@react-pdf-viewer/page-navigation';
+import { getFilePlugin, RenderDownloadProps } from '@react-pdf-viewer/get-file';
 
 import '@react-pdf-viewer/core/lib/styles/index.css';
 import '@react-pdf-viewer/page-navigation/lib/styles/index.css';
@@ -70,7 +72,6 @@ function DeckPreview({
 }: Props) {
   const pageNavigationPluginInstance = pageNavigationPlugin();
   const { jumpToNextPage, jumpToPreviousPage } = pageNavigationPluginInstance;
-
   const thumbnailPluginInstance = thumbnailPlugin({
     thumbnailWidth: 200,
   });
@@ -82,6 +83,16 @@ function DeckPreview({
   const [isPageActive, setIsPageActive] = useState(true);
   const [slidesStats, setSlidesStats] = useState<IDeckSlidesStats[]>([]);
   const [deckViewId, setDeckViewId] = useState<string | null>(null);
+
+  const urlParts = window.location.pathname.split('/');
+  const deckName = urlParts[urlParts.length - 1];
+
+  const getFilePluginInstance = getFilePlugin({
+    fileNameGenerator: (pdfFile: OpenFile) => {
+      return deckName ?? pdfFile;
+    },
+  });
+  const { Download } = getFilePluginInstance;
 
   const handleError = (error: Error | string) => {
     let errorMessage: string = 'Whoops! Something went wrong. Error: ';
@@ -234,8 +245,6 @@ function DeckPreview({
         }
       );
 
-      console.log(data);
-
       setShowModal(false);
       setDeckViewId(data._id);
       initializeCounting();
@@ -307,9 +316,6 @@ function DeckPreview({
     }
   }, [deckSlidesNumber]);
 
-  const urlParts = window.location.pathname.split('/');
-  const deckName = urlParts[urlParts.length - 1];
-
   useEffect(() => {
     if (type === 'deckUserPreview') {
       document.title = deckName;
@@ -345,15 +351,6 @@ function DeckPreview({
   const handlePageChange = (e: PageChangeEvent) => {
     setPageIndex(e.currentPage);
     updateSlideTime();
-  };
-
-  const handleDownload = () => {
-    const link = document.createElement('a');
-    link.download = 'download-PDF-file';
-
-    link.href = deckDownloadUrl!;
-
-    link.click();
   };
 
   return (
@@ -488,6 +485,7 @@ function DeckPreview({
                   plugins={[
                     pageNavigationPluginInstance,
                     thumbnailPluginInstance,
+                    getFilePluginInstance,
                   ]}
                 />
               </Worker>
@@ -515,14 +513,18 @@ function DeckPreview({
       )}
 
       {type === 'deckUserPreview' && deckDownloadUrl && (
-        <Button
-          type="button"
-          text="Download Deck"
-          icon={<Logo color="white" />}
-          className="bg-persimmon text-white fixed bottom-4 right-[15%]  py-3 px-3"
-          textColor="#FFF"
-          onClick={handleDownload}
-        />
+        <Download>
+          {(props: RenderDownloadProps) => (
+            <Button
+              type="button"
+              text="Download Deck"
+              icon={<Logo color="white" />}
+              className="bg-persimmon text-white fixed bottom-4 right-[15%]  py-3 px-3"
+              textColor="#FFF"
+              onClick={props.onClick}
+            />
+          )}
+        </Download>
       )}
 
       {type === 'deckUserPreview' && (
