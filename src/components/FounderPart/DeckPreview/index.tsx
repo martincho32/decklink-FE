@@ -359,7 +359,7 @@ function DeckPreview({
       role="button"
       tabIndex={0}
       onClick={handleOnClose}
-      className="fixed !h-full inset-0 bg-black bg-opacity-80 backdrop-blur-sm p-2"
+      className="fixed !h-full inset-0 bg-black bg-opacity-80 backdrop-blur-sm p-2 z-10"
     >
       <AskEmailPassword onSubmit={handleModalSubmit} />
       {!isShowModal && type === 'deckCreationPreview' ? (
