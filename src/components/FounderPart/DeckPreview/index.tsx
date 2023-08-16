@@ -162,7 +162,8 @@ function DeckPreview({
   };
 
   const onSaveDeck = () => {
-    window.location.href = 'https://tally.so/r/w2a4dM';
+    const websiteUrl = 'https://tally.so/r/w2a4dM';
+    window.open(websiteUrl, '_blank');
   };
 
   const handleKeyDown = (event: KeyboardEvent) => {
