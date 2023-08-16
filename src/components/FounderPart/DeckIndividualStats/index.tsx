@@ -21,12 +21,10 @@ interface Props {
 }
 
 interface IDeckViewNew extends IDeckView {
-  repeated: number;
+  repeated?: number;
 }
 
 function DeckIndividualStats({ deck, deckViews }: Props) {
-  console.log(deckViews);
-
   // Step 1: Group objects by viewerEmail
   const groupedData: Map<string | null | undefined, IDeckViewNew[]> = new Map();
   const combinedData: IDeckViewNew[] = [];
@@ -34,7 +32,7 @@ function DeckIndividualStats({ deck, deckViews }: Props) {
 
   deckViews?.forEach((obj) => {
     const { viewerEmail } = obj;
-    if (viewerEmail !== null && viewerEmail !== undefined) {
+    if (viewerEmail) {
       if (!groupedData.has(viewerEmail)) {
         groupedData.set(viewerEmail, []);
       }
@@ -69,8 +67,6 @@ function DeckIndividualStats({ deck, deckViews }: Props) {
     };
     combinedData.push(combinedObject);
   });
-
-  console.log(combinedData);
 
   const labels = Array.from(
     new Array(deck?.slides),
