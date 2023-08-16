@@ -12,7 +12,7 @@ function SEO({ title, description, name, type }: Props) {
     <div>
       <Helmet>
         {/* Standard metadata tags */}
-        <title>Some hardCoded data!</title>
+        <title>{title}</title>
         <meta name="description" content={description} />
         {/* End standard metadata tags */}
         {/* Facebook tags */}
