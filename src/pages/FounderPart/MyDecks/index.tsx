@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useContext, useEffect, useState } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { useSnackbar } from 'notistack';
 import { v4 as uuidv4 } from 'uuid';
 import {
@@ -32,13 +32,11 @@ import CalendlyIntegration from '@/components/CalendlyIntegration';
 import { useLocalStorage } from '@/hooks/useLocalStorage';
 
 function MyDecks() {
-  const location = useLocation();
   const { getItem, setItem } = useLocalStorage();
-  const isFirstDeck = location.state?.isFirstDeck;
   const [previewPickDeckSlide, setPreviewPickDeckSlide] = useState(false);
   const [pageIndex, setPageIndex] = useState(0);
   const [showFreePitchDeckModal, setShowFreePitchDeckModal] =
-    useState<boolean>(isFirstDeck);
+    useState<boolean>(false);
   const [showCalendly, setShowCalendly] = useState<boolean>(false);
 
   const handleOnClosePitchDeckSlidePreview = () => {
@@ -76,14 +74,11 @@ function MyDecks() {
     }
   };
 
-  function checkIfShowFreePitchDeckModal(data: IDeck[]) {
+  function checkIfShowFreePitchDeckModal() {
     const localStorageShowModal = JSON.parse(
       getItem('showFreePitchDeckModal')! ?? true
     );
-    if (
-      (!!data.length && data.length % 5 === 0 && !!localStorageShowModal) ||
-      (isFirstDeck && !!localStorageShowModal)
-    ) {
+    if (!!localStorageShowModal) {
       setShowFreePitchDeckModal(true);
     } else {
       setShowFreePitchDeckModal(false);
@@ -107,7 +102,7 @@ function MyDecks() {
       })
       .then(({ data }) => {
         setDeckList(data);
-        checkIfShowFreePitchDeckModal(data);
+        checkIfShowFreePitchDeckModal();
       })
       .catch(() => {
         enqueueSnackbar(`Couldn't load decks. Please contact support.`, {
@@ -224,6 +219,9 @@ function MyDecks() {
               <Link
                 className={`${styles.link} hover:no-underline`}
                 to="/founder/deck/create"
+                state={{
+                  deckListLength: deckList.length,
+                }}
               >
                 <Button
                   type="button"
@@ -270,6 +268,9 @@ function MyDecks() {
               <Link
                 className={`${styles.link} hover:no-underline`}
                 to="/founder/deck/create"
+                state={{
+                  deckListLength: deckList.length,
+                }}
               >
                 <Button
                   type="button"
