@@ -1,6 +1,6 @@
 /* eslint-disable no-nested-ternary */
 import { useContext, useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import {
   Viewer,
   Worker,
@@ -27,6 +27,7 @@ import EmptyDeckPreview from '../../../components/FounderPart/DeckPreview/EmptyD
 import { deckService } from '../../../services';
 import Loading from '../../../components/PreloadingScreen';
 import { AuthContext } from '@/context';
+import { useLocalStorage } from '@/hooks/useLocalStorage';
 
 type PDFFile = string | File | null;
 
@@ -34,6 +35,10 @@ export interface Props {
   title: string;
   deckId?: string;
 }
+
+const deckAmountBeforeShowFreePitchDeckModal = [
+  0, 4, 9, 14, 19, 24, 29, 34, 39,
+];
 
 function Deck({ title = 'Create', deckId }: Props) {
   const scrollModePluginInstance = scrollModePlugin();
@@ -50,8 +55,7 @@ function Deck({ title = 'Create', deckId }: Props) {
       width: size.width + 5,
     }),
   };
-
-  const { user } = useContext(AuthContext);
+  const location = useLocation();
   const { validateToken } = useContext(AuthContext);
   const [deckFile, setDeckFile] = useState<PDFFile>(null);
   const [finalDeckUrl, setFinalDeckUrl] = useState<string>();
@@ -85,9 +89,7 @@ function Deck({ title = 'Create', deckId }: Props) {
   const [fileInputErrorMessage, setFileInputErrorMessage] = useState(
     'You need to add a PDF file'
   );
-
-  // const [progress, setProgress] = useState({ started: false, pc: 0 });
-  // const [msg, setMsg] = useState<string | null>(null);
+  const { setItem } = useLocalStorage();
 
   const handleOnClosePitchDeckSlidePreview = () => {
     document.body.style.overflow = 'auto';
@@ -275,9 +277,15 @@ function Deck({ title = 'Create', deckId }: Props) {
           horizontal: 'right',
         },
       });
-      navigate('/founder/decks', {
-        state: { isFirstDeck: !user?.hasCreatedDeck },
-      });
+
+      if (
+        deckAmountBeforeShowFreePitchDeckModal.includes(
+          location.state.deckListLength
+        )
+      ) {
+        setItem('showFreePitchDeckModal', JSON.stringify(true));
+      }
+      navigate('/founder/decks');
 
       setDeckName('');
       setEnteredDeckNameTouched(false);
