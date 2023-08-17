@@ -519,7 +519,11 @@ function DeckPreview({
             <Button
               type="button"
               text="Download Deck"
-              icon={<Logo color="white" />}
+              icon={
+                <div className="rotate-[135deg]">
+                  <Logo color="white" />
+                </div>
+              }
               className="bg-persimmon text-white fixed bottom-4 left-[5%]  py-3 px-3"
               textColor="#FFF"
               onClick={props.onClick}
