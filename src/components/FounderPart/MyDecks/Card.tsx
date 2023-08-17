@@ -150,14 +150,19 @@ function Card({ deck, handleClickDelete, onClick }: Props) {
               tabIndex={0}
               onMouseEnter={handleMouseEnter}
               onMouseLeave={handleMouseLeave}
-              onClick={handleCopyClick}
-              className={`${styles.buttonContainer} flex w-full gap-1 p-2 bg-gray-200 rounded justify-between`}
+              className={`${styles.buttonContainer}`}
             >
-              <p className="break-all max-w-[12rem] truncate">{`fundraisingtoolbox.io/preview/${deck?.customDeckLink}`}</p>
-              <img src={copyIcon} alt="" />
+              <Button
+                type="button"
+                text="Copy Link"
+                icon={<img src={copyIcon} alt="" />}
+                textColor="#F1511B"
+                className="min-w-max"
+                onClick={handleCopyClick}
+              />
               {isPopupVisible && (
                 <div
-                  className={styles.popup}
+                  className={`${styles.popup}`}
                 >{`fundraisingtoolbox.io/preview/${deck?.customDeckLink}`}</div>
               )}
             </div>
