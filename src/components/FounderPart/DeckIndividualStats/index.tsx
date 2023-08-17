@@ -1,4 +1,3 @@
-import { pdfjs } from 'react-pdf';
 import { AccordionTopContent, LineChart } from '../..';
 import { IDeck, IDeckView } from '../../../types';
 import {
@@ -9,11 +8,7 @@ import {
 } from '@/components/UI/Accordion';
 import './DeckIndividualStats.css';
 import { getTotalViewingTime } from '@/utils';
-
-pdfjs.GlobalWorkerOptions.workerSrc = new URL(
-  'pdfjs-dist/build/pdf.worker.min.js',
-  import.meta.url
-).toString();
+import Button from '../../UI/Button';
 
 interface Props {
   deck: Partial<IDeck> | null;
@@ -73,8 +68,39 @@ function DeckIndividualStats({ deck, deckViews }: Props) {
     (_el, index) => `Slide ${index + 1}`
   );
 
+  const downloadWiewersEmail = () => {
+    try {
+      const viewersEmailsArray: string[] = [];
+      groupedData.forEach((_group, viewerEmail) => {
+        viewersEmailsArray.push(viewerEmail!);
+      });
+      const blob = new Blob([viewersEmailsArray.join('\n')], {
+        type: 'text/plain',
+      });
+      const url = URL.createObjectURL(blob);
+
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'viewers-email.txt';
+      a.click();
+
+      URL.revokeObjectURL(url);
+    } catch (error) {
+      console.error('Error while downloading viewers email');
+    }
+  };
+
   return (
     <>
+      <div className="flex justify-center mobileh:justify-start">
+        <Button
+          id="download-btn"
+          type="button"
+          text="Download viewers email"
+          className="bg-persimmon p-2 rounded text-white"
+          onClick={downloadWiewersEmail}
+        />
+      </div>
       <div
         className={`flex flex-col items-center ${
           !!combinedData?.length ? 'block' : 'hidden'
