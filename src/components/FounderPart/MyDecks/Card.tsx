@@ -185,12 +185,12 @@ function Card({ deck, handleClickDelete, onClick }: Props) {
                   alt="average-time-icon"
                 />
                 <p className={styles.deckMainInfoItemTitle}>
-                  Average spent time(s):
+                  Avg spent time(m):
                 </p>
               </div>
               <div className={styles.dashedLine} />
               <p className={styles.deckMainInfoItemData}>
-                {getAverageTotalTime(deckViews)}
+                {Number((getAverageTotalTime(deckViews) / 60).toFixed(2))}
               </p>
             </div>
           </div>
