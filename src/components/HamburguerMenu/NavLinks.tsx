@@ -13,7 +13,7 @@ function NavLinks() {
       >
         MyDecks
       </NavLink>
-      <NavLink
+      {/* <NavLink
         to="/founder/referrals"
         className={({ isActive }) =>
           isActive
@@ -22,7 +22,7 @@ function NavLinks() {
         }
       >
         Referral System
-      </NavLink>
+      </NavLink> */}
       <NavLink
         to="https://decklink.canny.io/feature-requests/?selectedCategory=feature-suggestion"
         className="text-mirage mr-4 inline-block"
