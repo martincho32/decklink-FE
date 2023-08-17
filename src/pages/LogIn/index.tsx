@@ -89,9 +89,6 @@ function LogIn() {
 
   return (
     <MainLayout>
-      {/* {location?.state?.isSignedUp && (
-        <SuccessBanner message="You succesfully signed up! Now you just need to log in" />
-      )} */}
       <div className={styles.blockContainer}>
         <img
           className={styles.imgTopRight}
@@ -141,6 +138,7 @@ function LogIn() {
               />
             </div>
             <Button
+              id="login-button"
               type="submit"
               text="Log In"
               icon={<img src={whiteTopRightArrow} alt="Arrow" />}

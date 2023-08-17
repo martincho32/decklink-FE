@@ -1,9 +1,16 @@
-/* eslint-disable no-extra-boolean-cast */
 import * as React from 'react';
-import { useContext, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useSnackbar } from 'notistack';
-import { MainLayout, Button, DeckPreview } from '../../../components';
+import { v4 as uuidv4 } from 'uuid';
+import {
+  MainLayout,
+  Button,
+  DeckPreview,
+  Logo,
+  Carrousel,
+  CarouselCard,
+} from '@/components';
 import whiteTopRightArrow from '../../../assets/images/ArrowTopRight.svg';
 import styles from './MyDecks.module.css';
 import Card from '../../../components/FounderPart/MyDecks/Card';
@@ -11,19 +18,26 @@ import EmptyState from '../../../components/ItemEmptyState';
 import { deckService } from '../../../services';
 import { IDeck } from '../../../types';
 import Loading from '../../../components/PreloadingScreen';
+import firstReview from '../../../assets/images/FirstReview.png';
+import secondReview from '../../../assets/images/SecondReview.png';
+import thirdReview from '../../../assets/images/ThirdReview.png';
+import reviewStats from '../../../assets/images/ReviewStats.png';
+import customImage from '../../../assets/images/CustromImage.png';
 
 // Import the useLoading hook
 import useLoading from '../../../hooks/useLoading';
 import { AuthContext } from '@/context';
-
-const options = {
-  cMapUrl: 'cmaps/',
-  standardFontDataUrl: 'standard_fonts/',
-};
+import Popup from '@/components/UI/Popup';
+import CalendlyIntegration from '@/components/CalendlyIntegration';
+import { useLocalStorage } from '@/hooks/useLocalStorage';
 
 function MyDecks() {
+  const { getItem, setItem } = useLocalStorage();
   const [previewPickDeckSlide, setPreviewPickDeckSlide] = useState(false);
-  const [pageNumber, setPageNumber] = useState(1);
+  const [pageIndex, setPageIndex] = useState(0);
+  const [showFreePitchDeckModal, setShowFreePitchDeckModal] =
+    useState<boolean>(false);
+  const [showCalendly, setShowCalendly] = useState<boolean>(false);
 
   const handleOnClosePitchDeckSlidePreview = () => {
     document.body.style.overflow = 'auto';
@@ -34,7 +48,6 @@ function MyDecks() {
   const { enqueueSnackbar } = useSnackbar();
 
   const [deckList, setDeckList] = useState<IDeck[]>([]);
-  const [refresh, setRefresh] = useState(true);
 
   const handleClickDelete = async (id) => {
     try {
@@ -44,7 +57,8 @@ function MyDecks() {
         },
       });
       if (data) {
-        setRefresh(!refresh);
+        const updatedDeckList = deckList.filter((item) => item._id !== id);
+        setDeckList(updatedDeckList);
       } else {
         throw new Error('Deck not found! Please contact support.');
       }
@@ -60,6 +74,24 @@ function MyDecks() {
     }
   };
 
+  function checkIfShowFreePitchDeckModal() {
+    const localStorageShowModal = JSON.parse(
+      getItem('showFreePitchDeckModal')! ?? true
+    );
+    if (!!localStorageShowModal) {
+      setShowFreePitchDeckModal(true);
+    } else {
+      setShowFreePitchDeckModal(false);
+    }
+  }
+
+  function handleOnCloseModal() {
+    document.body.style.overflow = 'auto';
+    setShowFreePitchDeckModal(false);
+    setShowCalendly(false);
+    setItem('showFreePitchDeckModal', JSON.stringify(false));
+  }
+
   // Use the useLoading hook with the actual backend request function
   const isLoading = useLoading(() => {
     return deckService
@@ -70,6 +102,7 @@ function MyDecks() {
       })
       .then(({ data }) => {
         setDeckList(data);
+        checkIfShowFreePitchDeckModal();
       })
       .catch(() => {
         enqueueSnackbar(`Couldn't load decks. Please contact support.`, {
@@ -83,81 +116,175 @@ function MyDecks() {
       });
   });
 
+  useEffect(() => {
+    if (showFreePitchDeckModal) {
+      document.body.style.overflow = 'hidden';
+    }
+    document.body.style.overflow = 'auto';
+  }, [showFreePitchDeckModal, showCalendly]);
+
+  const cards = [
+    {
+      key: uuidv4(),
+      content: <CarouselCard image={firstReview} />,
+    },
+    {
+      key: uuidv4(),
+      content: <CarouselCard image={secondReview} />,
+    },
+    {
+      key: uuidv4(),
+      content: <CarouselCard image={thirdReview} />,
+    },
+  ];
+
   return isLoading ? (
     <Loading />
   ) : (
-    <MainLayout>
-      {/* Display the loading screen if the backend request is still loading */}
-      {!!deckList.length ? (
-        <div className={styles.myDesksWrapper}>
-          <div className={styles.pageNavigation}>
-            <h2 className={styles.title}>
-              Hi {user?.firstName}! Here is your created decks
+    <>
+      {showFreePitchDeckModal && (
+        <Popup
+          isOpen
+          onClose={() => {
+            handleOnCloseModal();
+          }}
+        >
+          <div className="">
+            <h2 className="mobilev:leading-normal desktopxl:text-5xl desktopxl:w-[50rem] desktopxl:leading-normal mobileh:text-2xl mobileh:w-[35rem] mobileh:leading-normal desktop:text-4xl desktop:leading-normal text-mirage desktop:w-[40rem] mb-8 mt-[-1rem] mobilev:mt-[-0.5rem]">
+              Not getting as much
+              <br />
+              <span className="text-white p-2 mobilev:p-1 bg-persimmon">
+                VC meetings as you want?
+              </span>
             </h2>
-            <Link
-              className={`${styles.link} hover:no-underline`}
-              to="/founder/deck/create"
-            >
-              <Button
-                type="button"
-                text="Create New Deck"
-                icon={<img src={whiteTopRightArrow} alt="Arrow" />}
-                backgroundColor="#F1511B"
-                textColor="#FFF"
+            <div className="flex justify-between items-start">
+              <img
+                src={reviewStats}
+                className="desktopxl:max-h-[7rem] mobileh:max-h-[4rem] mobilev:max-h-[3rem] max-h-[5rem] h-auto"
+                alt="Review Stats"
               />
-            </Link>
-          </div>
-          <div className={styles.decksBlock}>
-            {deckList.map((deck) => (
-              <React.Fragment key={deck._id}>
-                <Card
-                  onClick={(event: React.MouseEvent<HTMLDivElement>) => {
-                    if (event.target instanceof HTMLDivElement) {
-                      document.body.style.overflow = 'hidden';
-                      setPreviewPickDeckSlide(true);
-                    }
-                  }}
-                  deck={deck}
-                  handleClickDelete={() => handleClickDelete(deck._id)}
-                />
-                {previewPickDeckSlide && (
-                  <DeckPreview
-                    type="deckUserPreview"
-                    onClose={handleOnClosePitchDeckSlidePreview}
-                    pageNumber={pageNumber}
-                    file={deck.deckUrl}
-                    options={options}
-                    numPages={deck.slides}
-                    setPreviewPickDeckSlide={setPreviewPickDeckSlide}
-                    setPageNumber={setPageNumber}
-                    deckId={null}
-                  />
-                )}
-              </React.Fragment>
-            ))}
-          </div>
-        </div>
-      ) : (
-        <EmptyState
-          title="Zero pitchdecks at the moment."
-          subtitle="Why not be the first to create one and kickstart the fun?"
-          button={
-            <Link
-              className={`${styles.link} hover:no-underline`}
-              to="/founder/deck/create"
-            >
-              <Button
-                type="button"
-                text="Create New Deck"
-                icon={<img src={whiteTopRightArrow} alt="Arrow" />}
-                backgroundColor="#F1511B"
-                textColor="#FFF"
+              <img
+                src={customImage}
+                className="desktopxl:max-h-[17rem] mobileh:max-h-[10rem] mobilev:max-h-[7rem] max-h-[15rem] h-auto"
+                aria-hidden
+                alt="Custom Image"
               />
-            </Link>
-          }
-        />
+            </div>
+
+            <div className="desktopxl:h-[20rem] mobilev:h-[6rem] mobilev:mt-[-7rem] mobilev:mb-24 mobileh:mb-2 desktop:mb-8 desktop:mt-[-5rem] mobileh:h-[15rem] w-full h-[15rem] mx-auto mb-12 mt-[-4rem]">
+              <Carrousel
+                cards={cards}
+                height="15rem"
+                width="100%"
+                margin="0 auto"
+                offset={2}
+              />
+            </div>
+
+            <Button
+              type="button"
+              text="Free Pitch Deck Review"
+              icon={<Logo color="#FFFFFF" width="10" height="11" />}
+              backgroundColor="#F1511B"
+              textColor="#FFF"
+              onClick={() => {
+                setShowFreePitchDeckModal(false);
+                setShowCalendly(true);
+              }}
+              className="py-3 w-full mx-auto relative z-10"
+            />
+          </div>
+        </Popup>
       )}
-    </MainLayout>
+      <div className={`${showCalendly ? 'block' : 'hidden'}`}>
+        <Popup
+          isOpen={showCalendly}
+          onClose={() => {
+            handleOnCloseModal();
+          }}
+        >
+          <div className="">
+            <CalendlyIntegration />
+          </div>
+        </Popup>
+      </div>
+      <MainLayout>
+        {/* Display the loading screen if the backend request is still loading */}
+        {!!deckList.length ? (
+          <div className={styles.myDesksWrapper}>
+            <div className={styles.pageNavigation}>
+              <h2 className={styles.title}>
+                Hi {user?.firstName}! Here is your created decks
+              </h2>
+              <Link
+                className={`${styles.link} hover:no-underline`}
+                to="/founder/deck/create"
+                state={{
+                  deckListLength: deckList.length,
+                }}
+              >
+                <Button
+                  type="button"
+                  text="Create New Deck"
+                  icon={<img src={whiteTopRightArrow} alt="Arrow" />}
+                  backgroundColor="#F1511B"
+                  textColor="#FFF"
+                />
+              </Link>
+            </div>
+            <div className={styles.decksBlock}>
+              {deckList.map((deck) => (
+                <React.Fragment key={deck._id}>
+                  <Card
+                    onClick={(event: React.MouseEvent<HTMLDivElement>) => {
+                      if (event.target instanceof HTMLDivElement) {
+                        document.body.style.overflow = 'hidden';
+                        setPreviewPickDeckSlide(true);
+                      }
+                    }}
+                    deck={deck}
+                    handleClickDelete={() => handleClickDelete(deck._id)}
+                  />
+                  {previewPickDeckSlide && (
+                    <DeckPreview
+                      type="deckCreationPreview"
+                      onClose={handleOnClosePitchDeckSlidePreview}
+                      pageIndex={pageIndex}
+                      file={deck.deckUrl}
+                      numPages={deck.slides}
+                      deckId={null}
+                      setPageIndex={setPageIndex}
+                    />
+                  )}
+                </React.Fragment>
+              ))}
+            </div>
+          </div>
+        ) : (
+          <EmptyState
+            title="Zero pitchdecks at the moment."
+            subtitle="Why not be the first to create one and kickstart the fun?"
+            button={
+              <Link
+                className={`${styles.link} hover:no-underline`}
+                to="/founder/deck/create"
+                state={{
+                  deckListLength: deckList.length,
+                }}
+              >
+                <Button
+                  type="button"
+                  text="Create New Deck"
+                  icon={<img src={whiteTopRightArrow} alt="Arrow" />}
+                  backgroundColor="#F1511B"
+                  textColor="#FFF"
+                />
+              </Link>
+            }
+          />
+        )}
+      </MainLayout>
+    </>
   );
 }
 

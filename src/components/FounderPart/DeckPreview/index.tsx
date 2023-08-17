@@ -1,11 +1,34 @@
+/* eslint-disable react/no-unused-prop-types */
+/* eslint-disable no-nested-ternary */
+/* eslint-disable jsx-a11y/no-static-element-interactions */
 import { useContext, useEffect, useState } from 'react';
-import axios from 'axios';
 import {
-  Page,
-  Document,
-  Thumbnail,
-  // pdfjs,
-} from 'react-pdf'; /** File library */
+  MinimalButton,
+  ViewMode,
+  ScrollMode,
+  SpecialZoomLevel,
+  Viewer,
+  Worker,
+  PageChangeEvent,
+  OpenFile,
+} from '@react-pdf-viewer/core';
+import {
+  RenderThumbnailItemProps,
+  ThumbnailDirection,
+  thumbnailPlugin,
+} from '@react-pdf-viewer/thumbnail';
+import {
+  NextIcon,
+  pageNavigationPlugin,
+  PreviousIcon,
+} from '@react-pdf-viewer/page-navigation';
+import { getFilePlugin, RenderDownloadProps } from '@react-pdf-viewer/get-file';
+
+import '@react-pdf-viewer/core/lib/styles/index.css';
+import '@react-pdf-viewer/page-navigation/lib/styles/index.css';
+import '@react-pdf-viewer/default-layout/lib/styles/index.css';
+import '@react-pdf-viewer/thumbnail/lib/styles/index.css';
+import axios from 'axios';
 import { enqueueSnackbar } from 'notistack';
 // import { Helmet } from 'react-helmet-async';
 import './DeckPreview.css';
@@ -15,6 +38,8 @@ import AskEmailPassword from '../../AskEmailPassword';
 import { UIContext } from '@/context';
 import { deckService, deckViewService } from '@/services';
 import { IDeckSlidesStats } from '@/types';
+// import Loading from '../../PreloadingScreen';
+
 // import { milisecondsToMinutesAndSeconds } from '@/utils';
 
 interface KeyboardEvent {
@@ -24,38 +49,50 @@ interface KeyboardEvent {
 export interface Props {
   type: 'deckCreationPreview' | 'deckUserPreview';
   onClose: () => void;
-  pageNumber: number;
+  pageIndex: number;
   file;
-  onDocumentLoadSuccess?;
-  options?;
-  numPages;
-  setPreviewPickDeckSlide;
-  setPageNumber?;
+  numPages?;
+  setPageIndex?;
   deckId: string | null;
   deckSlidesNumber?: number | null;
   userId?: string | null;
+  deckDownloadUrl?: string | null;
 }
 
 function DeckPreview({
   type,
   onClose,
-  pageNumber,
+  pageIndex,
   file,
-  onDocumentLoadSuccess,
-  options,
-  numPages,
-  setPreviewPickDeckSlide,
-  setPageNumber,
+  setPageIndex,
   deckId,
   deckSlidesNumber,
   userId,
+  deckDownloadUrl,
 }: Props) {
+  const pageNavigationPluginInstance = pageNavigationPlugin();
+  const { jumpToNextPage, jumpToPreviousPage } = pageNavigationPluginInstance;
+  const thumbnailPluginInstance = thumbnailPlugin({
+    thumbnailWidth: 200,
+  });
+  const { Thumbnails } = thumbnailPluginInstance;
+
   const { isShowModal, setShowModal, hasPasswordRequired, hasEmailRequired } =
     useContext(UIContext);
   const [currentSlideStartTime, setCurrentSlideStartTime] = useState(0);
   const [isPageActive, setIsPageActive] = useState(true);
   const [slidesStats, setSlidesStats] = useState<IDeckSlidesStats[]>([]);
   const [deckViewId, setDeckViewId] = useState<string | null>(null);
+
+  const urlParts = window.location.pathname.split('/');
+  const deckName = urlParts[urlParts.length - 1];
+
+  const getFilePluginInstance = getFilePlugin({
+    fileNameGenerator: (pdfFile: OpenFile) => {
+      return deckName ?? pdfFile;
+    },
+  });
+  const { Download } = getFilePluginInstance;
 
   const handleError = (error: Error | string) => {
     let errorMessage: string = 'Whoops! Something went wrong. Error: ';
@@ -110,12 +147,8 @@ function DeckPreview({
         const currentTime = Date.now();
         const elapsedTime = currentTime - currentSlideStartTime;
         const auxSlidesStats = JSON.parse(JSON.stringify(slidesStats));
-        auxSlidesStats[pageNumber - 1].viewingTime += elapsedTime;
-        // console.log(
-        //   `El usuario ${userId} miró la slide ${pageNumber} durante ${
-        //     auxSlidesStats[pageNumber - 1].viewingTime
-        //   }`
-        // );
+        if (auxSlidesStats[pageIndex].viewingTime >= 120000) return; // Set the limit in 2 minutes
+        auxSlidesStats[pageIndex].viewingTime += elapsedTime;
         setSlidesStats([...auxSlidesStats]);
         setCurrentSlideStartTime(Date.now());
       }
@@ -129,28 +162,18 @@ function DeckPreview({
   };
 
   const onSaveDeck = () => {
-    window.location.href = 'https://tally.so/r/w2a4dM';
-  };
-
-  const onPrev = () => {
-    updateSlideTime();
-    if (pageNumber > 1) {
-      setPageNumber(pageNumber - 1);
-    }
-  };
-
-  const onNext = () => {
-    updateSlideTime();
-    if (pageNumber !== numPages) {
-      setPageNumber(pageNumber + 1);
-    }
+    const websiteUrl = 'https://tally.so/r/w2a4dM';
+    window.open(websiteUrl, '_blank');
   };
 
   const handleKeyDown = (event: KeyboardEvent) => {
+    if (event.key === 'ArrowLeft') {
+      updateSlideTime();
+      jumpToPreviousPage();
+    }
     if (event.key === 'ArrowRight') {
-      onNext();
-    } else if (event.key === 'ArrowLeft') {
-      onPrev();
+      updateSlideTime();
+      jumpToNextPage();
     }
   };
 
@@ -159,7 +182,7 @@ function DeckPreview({
     return () => {
       document.removeEventListener('keydown', handleKeyDown);
     };
-  }, [pageNumber]);
+  }, [pageIndex]);
 
   function initializeArrayOfSLidesStats(count): IDeckSlidesStats[] {
     const arrayOfEmptyObjects: { slideNumber: number; viewingTime: number }[] =
@@ -222,6 +245,7 @@ function DeckPreview({
           },
         }
       );
+
       setShowModal(false);
       setDeckViewId(data._id);
       initializeCounting();
@@ -288,94 +312,47 @@ function DeckPreview({
           initializeCounting();
         })
         .catch((error: any) => {
-          console.error('Presentation page error: ', error);
+          console.error('DeckPreview error: ', error);
         });
     }
   }, [deckSlidesNumber]);
 
-  const urlParts = window.location.pathname.split('/');
-  const deckName = urlParts[urlParts.length - 1];
-
-  useEffect(() => {
-    if (type === 'deckUserPreview') {
-      document.title = deckName;
-    }
-
-    // Cleanup function to reset the document title when the component unmounts
-    return () => {
-      document.title = 'Fundraisingtoolbox'; // Replace with default tab name
-    };
-  }, [type]);
-
-  // const canvasRef: any = useRef(null);
-
   // useEffect(() => {
-  //   const renderPdfAsImage = async () => {
-  //     try {
-  //       // Load the PDF document using pdf.js
-  //       const loadingTask = pdfjs.getDocument(file);
-  //       const pdfDocument = await loadingTask.promise;
-
-  //       // Get the first page of the PDF
-  //       const slideNumber = 1;
-  //       const page = await pdfDocument.getPage(slideNumber);
-
-  //       // Set the scale for the image rendering (adjust as needed)
-  //       const scale = 1.5;
-  //       const viewport = page.getViewport({ scale });
-
-  //       // Prepare the canvas
-  //       const canvas: any = canvasRef.current;
-
-  //       const context = canvas?.getContext('2d');
-  //       canvas.width = viewport.width;
-  //       canvas.height = viewport.height;
-
-  //       // Render the PDF page as an image
-  //       const renderContext = {
-  //         canvasContext: context,
-  //         viewport,
-  //       };
-  //       await page.render(renderContext).promise;
-
-  //       // Now you can use the canvas as an image
-  //     } catch (error) {
-  //       console.error('Error rendering PDF:', error);
-  //     }
-  //   };
-
-  //   renderPdfAsImage();
-  // }, [file]);
-
-  // const pdfUrl = file;
-  // const [pdfImage, setPDFImage] = useState<string | null>(null);
-
-  // const generatePDFImage = async () => {
-  //   const pdfDocument = await pdfjs.getDocument(pdfUrl).promise;
-  //   const pdfPage = await pdfDocument.getPage(1);
-  //   const viewport = pdfPage.getViewport({ scale: 1 });
-  //   const canvas = document.createElement('canvas');
-  //   const context = canvas.getContext('2d');
-
-  //   if (context) {
-  //     canvas.width = viewport.width;
-  //     canvas.height = viewport.height;
-
-  //     const renderContext = {
-  //       canvasContext: context,
-  //       viewport,
-  //     };
-
-  //     await pdfPage.render(renderContext).promise;
-
-  //     const imageDataURL = canvas.toDataURL('image/png');
-  //     setPDFImage(imageDataURL);
+  //   if (type === 'deckUserPreview') {
+  //     document.title = deckName;
   //   }
-  // };
 
-  // useEffect(() => {
-  //   generatePDFImage();
-  // }, []);
+  //   // Cleanup function to reset the document title when the component unmounts
+  //   return () => {
+  //     document.title = 'Fundraisingtoolbox'; // Replace with default tab name
+  //   };
+  // }, [type]);
+
+  const renderThumbnailItem = (props: RenderThumbnailItemProps) => (
+    <div
+      key={props.pageIndex}
+      className="custom-thumbnail-item"
+      data-testid={`thumbnail-${props.pageIndex}`}
+      style={{
+        backgroundColor:
+          props.pageIndex === props.currentPage
+            ? 'rgb(241, 81, 27)'
+            : 'transparent',
+        cursor: 'pointer',
+        height: '100%',
+        marginRight: '1rem',
+      }}
+    >
+      <div style={{ margin: '0.25rem' }} onClick={props.onJumpToPage}>
+        {props.renderPageThumbnail}
+      </div>
+    </div>
+  );
+
+  const handlePageChange = (e: PageChangeEvent) => {
+    setPageIndex(e.currentPage);
+    updateSlideTime();
+  };
 
   return (
     <div
@@ -383,124 +360,172 @@ function DeckPreview({
       role="button"
       tabIndex={0}
       onClick={handleOnClose}
-      className={`fixedContainer fixed overflow-y-scroll h-screen inset-0 bg-black bg-opacity-80 backdrop-blur-sm ${
-        type === 'deckUserPreview' ? 'p-2' : 'p-2'
-      }`}
+      className="fixed !h-full inset-0 bg-black bg-opacity-80 backdrop-blur-sm p-2 z-10"
     >
       <AskEmailPassword onSubmit={handleModalSubmit} />
-      {/* <Document file={pdfUrl}>
-        <Page pageNumber={1} />
-      </Document>
-      {pdfImage && (
-        <Helmet>
-          <meta property="og:title" content="Custom Link Preview" />
-          <meta
-            property="og:description"
-            content="Check out this PDF link preview!"
-          />
-          <meta property="og:image" content={pdfImage} />
-        </Helmet>
-      )} */}
-      {/* <Document
-        file={file}
-        renderMode="svg"
-        onLoadSuccess={onDocumentLoadSuccess}
-        options={options}
-      >
-        <Helmet>
-          <meta property="og:title" content={deckName} />
-          <meta
-            property="og:description"
-            content={`This is pitch deck of ${deckName}.`}
-          />
-          <meta property="og:image" content={canvasRef.current?.toDataURL()} />
-          <meta property="og:image:width" content="1200" />{' '}
-          <meta property="og:image:height" content="630" />{' '}
-          <meta property="og:image:alt" content={`Preview for ${deckName}`} />
-          <meta property="og:type" content="website" />
-          <meta name="twitter:card" content="summary_large_image" />
-          <meta name="twitter:title" content={deckName} />
-          <meta
-            name="twitter:description"
-            content={`This is pitch deck of ${deckName}.`}
-          />
-          <meta name="twitter:image" content={canvasRef.current?.toDataURL()} />
-          <meta name="twitter:image:alt" content={`Preview for ${deckName}`} />
-        </Helmet>
-      </Document> */}
-      {!isShowModal && (
-        <Document
-          file={file}
-          onLoadSuccess={onDocumentLoadSuccess}
-          options={options}
-          noData={<h4 className="">No file selected</h4>}
-          className={`document h-screen p-4 bg-mirage ${
-            type === 'deckCreationPreview' ? ' rounded-lg' : 'md:rounded-none'
-          }`}
+      {!isShowModal && type === 'deckCreationPreview' ? (
+        <div className="flex cursor-default flex-col gap-4 !w-full !h-full p-4 bg-mirage rounded-lg md:rounded-none justify-between">
+          <div
+            style={{
+              display: 'flex',
+              height: '100%',
+              width: '100%',
+              flexDirection: 'column',
+            }}
+          >
+            <div
+              style={{
+                height: '70%',
+                position: 'relative',
+              }}
+            >
+              <div
+                className="prev"
+                style={{
+                  position: 'absolute',
+                  top: '50%',
+                  left: '3rem',
+                  transform: 'translate(0, -100%) rotate(-90deg)',
+                  zIndex: '1',
+                  background: '#fff',
+                  borderRadius: '4px',
+                }}
+              >
+                <MinimalButton onClick={jumpToPreviousPage}>
+                  <PreviousIcon />
+                </MinimalButton>
+              </div>
+              <Worker workerUrl="https://unpkg.com/pdfjs-dist@3.6.172/build/pdf.worker.min.js">
+                <Viewer
+                  onPageChange={handlePageChange}
+                  defaultScale={SpecialZoomLevel.PageFit}
+                  initialPage={pageIndex}
+                  scrollMode={ScrollMode.Page}
+                  viewMode={ViewMode.SinglePage}
+                  fileUrl={file}
+                  plugins={[
+                    pageNavigationPluginInstance,
+                    thumbnailPluginInstance,
+                  ]}
+                />
+              </Worker>
+              <div
+                className="next"
+                style={{
+                  position: 'absolute',
+                  top: '50%',
+                  right: '3rem',
+                  transform: 'translate(0, -100%) rotate(-90deg)',
+                  zIndex: '1',
+                  background: '#fff',
+                  borderRadius: '4px',
+                }}
+              >
+                <MinimalButton onClick={jumpToNextPage}>
+                  <NextIcon />
+                </MinimalButton>
+              </div>
+            </div>
+            <div
+              style={{
+                height: '30%',
+                overflow: 'auto',
+              }}
+            >
+              <Thumbnails
+                thumbnailDirection={ThumbnailDirection.Horizontal}
+                renderThumbnailItem={renderThumbnailItem}
+              />
+            </div>
+          </div>
+        </div>
+      ) : !isShowModal && type === 'deckUserPreview' ? (
+        <div
+          id="deckUserPreview"
+          className="flex flex-col gap-4 !w-full !h-full p-4 bg-mirage rounded-lg md:rounded-none justify-between"
         >
           <div
-            className={`flex items-center gap-4 justify-center${
-              type === 'deckUserPreview'
-                ? ' max-w-full max-h-full w-auto h-auto'
-                : ''
-            }`}
+            style={{
+              display: 'flex',
+              height: '100%',
+              width: '100%',
+              flexDirection: 'column',
+            }}
           >
-            <Button
-              className={`${
-                type === 'deckCreationPreview' ? 'prev' : ''
-              } p-4 bg-white w-8 h-8 ${
-                pageNumber === 1 ? 'opacity-50 bg-transparent' : 'opacity-100'
-              }`}
-              type="button"
-              icon={<Logo color="#F1511B" topLeft />}
-              onClick={onPrev}
-              disabled={pageNumber === 1}
-            />
-
-            <Page
-              renderTextLayer={false}
-              renderAnnotationLayer={false}
-              className={`${
-                type === 'deckUserPreview'
-                  ? 'pageWrapperFullScreen'
-                  : 'pageWrapper'
-              }`}
-              pageNumber={pageNumber}
-            />
-            <Button
-              type="button"
-              icon={
-                <Logo
-                  color={pageNumber === numPages ? '#f1511b2e' : '#F1511B'}
-                />
-              }
-              className={`${
-                type === 'deckCreationPreview' ? 'next' : ''
-              } p-4 bg-white w-8 h-8 ${
-                pageNumber === numPages
-                  ? 'opacity-50 bg-transparent'
-                  : 'opacity-100'
-              }`}
-              onClick={onNext}
-              disabled={pageNumber === numPages}
-            />
-          </div>
-          {type === 'deckCreationPreview' && (
-            <div className="previewPagesWrapper">
-              {Array.from(new Array(numPages), (_el, index) => (
-                <Thumbnail
-                  onItemClick={() => {
-                    setPreviewPickDeckSlide(true);
-                    setPageNumber(index + 1);
-                  }}
-                  key={`page_${index + 1}`}
-                  pageNumber={index + 1}
-                  className="previewPageWrapper"
-                />
-              ))}
+            <div
+              className="prev"
+              style={{
+                position: 'absolute',
+                top: '50%',
+                left: '3rem',
+                transform: 'translate(0, -100%) rotate(-90deg)',
+                zIndex: '1',
+                background: '#fff',
+                borderRadius: '4px',
+              }}
+            >
+              <MinimalButton onClick={jumpToPreviousPage}>
+                <PreviousIcon />
+              </MinimalButton>
             </div>
+            <div
+              className="deckUserPreview"
+              style={{
+                height: '100%',
+                position: 'relative',
+              }}
+            >
+              <Worker workerUrl="https://unpkg.com/pdfjs-dist@3.6.172/build/pdf.worker.min.js">
+                <Viewer
+                  onPageChange={handlePageChange}
+                  initialPage={pageIndex}
+                  defaultScale={SpecialZoomLevel.PageFit}
+                  scrollMode={ScrollMode.Page}
+                  viewMode={ViewMode.SinglePage}
+                  fileUrl={file}
+                  plugins={[
+                    pageNavigationPluginInstance,
+                    thumbnailPluginInstance,
+                    getFilePluginInstance,
+                  ]}
+                />
+              </Worker>
+            </div>
+            <div
+              className="next"
+              style={{
+                position: 'absolute',
+                top: '50%',
+                right: '3rem',
+                transform: 'translate(0, -100%) rotate(-90deg)',
+                zIndex: '1',
+                background: '#fff',
+                borderRadius: '4px',
+              }}
+            >
+              <MinimalButton onClick={jumpToNextPage}>
+                <NextIcon />
+              </MinimalButton>
+            </div>
+          </div>
+        </div>
+      ) : (
+        <div>Something went wrong, please contact support</div>
+      )}
+
+      {type === 'deckUserPreview' && deckDownloadUrl && (
+        <Download>
+          {(props: RenderDownloadProps) => (
+            <Button
+              type="button"
+              text="Download Deck"
+              icon={<Logo color="white" />}
+              className="bg-persimmon text-white fixed bottom-4 left-[5%]  py-3 px-3"
+              textColor="#FFF"
+              onClick={props.onClick}
+            />
           )}
-        </Document>
+        </Download>
       )}
 
       {type === 'deckUserPreview' && (
@@ -509,23 +534,10 @@ function DeckPreview({
           text="Join DeckLink"
           icon={<Logo color="white" />}
           className="bg-persimmon/25 text-white fixed bottom-4 right-[7%]  py-3 px-3"
-          // backgroundColor="#F1511B"
           textColor="#FFF"
           onClick={onSaveDeck}
         />
       )}
-
-      <div
-        className={`${
-          type === 'deckCreationPreview'
-            ? 'counter fixed flex flex-row top-8 left-8 p-2 bg-persimmon rounded-md text-white text-xs'
-            : 'fixed flex flex-row top-8 left-8 p-2 bg-persimmon rounded-md text-white text-xs'
-        }`}
-      >
-        <p>{pageNumber}</p>
-        <p>/</p>
-        <p>{numPages}</p>
-      </div>
 
       {type === 'deckCreationPreview' && (
         <Button

@@ -1,6 +1,11 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useSnackbar } from 'notistack';
-import { Page, Document } from 'react-pdf'; /** File library */
+import { Viewer, Worker } from '@react-pdf-viewer/core';
+import '@react-pdf-viewer/default-layout/lib/styles/index.css';
+
+import { thumbnailPlugin } from '@react-pdf-viewer/thumbnail';
+import '@react-pdf-viewer/thumbnail/lib/styles/index.css';
+
 import { Link } from 'react-router-dom';
 import { Button } from '../..';
 import whiteTopRightArrow from '../../../assets/images/ArrowTopRight.svg';
@@ -10,8 +15,8 @@ import AverageTimeIcon from '../../../assets/images/AverageTime.png';
 import orangeTopRightArrow from '../../../assets/images/OrangeArrowTopRight.svg';
 import deleteIcon from '../../../assets/images/Delete.png';
 import { IDeck, IDeckView } from '../../../types';
-import loadingImage from '../../../assets/images/Dummy Slide.svg';
 import copyIcon from '../../../assets/images/CopyIcon.svg';
+import chartIcon from '../../../assets/images/ChartIcon.svg';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -26,6 +31,8 @@ import {
 import { deckViewService } from '@/services';
 import { getAverageTotalTime } from '@/utils';
 
+import { pageThumbnailPlugin } from './pageThumbnailPlugin';
+
 interface Props {
   deck: IDeck;
   handleClickDelete: (id: string) => Promise<void>;
@@ -33,6 +40,13 @@ interface Props {
 }
 
 function Card({ deck, handleClickDelete, onClick }: Props) {
+  const thumbnailPluginInstance = thumbnailPlugin();
+  const { Cover } = thumbnailPluginInstance;
+
+  const pageThumbnailPluginInstance = pageThumbnailPlugin({
+    PageThumbnail: <Cover width={500} getPageIndex={() => 0} />,
+  });
+
   const [isPopupVisible, setPopupVisible] = useState(false);
 
   const handleMouseEnter = () => {
@@ -45,12 +59,7 @@ function Card({ deck, handleClickDelete, onClick }: Props) {
 
   const { enqueueSnackbar } = useSnackbar();
 
-  const [loading, setLoading] = useState<boolean>(true);
   const [deckViews, setDeckViews] = useState<IDeckView[] | null>(null);
-
-  const onDocumentLoadSuccess = () => {
-    setLoading(false);
-  };
 
   const handleCopyClick = () => {
     navigator.clipboard
@@ -81,10 +90,6 @@ function Card({ deck, handleClickDelete, onClick }: Props) {
       );
   };
 
-  const handleLoadError = () => {
-    setLoading(true);
-  };
-
   useEffect(() => {
     deckViewService
       .getDeckViewByDeckId(deck._id, {
@@ -100,6 +105,21 @@ function Card({ deck, handleClickDelete, onClick }: Props) {
       });
   }, []);
 
+  const viewer = useMemo(
+    () => (
+      <Worker workerUrl="https://unpkg.com/pdfjs-dist@3.6.172/build/pdf.worker.min.js">
+        <div className="">
+          <Viewer
+            defaultScale={10}
+            fileUrl={deck.deckUrl}
+            plugins={[pageThumbnailPluginInstance, thumbnailPluginInstance]}
+          />
+        </div>
+      </Worker>
+    ),
+    [deck.deckUrl]
+  );
+
   return (
     <div
       onClick={onClick}
@@ -107,35 +127,23 @@ function Card({ deck, handleClickDelete, onClick }: Props) {
       role="button"
       className={styles.deckBlock}
     >
-      <Document
-        file={deck.deckUrl}
-        onLoadSuccess={onDocumentLoadSuccess}
-        onLoadError={handleLoadError}
-        noData={
-          <img
-            className={styles.dummyPreviewImage}
-            src={loadingImage}
-            alt="Loading"
+      {/* <Worker workerUrl="https://unpkg.com/pdfjs-dist@3.6.172/build/pdf.worker.min.js">
+        <div className="">
+          <Viewer
+            defaultScale={10}
+            fileUrl={deck.deckUrl}
+            plugins={[pageThumbnailPluginInstance, thumbnailPluginInstance]}
           />
-        }
-        loading=""
-      >
-        {!loading && (
-          <Page
-            renderTextLayer={false}
-            renderAnnotationLayer={false}
-            className={styles.previewImage}
-            pageNumber={1}
-          />
-        )}
-      </Document>
+        </div>
+      </Worker> */}
+
+      {viewer}
 
       <div className={styles.deckMainContentWrapper}>
         <div className={styles.deckMainInfoAndButtons}>
           <div className={styles.deckFirstRow}>
             <div className={styles.deckTitleWrapper}>
               <h3 className={styles.deckTitle}>{deck.name}</h3>
-              {/* <p className={styles.subtitle}>Published</p> */}
             </div>
             <div
               role="button"
@@ -145,14 +153,6 @@ function Card({ deck, handleClickDelete, onClick }: Props) {
               onClick={handleCopyClick}
               className={`${styles.buttonContainer} flex w-full gap-1 p-2 bg-gray-200 rounded justify-between`}
             >
-              {/* <Button
-                type="button"
-                text={`fundraisingtoolbox.io/preview/${deck?.customDeckLink}`}
-                textColor="#161A20"
-                onMouserEnter={handleMouseEnter}
-                onMouserLeave={handleMouseLeave}
-                onClick={handleCopyClick}
-              /> */}
               <p className="break-all max-w-[12rem] truncate">{`fundraisingtoolbox.io/preview/${deck?.customDeckLink}`}</p>
               <img src={copyIcon} alt="" />
               {isPopupVisible && (
@@ -185,7 +185,7 @@ function Card({ deck, handleClickDelete, onClick }: Props) {
                   alt="average-time-icon"
                 />
                 <p className={styles.deckMainInfoItemTitle}>
-                  Average spent time:
+                  Average spent time(s):
                 </p>
               </div>
               <div className={styles.dashedLine} />
@@ -200,6 +200,7 @@ function Card({ deck, handleClickDelete, onClick }: Props) {
             <Button
               type="button"
               text="See Detailed Info"
+              leftIcon={<img src={chartIcon} alt="Arrow" />}
               icon={<img src={whiteTopRightArrow} alt="Arrow" />}
               backgroundColor="#F1511B"
               textColor="#FFF"

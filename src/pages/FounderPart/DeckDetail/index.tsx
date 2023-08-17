@@ -8,6 +8,9 @@ import DeckAverageStats from '../../../components/FounderPart/DeckAverageStats';
 import DeckIndividualStats from '@/components/FounderPart/DeckIndividualStats';
 import useLoading from '@/hooks/useLoading';
 import Loading from '../../../components/PreloadingScreen';
+import copyIcon from '../../../assets/images/CopyIcon.svg';
+
+import styles from './Detail.module.css';
 
 function DeclkDetail() {
   const { enqueueSnackbar } = useSnackbar();
@@ -17,11 +20,11 @@ function DeclkDetail() {
 
   const [deck, setDeck] = useState<IDeck | null>(null);
   const [deckViews, setDeckViews] = useState<IDeckView[] | null>(null);
+  const [isPopupVisible, setPopupVisible] = useState(false);
 
   const isLoading = useLoading(async () => {
     if (!id) {
       // TODO Handle this, maybe use Snackbar to show error
-      console.error('Error: There is no deck id to get.');
       navigate('/founder/decks');
     } else {
       try {
@@ -57,15 +60,21 @@ function DeclkDetail() {
     navigate('/founder/decks');
   };
 
-  const onClickCopyDeckLink = () => {
+  const handleMouseEnter = () => {
+    setPopupVisible(true);
+  };
+
+  const handleMouseLeave = () => {
+    setPopupVisible(false);
+  };
+  const handleCopyClick = () => {
     navigator.clipboard
       .writeText(
         `https://www.fundraisingtoolbox.io/preview/${deck?.customDeckLink}`
       )
       .then(
         () => {
-          /* Resolved - text copied to clipboard successfully */
-          enqueueSnackbar('You copied link', {
+          enqueueSnackbar('Url successfully copied!', {
             variant: 'success',
             autoHideDuration: 2000,
             anchorOrigin: {
@@ -74,18 +83,15 @@ function DeclkDetail() {
             },
           });
         },
-        () => {
-          enqueueSnackbar(
-            'Something went wrong. Please try again or contact our support',
-            {
-              variant: 'success',
-              autoHideDuration: 2000,
-              anchorOrigin: {
-                vertical: 'top',
-                horizontal: 'right',
-              },
-            }
-          );
+        (error) => {
+          enqueueSnackbar(`Failed to copy. Please contact support. ${error}`, {
+            variant: 'error',
+            autoHideDuration: 2000,
+            anchorOrigin: {
+              vertical: 'top',
+              horizontal: 'right',
+            },
+          });
         }
       );
   };
@@ -112,13 +118,26 @@ function DeclkDetail() {
           <span className="text-persimmon text-center">{deck?.name} </span>
           Detailed Information
         </h1>
-        <Button
-          type="button"
-          text="Copy Link"
-          icon={<Logo />}
-          textColor="#F1511B"
-          onClick={onClickCopyDeckLink}
-        />
+        <div
+          role="button"
+          tabIndex={0}
+          onMouseEnter={handleMouseEnter}
+          onMouseLeave={handleMouseLeave}
+          className={`${styles.buttonContainer}`}
+        >
+          <Button
+            type="button"
+            text="Copy Link"
+            icon={<img src={copyIcon} alt="" />}
+            textColor="#F1511B"
+            onClick={handleCopyClick}
+          />
+          {isPopupVisible && (
+            <div
+              className={styles.popup}
+            >{`fundraisingtoolbox.io/preview/${deck?.customDeckLink}`}</div>
+          )}
+        </div>
       </div>
       <DeckAverageStats deckViews={deckViews} deck={deck} />
       <DeckIndividualStats deckViews={deckViews} deck={deck} />

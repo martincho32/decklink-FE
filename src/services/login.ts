@@ -27,6 +27,7 @@ export const registerUser = (
     token: string;
     firstName: string;
     lastName: string;
+    hasCreatedDeck: boolean;
   };
 }> => api.post(`${resource}/register?role=${role}`, user);
 
@@ -39,11 +40,18 @@ export const loginUser = (
     token: string;
     firstName: string;
     lastName: string;
+    hasCreatedDeck: boolean;
   };
 }> => api.post(`${resource}/login`, userCredentials);
 
 export const validateUserToken = (
   config: AxiosRequestConfig<any> | undefined = undefined
 ): Promise<{
-  data: { email: string; role: string; token: string };
+  data: {
+    email: string;
+    role: string;
+    token: string;
+    hasCreatedDeck: boolean;
+    firstName: string;
+  };
 }> => api.get(`${resource}/validate-token`, config);

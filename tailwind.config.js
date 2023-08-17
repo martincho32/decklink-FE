@@ -66,5 +66,9 @@ export const theme = {
       desktopxl: '1440px',
     },
   },
+
+  fontSize: {
+    s: '0.7rem',
+  },
 };
 export const plugins = [tailwindcssAnimate];

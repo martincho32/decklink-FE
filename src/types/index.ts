@@ -8,6 +8,7 @@ export interface IUser {
   websiteUrl?: string;
   linkedInUrl?: string;
   role?: string;
+  hasCreatedDeck?: boolean;
 }
 
 // export interface IAuthContext {
@@ -22,6 +23,7 @@ export interface IDeck {
   customDeckLink: string;
   requestEmail: boolean;
   requestPassword: boolean;
+  isDownloadable: boolean;
   password: string;
   slides: number;
   userId: string;
