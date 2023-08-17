@@ -280,7 +280,7 @@ function Deck({ title = 'Create', deckId }: Props) {
 
       if (
         deckAmountBeforeShowFreePitchDeckModal.includes(
-          location.state.deckListLength
+          location.state?.deckListLength
         )
       ) {
         setItem('showFreePitchDeckModal', JSON.stringify(true));
