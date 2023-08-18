@@ -29,7 +29,7 @@ import {
   AlertDialogTrigger,
 } from '../../UI/AlertDialog';
 import { deckViewService } from '@/services';
-import { getAverageTotalTime } from '@/utils';
+import { getAverageTotalTimeInMinutes } from '@/utils';
 
 import { pageThumbnailPlugin } from './pageThumbnailPlugin';
 
@@ -195,7 +195,7 @@ function Card({ deck, handleClickDelete, onClick }: Props) {
               </div>
               <div className={styles.dashedLine} />
               <p className={styles.deckMainInfoItemData}>
-                {Number((getAverageTotalTime(deckViews) / 60).toFixed(2))}
+                {getAverageTotalTimeInMinutes(deckViews)}
               </p>
             </div>
           </div>

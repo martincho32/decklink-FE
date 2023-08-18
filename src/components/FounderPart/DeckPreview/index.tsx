@@ -451,14 +451,7 @@ function DeckPreview({
           >
             <div className="absolute bg-persimmon  rounded-lg z-10 bottom-4 flex gap-2 left-[50%] -translate-x-1/2 ">
               <div className="flex">
-                <div
-                  className="prev"
-                  style={{
-                    zIndex: '1',
-                    background: '#F1511B',
-                    borderRadius: '4px',
-                  }}
-                >
+                <div className="prev z-[1] bg-persimmon rounded">
                   <MinimalButton onClick={jumpToPreviousPage}>
                     <img src={arrowBottom} className="rotate-180" alt="" />
                   </MinimalButton>
@@ -466,14 +459,7 @@ function DeckPreview({
                 <div className="text-white p-2 text-[12px]">
                   {pageIndex + 1}/{deckSlidesNumber}
                 </div>
-                <div
-                  className="next"
-                  style={{
-                    zIndex: '1',
-                    background: '#F1511B',
-                    borderRadius: '4px',
-                  }}
-                >
+                <div className="next z-[1] bg-persimmon rounded">
                   <MinimalButton onClick={jumpToNextPage}>
                     <img src={arrowBottom} alt="" />
                   </MinimalButton>
