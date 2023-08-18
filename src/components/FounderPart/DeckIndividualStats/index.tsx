@@ -92,25 +92,26 @@ function DeckIndividualStats({ deck, deckViews }: Props) {
 
   return (
     <>
-      <div className="flex justify-center mobileh:justify-start">
+      <div className="flex flex-col gap-4 items-center">
+        <div
+          className={`flex flex-col items-center ${
+            !!combinedData?.length ? 'block' : 'hidden'
+          }`}
+        >
+          <h3 className="text-2xl leading-normal text-center">
+            <span className="text-persimmon text-center">{deck?.name} </span>
+            Detailed Information
+          </h3>
+          <span className="text-mirage">For each view</span>
+        </div>
         <Button
           id="download-btn"
           type="button"
+          backgroundColor="#f1511b"
           text="Download viewers email"
-          className="bg-persimmon p-2 rounded text-white"
+          className="rounded text-white p-4 max-w-max"
           onClick={downloadWiewersEmail}
         />
-      </div>
-      <div
-        className={`flex flex-col items-center ${
-          !!combinedData?.length ? 'block' : 'hidden'
-        }`}
-      >
-        <h3 className="text-2xl leading-normal text-center">
-          <span className="text-persimmon text-center">{deck?.name} </span>
-          Detailed Information
-        </h3>
-        <span className="text-mirage">For each view</span>
       </div>
       {!!combinedData?.length &&
         combinedData.map((view) => {

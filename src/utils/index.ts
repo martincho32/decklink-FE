@@ -33,3 +33,9 @@ export function getAverageTotalTime(deckViews: IDeckView[] | null): number {
   }
   return 0;
 }
+
+export function getAverageTotalTimeInMinutes(
+  deckViews: IDeckView[] | null
+): number {
+  return Number((getAverageTotalTime(deckViews) / 60).toFixed(2));
+}
