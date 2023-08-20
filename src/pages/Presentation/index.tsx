@@ -23,7 +23,7 @@ function Presentation() {
 
   useEffect(() => {
     if (!customDeckLink) {
-      const errorMessage = `Error fetching deck's customDeckLink is undefined or null. Please contact support.`;
+      const errorMessage = `There is no deck with such url. Please contact support.`;
       enqueueSnackbar(errorMessage, {
         variant: 'error',
         autoHideDuration: 10000,

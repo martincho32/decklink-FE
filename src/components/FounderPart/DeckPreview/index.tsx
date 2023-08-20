@@ -93,14 +93,8 @@ function DeckPreview({
   const { Download } = getFilePluginInstance;
 
   const handleError = (error: Error | string) => {
-    let errorMessage: string = 'Whoops! Something went wrong. Error: ';
-    const contactSupportMessage = ' Please contact support.';
     if (axios.isAxiosError(error)) {
-      errorMessage +=
-        error.response?.data?.message ??
-        error.response?.data ??
-        'Server error.';
-      enqueueSnackbar(errorMessage + contactSupportMessage, {
+      enqueueSnackbar(error.response?.data?.message, {
         variant: 'error',
         autoHideDuration: 10000,
         anchorOrigin: {
@@ -109,8 +103,7 @@ function DeckPreview({
         },
       });
     } else {
-      errorMessage += (error as Error).message ?? error;
-      enqueueSnackbar(errorMessage + contactSupportMessage, {
+      enqueueSnackbar((error as Error).message ?? error, {
         variant: 'error',
         autoHideDuration: 10000,
         anchorOrigin: {
@@ -203,14 +196,17 @@ function DeckPreview({
   const handleModalSubmit = async (email: string, password?: string) => {
     try {
       if (!deckId) {
-        enqueueSnackbar('deck id is null. Please contact support.', {
-          variant: 'error',
-          autoHideDuration: 2000,
-          anchorOrigin: {
-            vertical: 'top',
-            horizontal: 'right',
-          },
-        });
+        enqueueSnackbar(
+          'There is no deck with such id. Please contact support.',
+          {
+            variant: 'error',
+            autoHideDuration: 2000,
+            anchorOrigin: {
+              vertical: 'top',
+              horizontal: 'right',
+            },
+          }
+        );
         return;
       }
       if (hasPasswordRequired) {

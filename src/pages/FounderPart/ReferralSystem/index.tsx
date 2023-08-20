@@ -21,7 +21,7 @@ export default function Referral() {
         });
       },
       (error) => {
-        enqueueSnackbar(`Failed to copy. Please contact support. ${error}`, {
+        enqueueSnackbar(error.message, {
           variant: 'error',
           autoHideDuration: 2000,
           anchorOrigin: {
