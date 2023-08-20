@@ -17,11 +17,7 @@ import {
   ThumbnailDirection,
   thumbnailPlugin,
 } from '@react-pdf-viewer/thumbnail';
-import {
-  NextIcon,
-  pageNavigationPlugin,
-  PreviousIcon,
-} from '@react-pdf-viewer/page-navigation';
+import { pageNavigationPlugin } from '@react-pdf-viewer/page-navigation';
 import { getFilePlugin, RenderDownloadProps } from '@react-pdf-viewer/get-file';
 
 import '@react-pdf-viewer/core/lib/styles/index.css';
@@ -38,6 +34,7 @@ import AskEmailPassword from '../../AskEmailPassword';
 import { UIContext } from '@/context';
 import { deckService, deckViewService } from '@/services';
 import { IDeckSlidesStats } from '@/types';
+import arrowBottom from '../../../assets/images/ArrowBottom.svg';
 // import Loading from '../../PreloadingScreen';
 
 // import { milisecondsToMinutesAndSeconds } from '@/utils';
@@ -64,6 +61,7 @@ function DeckPreview({
   onClose,
   pageIndex,
   file,
+  numPages,
   setPageIndex,
   deckId,
   deckSlidesNumber,
@@ -167,11 +165,11 @@ function DeckPreview({
   };
 
   const handleKeyDown = (event: KeyboardEvent) => {
-    if (event.key === 'ArrowLeft') {
+    if (event.key === 'ArrowLeft' || event.key === 'ArrowUp') {
       updateSlideTime();
       jumpToPreviousPage();
     }
-    if (event.key === 'ArrowRight') {
+    if (event.key === 'ArrowRight' || event.key === 'ArrowDown') {
       updateSlideTime();
       jumpToNextPage();
     }
@@ -379,21 +377,36 @@ function DeckPreview({
                 position: 'relative',
               }}
             >
-              <div
-                className="prev"
-                style={{
-                  position: 'absolute',
-                  top: '50%',
-                  left: '3rem',
-                  transform: 'translate(0, -100%) rotate(-90deg)',
-                  zIndex: '1',
-                  background: '#fff',
-                  borderRadius: '4px',
-                }}
-              >
-                <MinimalButton onClick={jumpToPreviousPage}>
-                  <PreviousIcon />
-                </MinimalButton>
+              <div className="absolute bg-persimmon  rounded-lg z-10 bottom-0 flex gap-2 left-[50%] -translate-x-1/2 ">
+                <div className="flex">
+                  <div
+                    className="prev"
+                    style={{
+                      zIndex: '1',
+                      background: '#F1511B',
+                      borderRadius: '4px',
+                    }}
+                  >
+                    <MinimalButton onClick={jumpToPreviousPage}>
+                      <img src={arrowBottom} className="rotate-180" alt="" />
+                    </MinimalButton>
+                  </div>
+                  <div className="text-white p-2 text-[12px]">
+                    {pageIndex + 1}/{numPages}
+                  </div>
+                  <div
+                    className="next"
+                    style={{
+                      zIndex: '1',
+                      background: '#F1511B',
+                      borderRadius: '4px',
+                    }}
+                  >
+                    <MinimalButton onClick={jumpToNextPage}>
+                      <img src={arrowBottom} alt="" />
+                    </MinimalButton>
+                  </div>
+                </div>
               </div>
               <Worker workerUrl="https://unpkg.com/pdfjs-dist@3.6.172/build/pdf.worker.min.js">
                 <Viewer
@@ -409,22 +422,6 @@ function DeckPreview({
                   ]}
                 />
               </Worker>
-              <div
-                className="next"
-                style={{
-                  position: 'absolute',
-                  top: '50%',
-                  right: '3rem',
-                  transform: 'translate(0, -100%) rotate(-90deg)',
-                  zIndex: '1',
-                  background: '#fff',
-                  borderRadius: '4px',
-                }}
-              >
-                <MinimalButton onClick={jumpToNextPage}>
-                  <NextIcon />
-                </MinimalButton>
-              </div>
             </div>
             <div
               style={{
@@ -452,21 +449,22 @@ function DeckPreview({
               flexDirection: 'column',
             }}
           >
-            <div
-              className="prev"
-              style={{
-                position: 'absolute',
-                top: '50%',
-                left: '3rem',
-                transform: 'translate(0, -100%) rotate(-90deg)',
-                zIndex: '1',
-                background: '#fff',
-                borderRadius: '4px',
-              }}
-            >
-              <MinimalButton onClick={jumpToPreviousPage}>
-                <PreviousIcon />
-              </MinimalButton>
+            <div className="absolute bg-persimmon  rounded-lg z-10 bottom-4 flex gap-2 left-[50%] -translate-x-1/2 ">
+              <div className="flex">
+                <div className="prev z-[1] bg-persimmon rounded">
+                  <MinimalButton onClick={jumpToPreviousPage}>
+                    <img src={arrowBottom} className="rotate-180" alt="" />
+                  </MinimalButton>
+                </div>
+                <div className="text-white p-2 text-[12px]">
+                  {pageIndex + 1}/{deckSlidesNumber}
+                </div>
+                <div className="next z-[1] bg-persimmon rounded">
+                  <MinimalButton onClick={jumpToNextPage}>
+                    <img src={arrowBottom} alt="" />
+                  </MinimalButton>
+                </div>
+              </div>
             </div>
             <div
               className="deckUserPreview"
@@ -491,58 +489,42 @@ function DeckPreview({
                 />
               </Worker>
             </div>
-            <div
-              className="next"
-              style={{
-                position: 'absolute',
-                top: '50%',
-                right: '3rem',
-                transform: 'translate(0, -100%) rotate(-90deg)',
-                zIndex: '1',
-                background: '#fff',
-                borderRadius: '4px',
-              }}
-            >
-              <MinimalButton onClick={jumpToNextPage}>
-                <NextIcon />
-              </MinimalButton>
-            </div>
           </div>
         </div>
       ) : (
         <div>Something went wrong, please contact support</div>
       )}
+      <div className="fixed top-5 laptop:right-5 laptop:translate-x-0 right-[50%] translate-x-1/2 flex gap-4">
+        {type === 'deckUserPreview' && deckDownloadUrl && (
+          <Download>
+            {(props: RenderDownloadProps) => (
+              <Button
+                type="button"
+                text="Download"
+                icon={
+                  <div className="rotate-[135deg]">
+                    <Logo color="white" width="10" height="10" />
+                  </div>
+                }
+                className="bg-persimmon gap-2 text-[14px] text-white py-3 px-3"
+                textColor="#FFF"
+                onClick={props.onClick}
+              />
+            )}
+          </Download>
+        )}
 
-      {type === 'deckUserPreview' && deckDownloadUrl && (
-        <Download>
-          {(props: RenderDownloadProps) => (
-            <Button
-              type="button"
-              text="Download Deck"
-              icon={
-                <div className="rotate-[135deg]">
-                  <Logo color="white" />
-                </div>
-              }
-              className="bg-persimmon text-white fixed bottom-4 left-[5%]  py-3 px-3"
-              textColor="#FFF"
-              onClick={props.onClick}
-            />
-          )}
-        </Download>
-      )}
-
-      {type === 'deckUserPreview' && (
-        <Button
-          type="button"
-          text="Join DeckLink"
-          icon={<Logo color="white" />}
-          className="bg-persimmon/25 text-white fixed bottom-4 right-[7%]  py-3 px-3"
-          textColor="#FFF"
-          onClick={onSaveDeck}
-        />
-      )}
-
+        {type === 'deckUserPreview' && (
+          <Button
+            type="button"
+            text="Join DeckLink"
+            icon={<Logo color="white" width="10" height="10" />}
+            className="text-[14px] text-white py-3 px-3"
+            textColor="#FFF"
+            onClick={onSaveDeck}
+          />
+        )}
+      </div>
       {type === 'deckCreationPreview' && (
         <Button
           type="button"

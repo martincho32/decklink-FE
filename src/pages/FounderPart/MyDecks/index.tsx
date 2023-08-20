@@ -149,41 +149,42 @@ function MyDecks() {
             handleOnCloseModal();
           }}
         >
-          <div className="">
-            <h2 className="mobilev:leading-normal desktopxl:text-5xl desktopxl:w-[50rem] desktopxl:leading-normal mobileh:text-2xl mobileh:w-[35rem] mobileh:leading-normal desktop:text-4xl desktop:leading-normal text-mirage desktop:w-[40rem] mb-8 mt-[-1rem] mobilev:mt-[-0.5rem]">
+          <div className="flex flex-col gap-6">
+            <h2 className="mobilev:leading-normal mobilev:text-[14px] mobileh:text-[16px] tablet:text-[20px] desktop:text-[24px] desktopxl:text-[32px] desktopxl:w-[50rem] mobileh:w-[35rem] text-mirage desktop:w-[40rem] mt-[-1rem] mobilev:mt-[-0.5rem]">
               Not getting as much
               <br />
               <span className="text-white p-2 mobilev:p-1 bg-persimmon">
                 VC meetings as you want?
               </span>
             </h2>
-            <div className="flex justify-between items-start">
-              <img
-                src={reviewStats}
-                className="desktopxl:max-h-[7rem] mobileh:max-h-[4rem] mobilev:max-h-[3rem] max-h-[5rem] h-auto"
-                alt="Review Stats"
-              />
-              <img
-                src={customImage}
-                className="desktopxl:max-h-[17rem] mobileh:max-h-[10rem] mobilev:max-h-[7rem] max-h-[15rem] h-auto"
-                aria-hidden
-                alt="Custom Image"
-              />
-            </div>
+            <div className="flex flex-col gap-[-2rem]">
+              <div className="flex justify-between items-start">
+                <img
+                  src={reviewStats}
+                  className="mobilev:max-h-[3rem] mobileh:max-h-[4rem] tablet:max-h-[5rem] laptop:max-h-[6rem] desktopxl:max-h-[7rem]"
+                  alt="Review Stats"
+                />
+                <img
+                  src={customImage}
+                  className="mobilev:max-h-[7rem] mobileh:max-h-[10rem] tablet:max-h-[12rem] desktop:max-h-[14rem] desktopxl:max-h-[17rem]"
+                  aria-hidden
+                  alt="Custom Image"
+                />
+              </div>
 
-            <div className="desktopxl:h-[20rem] mobilev:h-[6rem] mobilev:mt-[-7rem] mobilev:mb-24 mobileh:mb-2 desktop:mb-8 desktop:mt-[-5rem] mobileh:h-[15rem] w-full h-[15rem] mx-auto mb-12 mt-[-4rem]">
-              <Carrousel
-                cards={cards}
-                height="15rem"
-                width="100%"
-                margin="0 auto"
-                offset={2}
-              />
+              <div className="mobilev:h-auto mobileh:h-[9rem] laptop:h-[9rem] desktopxl:h-[11rem]">
+                <Carrousel
+                  cards={cards}
+                  height="5rem"
+                  width="100%"
+                  margin="0 auto"
+                  offset={2}
+                />
+              </div>
             </div>
-
             <Button
               type="button"
-              text="Free Pitch Deck Review"
+              text="Get Free Pitch Deck Review"
               icon={<Logo color="#FFFFFF" width="10" height="11" />}
               backgroundColor="#F1511B"
               textColor="#FFF"

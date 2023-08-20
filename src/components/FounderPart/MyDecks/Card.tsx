@@ -29,7 +29,7 @@ import {
   AlertDialogTrigger,
 } from '../../UI/AlertDialog';
 import { deckViewService } from '@/services';
-import { getAverageTotalTime } from '@/utils';
+import { getAverageTotalTimeInMinutes } from '@/utils';
 
 import { pageThumbnailPlugin } from './pageThumbnailPlugin';
 
@@ -150,14 +150,19 @@ function Card({ deck, handleClickDelete, onClick }: Props) {
               tabIndex={0}
               onMouseEnter={handleMouseEnter}
               onMouseLeave={handleMouseLeave}
-              onClick={handleCopyClick}
-              className={`${styles.buttonContainer} flex w-full gap-1 p-2 bg-gray-200 rounded justify-between`}
+              className={`${styles.buttonContainer}`}
             >
-              <p className="break-all max-w-[12rem] truncate">{`fundraisingtoolbox.io/preview/${deck?.customDeckLink}`}</p>
-              <img src={copyIcon} alt="" />
+              <Button
+                type="button"
+                text="Copy Link"
+                icon={<img src={copyIcon} alt="" />}
+                textColor="#F1511B"
+                className="min-w-max"
+                onClick={handleCopyClick}
+              />
               {isPopupVisible && (
                 <div
-                  className={styles.popup}
+                  className={`${styles.popup}`}
                 >{`fundraisingtoolbox.io/preview/${deck?.customDeckLink}`}</div>
               )}
             </div>
@@ -185,12 +190,12 @@ function Card({ deck, handleClickDelete, onClick }: Props) {
                   alt="average-time-icon"
                 />
                 <p className={styles.deckMainInfoItemTitle}>
-                  Average spent time(s):
+                  Avg spent time(m):
                 </p>
               </div>
               <div className={styles.dashedLine} />
               <p className={styles.deckMainInfoItemData}>
-                {getAverageTotalTime(deckViews)}
+                {getAverageTotalTimeInMinutes(deckViews)}
               </p>
             </div>
           </div>
