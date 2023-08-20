@@ -60,17 +60,20 @@ function MyDecks() {
         const updatedDeckList = deckList.filter((item) => item._id !== id);
         setDeckList(updatedDeckList);
       } else {
-        throw new Error('Deck not found! Please contact support.');
+        throw new Error('Deck not found! Please try again or contact support.');
       }
     } catch (error: any) {
-      enqueueSnackbar(`Couldn't delete the deck. Please contact support.`, {
-        variant: 'error',
-        autoHideDuration: 10000,
-        anchorOrigin: {
-          vertical: 'top',
-          horizontal: 'right',
-        },
-      });
+      enqueueSnackbar(
+        `Couldn't delete the deck. Please try again or contact support.`,
+        {
+          variant: 'error',
+          autoHideDuration: 10000,
+          anchorOrigin: {
+            vertical: 'top',
+            horizontal: 'right',
+          },
+        }
+      );
     }
   };
 
@@ -105,14 +108,17 @@ function MyDecks() {
         checkIfShowFreePitchDeckModal();
       })
       .catch(() => {
-        enqueueSnackbar(`Couldn't load decks. Please contact support.`, {
-          variant: 'error',
-          autoHideDuration: 10000,
-          anchorOrigin: {
-            vertical: 'top',
-            horizontal: 'right',
-          },
-        });
+        enqueueSnackbar(
+          `Couldn't load decks. Please try again or contact support.`,
+          {
+            variant: 'error',
+            autoHideDuration: 10000,
+            anchorOrigin: {
+              vertical: 'top',
+              horizontal: 'right',
+            },
+          }
+        );
       });
   });
 

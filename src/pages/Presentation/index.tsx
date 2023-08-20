@@ -64,7 +64,14 @@ function Presentation() {
           if (data.isDownloadable) setDeckDownloadURL(data.deckUrl);
         })
         .catch((error) => {
-          console.error('Presentation page error: ', error.message);
+          enqueueSnackbar(error.message, {
+            variant: 'error',
+            autoHideDuration: 10000,
+            anchorOrigin: {
+              vertical: 'top',
+              horizontal: 'right',
+            },
+          });
         });
     }
   }, []);

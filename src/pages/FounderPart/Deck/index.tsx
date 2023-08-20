@@ -97,14 +97,8 @@ function Deck({ title = 'Create', deckId }: Props) {
   };
 
   const handleError = (error: Error | string) => {
-    let errorMessage: string =
-      'Whoops! Something went wrong. Please contact support. Error: ';
     if (axios.isAxiosError(error)) {
-      errorMessage +=
-        error.response?.data?.message ??
-        error.response?.data ??
-        'Server error.';
-      enqueueSnackbar(errorMessage, {
+      enqueueSnackbar(error.response?.data?.message, {
         variant: 'error',
         autoHideDuration: 10000,
         anchorOrigin: {
@@ -113,7 +107,7 @@ function Deck({ title = 'Create', deckId }: Props) {
         },
       });
     } else {
-      errorMessage += (error as Error).message ?? error;
+      const errorMessage = (error as Error).message ?? error;
       enqueueSnackbar(errorMessage, {
         variant: 'error',
         autoHideDuration: 10000,

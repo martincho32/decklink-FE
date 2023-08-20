@@ -77,15 +77,18 @@ function Card({ deck, handleClickDelete, onClick }: Props) {
             },
           });
         },
-        (error) => {
-          enqueueSnackbar(`Failed to copy. Please contact support. ${error}`, {
-            variant: 'error',
-            autoHideDuration: 2000,
-            anchorOrigin: {
-              vertical: 'top',
-              horizontal: 'right',
-            },
-          });
+        () => {
+          enqueueSnackbar(
+            `Failed to copy. Please try again or contact support.`,
+            {
+              variant: 'error',
+              autoHideDuration: 2000,
+              anchorOrigin: {
+                vertical: 'top',
+                horizontal: 'right',
+              },
+            }
+          );
         }
       );
   };
