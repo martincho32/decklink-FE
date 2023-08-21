@@ -78,7 +78,7 @@ function Card({ deck, handleClickDelete, onClick }: Props) {
           });
         },
         (error) => {
-          enqueueSnackbar(`Failed to copy. Please contact support. ${error}`, {
+          enqueueSnackbar(error.message, {
             variant: 'error',
             autoHideDuration: 2000,
             anchorOrigin: {

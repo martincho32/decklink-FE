@@ -40,7 +40,7 @@ function DeclkDetail() {
           },
         });
         if (!data.length) {
-          enqueueSnackbar(`Whoops!! You don't have any views yet.`, {
+          enqueueSnackbar(`You don't have any views yet.`, {
             variant: 'info',
             autoHideDuration: 3000,
             anchorOrigin: {
@@ -84,7 +84,7 @@ function DeclkDetail() {
           });
         },
         (error) => {
-          enqueueSnackbar(`Failed to copy. Please contact support. ${error}`, {
+          enqueueSnackbar(error.message, {
             variant: 'error',
             autoHideDuration: 2000,
             anchorOrigin: {
