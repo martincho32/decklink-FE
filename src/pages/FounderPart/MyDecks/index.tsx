@@ -65,7 +65,7 @@ function MyDecks() {
     } catch (error: any) {
       enqueueSnackbar(`Couldn't delete the deck. Please contact support.`, {
         variant: 'error',
-        autoHideDuration: 10000,
+        autoHideDuration: 5000,
         anchorOrigin: {
           vertical: 'top',
           horizontal: 'right',
@@ -107,7 +107,7 @@ function MyDecks() {
       .catch(() => {
         enqueueSnackbar(`Couldn't load decks. Please contact support.`, {
           variant: 'error',
-          autoHideDuration: 10000,
+          autoHideDuration: 5000,
           anchorOrigin: {
             vertical: 'top',
             horizontal: 'right',
