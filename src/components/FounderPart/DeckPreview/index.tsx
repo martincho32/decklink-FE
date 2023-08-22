@@ -138,7 +138,7 @@ function DeckPreview({
         const currentTime = Date.now();
         const elapsedTime = currentTime - currentSlideStartTime;
         const auxSlidesStats = JSON.parse(JSON.stringify(slidesStats));
-        if (auxSlidesStats[pageIndex].viewingTime >= 120000) return; // Set the limit in 2 minutes
+        if (auxSlidesStats[pageIndex]?.viewingTime ?? 0 >= 120000) return; // Set the limit in 2 minutes
         auxSlidesStats[pageIndex].viewingTime += elapsedTime;
         setSlidesStats([...auxSlidesStats]);
         setCurrentSlideStartTime(Date.now());
