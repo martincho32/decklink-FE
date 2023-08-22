@@ -213,7 +213,9 @@ export default function Referral() {
                     />
                     <div className="mobilev:items-start flex flex-col tablet:items-end justify-between">
                       <p className="font-bold">Price:</p>
-                      <p>{upgrade.redeemPrice} referral token</p>
+                      <p className="tablet:text-right">
+                        {upgrade.redeemPrice} referral token
+                      </p>
                     </div>
                   </div>
                 </div>
