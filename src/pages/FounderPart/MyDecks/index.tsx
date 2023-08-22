@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useContext, useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useSnackbar } from 'notistack';
 import { v4 as uuidv4 } from 'uuid';
 import {
@@ -10,6 +10,7 @@ import {
   Logo,
   Carrousel,
   CarouselCard,
+  AlertDialogComponent,
 } from '@/components';
 import whiteTopRightArrow from '../../../assets/images/ArrowTopRight.svg';
 import styles from './MyDecks.module.css';
@@ -32,12 +33,15 @@ import CalendlyIntegration from '@/components/CalendlyIntegration';
 import { useLocalStorage } from '@/hooks/useLocalStorage';
 
 function MyDecks() {
+  const navigate = useNavigate();
+
   const { getItem, setItem } = useLocalStorage();
   const [previewPickDeckSlide, setPreviewPickDeckSlide] = useState(false);
   const [pageIndex, setPageIndex] = useState(0);
   const [showFreePitchDeckModal, setShowFreePitchDeckModal] =
     useState<boolean>(false);
   const [showCalendly, setShowCalendly] = useState<boolean>(false);
+  const [showReferralAlert, setShowReferralAlert] = useState(false);
 
   const handleOnClosePitchDeckSlidePreview = () => {
     document.body.style.overflow = 'auto';
@@ -92,6 +96,10 @@ function MyDecks() {
     setItem('showFreePitchDeckModal', JSON.stringify(false));
   }
 
+  function onClickGoToReferral() {
+    navigate('/founder/referrals');
+  }
+
   // Use the useLoading hook with the actual backend request function
   const isLoading = useLoading(() => {
     return deckService
@@ -122,6 +130,12 @@ function MyDecks() {
     }
     document.body.style.overflow = 'auto';
   }, [showFreePitchDeckModal, showCalendly]);
+
+  useEffect(() => {
+    if ((user?.maxDecksStorageSize ?? 5) <= deckList.length) {
+      setShowReferralAlert(true);
+    }
+  });
 
   const cards = [
     {
@@ -217,21 +231,37 @@ function MyDecks() {
               <h2 className={styles.title}>
                 Hi {user?.firstName}! Here is your created decks
               </h2>
-              <Link
-                className={`${styles.link} hover:no-underline`}
-                to="/founder/deck/create"
-                state={{
-                  deckListLength: deckList.length,
-                }}
-              >
-                <Button
-                  type="button"
-                  text="Create New Deck"
-                  icon={<img src={whiteTopRightArrow} alt="Arrow" />}
-                  backgroundColor="#F1511B"
-                  textColor="#FFF"
-                />
-              </Link>
+              {!showReferralAlert ? (
+                <Link
+                  className={`${styles.link} hover:no-underline`}
+                  to="/founder/deck/create"
+                  state={{
+                    deckListLength: deckList.length,
+                  }}
+                >
+                  <Button
+                    type="button"
+                    text="Create New Deck"
+                    icon={<img src={whiteTopRightArrow} alt="Arrow" />}
+                    backgroundColor="#F1511B"
+                    textColor="#FFF"
+                  />
+                </Link>
+              ) : (
+                <AlertDialogComponent
+                  alertTitle="Can't create more decks"
+                  alertDescription="You need to redeem an upgrade to unlock more decks storage. Go to Referral System page and refer a new user to unlock."
+                  action={() => onClickGoToReferral()}
+                >
+                  <Button
+                    type="button"
+                    text="Create New Deck"
+                    icon={<img src={whiteTopRightArrow} alt="Arrow" />}
+                    backgroundColor="#F1511B"
+                    textColor="#FFF"
+                  />
+                </AlertDialogComponent>
+              )}
             </div>
             <div className={styles.decksBlock}>
               {deckList.map((deck) => (
