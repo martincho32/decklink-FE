@@ -1,5 +1,5 @@
 import { useState, useContext } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useSnackbar } from 'notistack';
 import whiteTopRightArrow from '../../assets/images/ArrowTopRight.svg';
 import styles from './SignUp.module.css';
@@ -16,7 +16,8 @@ function SignUp() {
   const { registerUser } = useContext(AuthContext);
   const { enqueueSnackbar } = useSnackbar();
   const navigate = useNavigate();
-
+  const location = useLocation();
+  const queryParams = new URLSearchParams(location.search);
   const [page, setPage] = useState<number>(0);
 
   // const [loginError, setSignUpError] = useState<string | null>(null);
@@ -117,7 +118,8 @@ function SignUp() {
       formData.firstName,
       formData.lastName,
       formData.companyName,
-      formData.companyWebUrl
+      formData.companyWebUrl,
+      queryParams.get('referredBy')!
     );
     if (hasError) {
       enqueueSnackbar(message, {
