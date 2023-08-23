@@ -96,7 +96,7 @@ function DeckPreview({
     if (axios.isAxiosError(error)) {
       enqueueSnackbar(error.response?.data?.message, {
         variant: 'error',
-        autoHideDuration: 10000,
+        autoHideDuration: 5000,
         anchorOrigin: {
           vertical: 'top',
           horizontal: 'right',
@@ -105,7 +105,7 @@ function DeckPreview({
     } else {
       enqueueSnackbar((error as Error).message ?? error, {
         variant: 'error',
-        autoHideDuration: 10000,
+        autoHideDuration: 5000,
         anchorOrigin: {
           vertical: 'top',
           horizontal: 'right',

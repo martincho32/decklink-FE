@@ -1,5 +1,4 @@
 import { PropsWithChildren, useReducer, useMemo, useEffect } from 'react';
-// import Cookies from 'js-cookie';
 import { AuthContext, authReducer } from '.';
 import { IUser } from '../../types';
 import { loginService } from '../../services';
@@ -18,7 +17,6 @@ const AUTH_INITIAL_STATE: AuthState = {
 export function AuthProvider({ children }: PropsWithChildren) {
   const [state, dispatch] = useReducer(authReducer, AUTH_INITIAL_STATE);
   const { removeItem, setItem, getItem } = useLocalStorage();
-
   const logoutUser = () => {
     removeItem('token');
     removeItem('showFreePitchDeckModal');
@@ -62,21 +60,25 @@ export function AuthProvider({ children }: PropsWithChildren) {
     _firstName: string,
     _lastName: string,
     companyName: string,
-    companyWebUrl: string
+    companyWebUrl: string,
+    referredBy: string
   ): Promise<{
     hasError: boolean;
     message?: string;
   }> => {
     try {
-      const { data } = await loginService.registerUser({
-        email: _email,
-        password,
-        cfpassword,
-        firstName: _firstName,
-        lastName: _lastName,
-        companyName,
-        companyWebUrl,
-      });
+      const { data } = await loginService.registerUser(
+        {
+          email: _email,
+          password,
+          cfpassword,
+          firstName: _firstName,
+          lastName: _lastName,
+          companyName,
+          companyWebUrl,
+        },
+        referredBy
+      );
       const { token, firstName, lastName, email, role, hasCreatedDeck } = data;
       setItem('token', token);
       dispatch({
@@ -111,11 +113,27 @@ export function AuthProvider({ children }: PropsWithChildren) {
           Authorization: `Bearer ${localStorage.getItem('token')}`,
         },
       });
-      const { token, email, role, hasCreatedDeck, firstName } = data;
+      const {
+        token,
+        email,
+        role,
+        hasCreatedDeck,
+        firstName,
+        id,
+        maxDecksStorageSize,
+      } = data;
       setItem('token', token);
       dispatch({
         type: '[Auth] - Validate',
-        payload: { email, role, token, hasCreatedDeck, firstName },
+        payload: {
+          email,
+          role,
+          token,
+          hasCreatedDeck,
+          firstName,
+          _id: id,
+          maxDecksStorageSize,
+        },
       });
       return true;
     } catch (error: any) {
