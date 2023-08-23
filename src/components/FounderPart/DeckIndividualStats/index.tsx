@@ -111,7 +111,9 @@ function DeckIndividualStats({ deck, deckViews }: Props) {
           type="button"
           backgroundColor="#f1511b"
           text="Download viewers email"
-          className="rounded text-white p-4 max-w-max"
+          className={
+            !!deckViews?.length ? 'rounded text-white p-4 max-w-max' : 'hidden'
+          }
           onClick={downloadWiewersEmail}
         />
       </div>

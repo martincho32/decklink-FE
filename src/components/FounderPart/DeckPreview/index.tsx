@@ -77,7 +77,9 @@ function DeckPreview({
 
   const { isShowModal, setShowModal, hasPasswordRequired, hasEmailRequired } =
     useContext(UIContext);
-  const [currentSlideStartTime, setCurrentSlideStartTime] = useState(0);
+  const [currentSlideStartTime, setCurrentSlideStartTime] = useState(
+    Date.now()
+  );
   const [isPageActive, setIsPageActive] = useState(true);
   const [slidesStats, setSlidesStats] = useState<IDeckSlidesStats[]>([]);
   const [deckViewId, setDeckViewId] = useState<string | null>(null);
@@ -133,14 +135,24 @@ function DeckPreview({
   };
 
   const updateSlideTime = () => {
+    console.log('isPageActive: ', isPageActive);
+    console.log('slidesStats.lenght: ', slidesStats.length);
     if (isPageActive) {
       if (slidesStats.length) {
         const currentTime = Date.now();
         const elapsedTime = currentTime - currentSlideStartTime;
         const auxSlidesStats = JSON.parse(JSON.stringify(slidesStats));
-        if (auxSlidesStats[pageIndex]?.viewingTime ?? 0 >= 120000) return; // Set the limit in 2 minutes
+        console.log('auxSlidesStats: ', auxSlidesStats);
         auxSlidesStats[pageIndex].viewingTime += elapsedTime;
+        if (auxSlidesStats[pageIndex]?.viewingTime >= 180000) {
+          auxSlidesStats[pageIndex].viewingTime = 180000;
+        } // Set the limit in 3 minutes
+
         setSlidesStats([...auxSlidesStats]);
+        sessionStorage.setItem(
+          'slidesStats',
+          JSON.stringify([...auxSlidesStats])
+        );
         setCurrentSlideStartTime(Date.now());
       }
     }
@@ -167,13 +179,6 @@ function DeckPreview({
       jumpToNextPage();
     }
   };
-
-  useEffect(() => {
-    document.addEventListener('keydown', handleKeyDown);
-    return () => {
-      document.removeEventListener('keydown', handleKeyDown);
-    };
-  }, [pageIndex]);
 
   function initializeArrayOfSLidesStats(count): IDeckSlidesStats[] {
     const arrayOfEmptyObjects: { slideNumber: number; viewingTime: number }[] =
@@ -261,6 +266,13 @@ function DeckPreview({
   };
 
   useEffect(() => {
+    document.addEventListener('keydown', handleKeyDown);
+    return () => {
+      document.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [pageIndex]);
+
+  useEffect(() => {
     if (type === 'deckUserPreview') {
       document.addEventListener('visibilitychange', handleVisibilityChange);
     }
@@ -310,6 +322,16 @@ function DeckPreview({
         });
     }
   }, [deckSlidesNumber]);
+
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      updateSlideTime();
+    }, 5000);
+
+    return () => {
+      clearInterval(intervalId);
+    };
+  }, []);
 
   // useEffect(() => {
   //   if (type === 'deckUserPreview') {
