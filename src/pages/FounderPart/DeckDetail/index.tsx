@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
+import axios from 'axios';
 import { useSnackbar } from 'notistack';
 import { Button, Logo, MainLayout } from '../../../components';
 import { deckService, deckViewService } from '../../../services';
@@ -19,8 +20,30 @@ function DeclkDetail() {
   const navigate = useNavigate();
 
   const [deck, setDeck] = useState<IDeck | null>(null);
-  const [deckViews, setDeckViews] = useState<IDeckView[] | null>(null);
+  const [deckViews, setDeckViews] = useState<IDeckView[] | null>([]);
   const [isPopupVisible, setPopupVisible] = useState(false);
+
+  const handleError = (error: Error | string) => {
+    if (axios.isAxiosError(error)) {
+      enqueueSnackbar(error.response?.data?.message, {
+        variant: 'error',
+        autoHideDuration: 10000,
+        anchorOrigin: {
+          vertical: 'top',
+          horizontal: 'right',
+        },
+      });
+    } else {
+      enqueueSnackbar((error as Error).message ?? error, {
+        variant: 'error',
+        autoHideDuration: 10000,
+        anchorOrigin: {
+          vertical: 'top',
+          horizontal: 'right',
+        },
+      });
+    }
+  };
 
   const isLoading = useLoading(async () => {
     if (!id) {
@@ -51,7 +74,8 @@ function DeclkDetail() {
         }
         setDeckViews(data);
       } catch (error: any) {
-        console.error('Error: ', error.message);
+        console.error('Error: ', error);
+        handleError(error);
       }
     }
   });

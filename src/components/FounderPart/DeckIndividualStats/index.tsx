@@ -1,3 +1,4 @@
+/* eslint-disable no-unsafe-optional-chaining */
 import { AccordionTopContent, LineChart } from '../..';
 import { IDeck, IDeckView } from '../../../types';
 import {
@@ -52,7 +53,8 @@ function DeckIndividualStats({ deck, deckViews }: Props) {
         const combinedSlide = {
           ...slide,
           viewingTime: group.reduce(
-            (total, obj) => total + obj.deckSlidesStats[index].viewingTime,
+            (total, obj) =>
+              total + obj.deckSlidesStats[index]?.viewingTime ?? 0,
             0
           ),
         };
@@ -143,7 +145,7 @@ function DeckIndividualStats({ deck, deckViews }: Props) {
                         <LineChart
                           labels={labels as string[] | undefined}
                           data={view.deckSlidesStats.map(
-                            (slide) => slide.viewingTime / 1000
+                            (slide) => (slide.viewingTime ?? 0) / 1000
                           )}
                           deck={deck}
                           pdfFile={deck?.deckUrl}

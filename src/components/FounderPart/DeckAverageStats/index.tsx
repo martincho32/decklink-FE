@@ -28,14 +28,13 @@ function DeckAverageStats({ deck, deckViews }: Props) {
         [currentIndex]: currentValue.deckSlidesStats,
       };
     }, {});
-
   const auxMockedData: number[] = [];
   labels?.forEach((_slideName, index) => {
     (Object.values(rawData!) as [][]).forEach((slide: IDeckSlidesStats[]) => {
       if (auxMockedData[index]) {
-        auxMockedData[index] += slide[index]?.viewingTime || 0;
+        auxMockedData[index] += slide[index]?.viewingTime ?? 0;
       } else {
-        auxMockedData[index] = slide[index]?.viewingTime || 0;
+        auxMockedData[index] = slide[index]?.viewingTime ?? 0;
       }
     });
   });
