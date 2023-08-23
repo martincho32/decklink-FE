@@ -134,8 +134,10 @@ function MyDecks() {
   useEffect(() => {
     if ((user?.maxDecksStorageSize ?? 5) <= deckList.length) {
       setShowReferralAlert(true);
+    } else {
+      setShowReferralAlert(false);
     }
-  });
+  }, [user, deckList]);
 
   useEffect(() => {
     checkIfShowFreePitchDeckModal();
