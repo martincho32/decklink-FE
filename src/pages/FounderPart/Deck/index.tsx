@@ -36,10 +36,6 @@ export interface Props {
   deckId?: string;
 }
 
-const deckAmountBeforeShowFreePitchDeckModal = [
-  0, 4, 9, 14, 19, 24, 29, 34, 39,
-];
-
 function Deck({ title = 'Create', deckId }: Props) {
   const scrollModePluginInstance = scrollModePlugin();
   scrollModePluginInstance.switchScrollMode(ScrollMode.Horizontal);
@@ -271,11 +267,15 @@ function Deck({ title = 'Create', deckId }: Props) {
         },
       });
 
-      if (
-        deckAmountBeforeShowFreePitchDeckModal.includes(
-          location.state?.deckListLength
-        )
-      ) {
+      const checkIfDeckListLengthIsDivisibleByFive = () => {
+        // Also checks if deckListLength is zero
+        return (
+          ((location.state?.deckListLength ?? 0) + 1) % 5 === 0 ||
+          location.state?.deckListLength === 0
+        );
+      };
+
+      if (checkIfDeckListLengthIsDivisibleByFive()) {
         setItem('showFreePitchDeckModal', JSON.stringify(true));
       }
       navigate('/founder/decks');
