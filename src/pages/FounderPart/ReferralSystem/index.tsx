@@ -1,7 +1,7 @@
 import { useContext, useEffect, useState } from 'react';
 import axios from 'axios';
 import { useSnackbar } from 'notistack';
-import { Button, Logo, MainLayout } from '@/components';
+import { AlertDialogComponent, Button, Logo, MainLayout } from '@/components';
 import contactImg from '../../../assets/images/Contacts.png';
 import copyIcon from '../../../assets/images/CopyIcon.svg';
 import { AuthContext } from '@/context';
@@ -11,7 +11,7 @@ import { IUpgrade, IUser } from '@/types';
 export default function Referral() {
   const [referralIsFull] = useState<boolean>(false);
   const { enqueueSnackbar } = useSnackbar();
-  const { user } = useContext(AuthContext);
+  const { user, validateToken } = useContext(AuthContext);
   const [userDetail, setUserDetail] = useState<IUser>({});
   const [upgradeList, setUpgradeList] = useState<IUpgrade[]>([]);
   const [refreshPage, setRefreshPage] = useState(false);
@@ -71,11 +71,12 @@ export default function Referral() {
       );
   };
 
-  const handleBuyUpgradeClick = (item: IUpgrade) => {
+  const handleBuyUpgradeClick = async (item: IUpgrade) => {
     upgradeService
       .redeemUpgradeItem(item, axiosConfig)
-      .then(() => {
+      .then(async () => {
         setRefreshPage(!refreshPage);
+        await validateToken();
         enqueueSnackbar('Upgrade successfully redeemed!', {
           variant: 'success',
           autoHideDuration: 2000,
@@ -200,17 +201,23 @@ export default function Referral() {
                     <p className="">{upgrade.description}</p>
                   </div>
                   <div className="flex mobilev:flex-col  mobilev:gap-2 tablet:flex-row tablet:justify-between">
-                    <Button
-                      type="button"
-                      text="Buy Upgrade"
-                      icon={<Logo color="#FFFFFF" width="10" height="11" />}
-                      backgroundColor="#F1511B"
-                      textColor="#FFF"
-                      onClick={() => {
+                    <AlertDialogComponent
+                      actionClassName="bg-persimmon"
+                      action={() => {
                         handleBuyUpgradeClick(upgrade);
                       }}
-                      className="py-3 w-full relative z-10 max-w-max"
-                    />
+                      alertDescription="This action will redeem 5 extra slots to upload decks."
+                    >
+                      <Button
+                        type="button"
+                        text="Buy Upgrade"
+                        icon={<Logo color="#FFFFFF" width="10" height="11" />}
+                        backgroundColor="#F1511B"
+                        textColor="#FFF"
+                        className="py-3 w-full relative z-10 max-w-max"
+                      />
+                    </AlertDialogComponent>
+
                     <div className="mobilev:items-start flex flex-col tablet:items-end justify-between">
                       <p className="font-bold">Price:</p>
                       <p>{upgrade.redeemPrice} referral token</p>
