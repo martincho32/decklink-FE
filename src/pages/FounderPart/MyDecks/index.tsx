@@ -82,7 +82,7 @@ function MyDecks() {
     const localStorageShowModal = JSON.parse(
       getItem('showFreePitchDeckModal')! ?? true
     );
-    if (!!localStorageShowModal) {
+    if (!!localStorageShowModal && !!deckList.length) {
       setShowFreePitchDeckModal(true);
     } else {
       setShowFreePitchDeckModal(false);
@@ -136,6 +136,10 @@ function MyDecks() {
       setShowReferralAlert(true);
     }
   });
+
+  useEffect(() => {
+    checkIfShowFreePitchDeckModal();
+  }, [deckList]);
 
   const cards = [
     {
