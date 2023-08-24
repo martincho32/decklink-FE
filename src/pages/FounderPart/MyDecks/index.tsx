@@ -79,10 +79,15 @@ function MyDecks() {
   };
 
   function checkIfShowFreePitchDeckModal() {
+    console.log(JSON.parse(getItem('showFreePitchDeckModal')! ?? false));
     const localStorageShowModal = JSON.parse(
-      getItem('showFreePitchDeckModal')! ?? true
+      getItem('showFreePitchDeckModal')! ?? false
     );
-    if (!!localStorageShowModal && !!deckList.length) {
+
+    if (
+      !!localStorageShowModal &&
+      (deckList.length % 5 === 0 || deckList.length === 1)
+    ) {
       setShowFreePitchDeckModal(true);
     } else {
       setShowFreePitchDeckModal(false);
