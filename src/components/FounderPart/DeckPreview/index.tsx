@@ -17,11 +17,7 @@ import {
   ThumbnailDirection,
   thumbnailPlugin,
 } from '@react-pdf-viewer/thumbnail';
-import {
-  NextIcon,
-  pageNavigationPlugin,
-  PreviousIcon,
-} from '@react-pdf-viewer/page-navigation';
+import { pageNavigationPlugin } from '@react-pdf-viewer/page-navigation';
 import { getFilePlugin, RenderDownloadProps } from '@react-pdf-viewer/get-file';
 
 import '@react-pdf-viewer/core/lib/styles/index.css';
@@ -38,6 +34,7 @@ import AskEmailPassword from '../../AskEmailPassword';
 import { UIContext } from '@/context';
 import { deckService, deckViewService } from '@/services';
 import { IDeckSlidesStats } from '@/types';
+import arrowBottom from '../../../assets/images/ArrowBottom.svg';
 // import Loading from '../../PreloadingScreen';
 
 // import { milisecondsToMinutesAndSeconds } from '@/utils';
@@ -64,6 +61,7 @@ function DeckPreview({
   onClose,
   pageIndex,
   file,
+  numPages,
   setPageIndex,
   deckId,
   deckSlidesNumber,
@@ -79,7 +77,9 @@ function DeckPreview({
 
   const { isShowModal, setShowModal, hasPasswordRequired, hasEmailRequired } =
     useContext(UIContext);
-  const [currentSlideStartTime, setCurrentSlideStartTime] = useState(0);
+  const [currentSlideStartTime, setCurrentSlideStartTime] = useState(
+    Date.now()
+  );
   const [isPageActive, setIsPageActive] = useState(true);
   const [slidesStats, setSlidesStats] = useState<IDeckSlidesStats[]>([]);
   const [deckViewId, setDeckViewId] = useState<string | null>(null);
@@ -95,26 +95,19 @@ function DeckPreview({
   const { Download } = getFilePluginInstance;
 
   const handleError = (error: Error | string) => {
-    let errorMessage: string = 'Whoops! Something went wrong. Error: ';
-    const contactSupportMessage = ' Please contact support.';
     if (axios.isAxiosError(error)) {
-      errorMessage +=
-        error.response?.data?.message ??
-        error.response?.data ??
-        'Server error.';
-      enqueueSnackbar(errorMessage + contactSupportMessage, {
+      enqueueSnackbar(error.response?.data?.message, {
         variant: 'error',
-        autoHideDuration: 10000,
+        autoHideDuration: 5000,
         anchorOrigin: {
           vertical: 'top',
           horizontal: 'right',
         },
       });
     } else {
-      errorMessage += (error as Error).message ?? error;
-      enqueueSnackbar(errorMessage + contactSupportMessage, {
+      enqueueSnackbar((error as Error).message ?? error, {
         variant: 'error',
-        autoHideDuration: 10000,
+        autoHideDuration: 5000,
         anchorOrigin: {
           vertical: 'top',
           horizontal: 'right',
@@ -142,14 +135,24 @@ function DeckPreview({
   };
 
   const updateSlideTime = () => {
+    console.log('isPageActive: ', isPageActive);
+    console.log('slidesStats.lenght: ', slidesStats.length);
     if (isPageActive) {
       if (slidesStats.length) {
         const currentTime = Date.now();
         const elapsedTime = currentTime - currentSlideStartTime;
         const auxSlidesStats = JSON.parse(JSON.stringify(slidesStats));
-        if (auxSlidesStats[pageIndex].viewingTime >= 120000) return; // Set the limit in 2 minutes
+        console.log('auxSlidesStats: ', auxSlidesStats);
         auxSlidesStats[pageIndex].viewingTime += elapsedTime;
+        if (auxSlidesStats[pageIndex]?.viewingTime >= 180000) {
+          auxSlidesStats[pageIndex].viewingTime = 180000;
+        } // Set the limit in 3 minutes
+
         setSlidesStats([...auxSlidesStats]);
+        sessionStorage.setItem(
+          'slidesStats',
+          JSON.stringify([...auxSlidesStats])
+        );
         setCurrentSlideStartTime(Date.now());
       }
     }
@@ -167,22 +170,15 @@ function DeckPreview({
   };
 
   const handleKeyDown = (event: KeyboardEvent) => {
-    if (event.key === 'ArrowLeft') {
+    if (event.key === 'ArrowLeft' || event.key === 'ArrowUp') {
       updateSlideTime();
       jumpToPreviousPage();
     }
-    if (event.key === 'ArrowRight') {
+    if (event.key === 'ArrowRight' || event.key === 'ArrowDown') {
       updateSlideTime();
       jumpToNextPage();
     }
   };
-
-  useEffect(() => {
-    document.addEventListener('keydown', handleKeyDown);
-    return () => {
-      document.removeEventListener('keydown', handleKeyDown);
-    };
-  }, [pageIndex]);
 
   function initializeArrayOfSLidesStats(count): IDeckSlidesStats[] {
     const arrayOfEmptyObjects: { slideNumber: number; viewingTime: number }[] =
@@ -205,14 +201,17 @@ function DeckPreview({
   const handleModalSubmit = async (email: string, password?: string) => {
     try {
       if (!deckId) {
-        enqueueSnackbar('deck id is null. Please contact support.', {
-          variant: 'error',
-          autoHideDuration: 2000,
-          anchorOrigin: {
-            vertical: 'top',
-            horizontal: 'right',
-          },
-        });
+        enqueueSnackbar(
+          'There is no deck with such id. Please contact support.',
+          {
+            variant: 'error',
+            autoHideDuration: 2000,
+            anchorOrigin: {
+              vertical: 'top',
+              horizontal: 'right',
+            },
+          }
+        );
         return;
       }
       if (hasPasswordRequired) {
@@ -267,6 +266,13 @@ function DeckPreview({
   };
 
   useEffect(() => {
+    document.addEventListener('keydown', handleKeyDown);
+    return () => {
+      document.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [pageIndex]);
+
+  useEffect(() => {
     if (type === 'deckUserPreview') {
       document.addEventListener('visibilitychange', handleVisibilityChange);
     }
@@ -316,6 +322,16 @@ function DeckPreview({
         });
     }
   }, [deckSlidesNumber]);
+
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      updateSlideTime();
+    }, 5000);
+
+    return () => {
+      clearInterval(intervalId);
+    };
+  }, []);
 
   // useEffect(() => {
   //   if (type === 'deckUserPreview') {
@@ -379,21 +395,36 @@ function DeckPreview({
                 position: 'relative',
               }}
             >
-              <div
-                className="prev"
-                style={{
-                  position: 'absolute',
-                  top: '50%',
-                  left: '3rem',
-                  transform: 'translate(0, -100%) rotate(-90deg)',
-                  zIndex: '1',
-                  background: '#fff',
-                  borderRadius: '4px',
-                }}
-              >
-                <MinimalButton onClick={jumpToPreviousPage}>
-                  <PreviousIcon />
-                </MinimalButton>
+              <div className="absolute bg-persimmon  rounded-lg z-10 bottom-0 flex gap-2 left-[50%] -translate-x-1/2 ">
+                <div className="flex">
+                  <div
+                    className="prev"
+                    style={{
+                      zIndex: '1',
+                      background: '#F1511B',
+                      borderRadius: '4px',
+                    }}
+                  >
+                    <MinimalButton onClick={jumpToPreviousPage}>
+                      <img src={arrowBottom} className="rotate-180" alt="" />
+                    </MinimalButton>
+                  </div>
+                  <div className="text-white p-2 text-[12px]">
+                    {pageIndex + 1}/{numPages}
+                  </div>
+                  <div
+                    className="next"
+                    style={{
+                      zIndex: '1',
+                      background: '#F1511B',
+                      borderRadius: '4px',
+                    }}
+                  >
+                    <MinimalButton onClick={jumpToNextPage}>
+                      <img src={arrowBottom} alt="" />
+                    </MinimalButton>
+                  </div>
+                </div>
               </div>
               <Worker workerUrl="https://unpkg.com/pdfjs-dist@3.6.172/build/pdf.worker.min.js">
                 <Viewer
@@ -409,22 +440,6 @@ function DeckPreview({
                   ]}
                 />
               </Worker>
-              <div
-                className="next"
-                style={{
-                  position: 'absolute',
-                  top: '50%',
-                  right: '3rem',
-                  transform: 'translate(0, -100%) rotate(-90deg)',
-                  zIndex: '1',
-                  background: '#fff',
-                  borderRadius: '4px',
-                }}
-              >
-                <MinimalButton onClick={jumpToNextPage}>
-                  <NextIcon />
-                </MinimalButton>
-              </div>
             </div>
             <div
               style={{
@@ -452,21 +467,22 @@ function DeckPreview({
               flexDirection: 'column',
             }}
           >
-            <div
-              className="prev"
-              style={{
-                position: 'absolute',
-                top: '50%',
-                left: '3rem',
-                transform: 'translate(0, -100%) rotate(-90deg)',
-                zIndex: '1',
-                background: '#fff',
-                borderRadius: '4px',
-              }}
-            >
-              <MinimalButton onClick={jumpToPreviousPage}>
-                <PreviousIcon />
-              </MinimalButton>
+            <div className="absolute bg-persimmon  rounded-lg z-10 bottom-4 flex gap-2 left-[50%] -translate-x-1/2 ">
+              <div className="flex">
+                <div className="prev z-[1] bg-persimmon rounded">
+                  <MinimalButton onClick={jumpToPreviousPage}>
+                    <img src={arrowBottom} className="rotate-180" alt="" />
+                  </MinimalButton>
+                </div>
+                <div className="text-white p-2 text-[12px]">
+                  {pageIndex + 1}/{deckSlidesNumber}
+                </div>
+                <div className="next z-[1] bg-persimmon rounded">
+                  <MinimalButton onClick={jumpToNextPage}>
+                    <img src={arrowBottom} alt="" />
+                  </MinimalButton>
+                </div>
+              </div>
             </div>
             <div
               className="deckUserPreview"
@@ -491,58 +507,42 @@ function DeckPreview({
                 />
               </Worker>
             </div>
-            <div
-              className="next"
-              style={{
-                position: 'absolute',
-                top: '50%',
-                right: '3rem',
-                transform: 'translate(0, -100%) rotate(-90deg)',
-                zIndex: '1',
-                background: '#fff',
-                borderRadius: '4px',
-              }}
-            >
-              <MinimalButton onClick={jumpToNextPage}>
-                <NextIcon />
-              </MinimalButton>
-            </div>
           </div>
         </div>
       ) : (
         <div>Something went wrong, please contact support</div>
       )}
+      <div className="fixed top-5 laptop:right-5 laptop:translate-x-0 right-[50%] translate-x-1/2 flex gap-4">
+        {type === 'deckUserPreview' && deckDownloadUrl && (
+          <Download>
+            {(props: RenderDownloadProps) => (
+              <Button
+                type="button"
+                text="Download"
+                icon={
+                  <div className="rotate-[135deg]">
+                    <Logo color="white" width="10" height="10" />
+                  </div>
+                }
+                className="bg-persimmon gap-2 text-[14px] text-white py-3 px-3"
+                textColor="#FFF"
+                onClick={props.onClick}
+              />
+            )}
+          </Download>
+        )}
 
-      {type === 'deckUserPreview' && deckDownloadUrl && (
-        <Download>
-          {(props: RenderDownloadProps) => (
-            <Button
-              type="button"
-              text="Download Deck"
-              icon={
-                <div className="rotate-[135deg]">
-                  <Logo color="white" />
-                </div>
-              }
-              className="bg-persimmon text-white fixed bottom-4 left-[5%]  py-3 px-3"
-              textColor="#FFF"
-              onClick={props.onClick}
-            />
-          )}
-        </Download>
-      )}
-
-      {type === 'deckUserPreview' && (
-        <Button
-          type="button"
-          text="Join DeckLink"
-          icon={<Logo color="white" />}
-          className="bg-persimmon/25 text-white fixed bottom-4 right-[7%]  py-3 px-3"
-          textColor="#FFF"
-          onClick={onSaveDeck}
-        />
-      )}
-
+        {type === 'deckUserPreview' && (
+          <Button
+            type="button"
+            text="Join DeckLink"
+            icon={<Logo color="white" width="10" height="10" />}
+            className="text-[14px] text-white py-3 px-3"
+            textColor="#FFF"
+            onClick={onSaveDeck}
+          />
+        )}
+      </div>
       {type === 'deckCreationPreview' && (
         <Button
           type="button"

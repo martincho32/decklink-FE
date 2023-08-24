@@ -9,12 +9,12 @@ export interface IUser {
   linkedInUrl?: string;
   role?: string;
   hasCreatedDeck?: boolean;
+  totalDecks?: number;
+  totalTokens?: number;
+  isSuperUser?: boolean;
+  referredUserList?: Array<{ firstName: string; email: string }>;
+  maxDecksStorageSize?: number;
 }
-
-// export interface IAuthContext {
-//   user: IUser | null;
-//   setUser: React.Dispatch<React.SetStateAction<IUser>>;
-// }
 
 export interface IDeck {
   _id: string;
@@ -44,6 +44,21 @@ export interface IDeckView {
   viewerEmail: string | null | undefined;
   viewerInfo: string | null | undefined;
   deckOwnerId: string;
+  createdAt?: string;
+  updatedAt?: string;
+}
+
+export enum ItemCode {
+  FIVEDECKS = '5DECKS',
+}
+
+export interface IUpgrade {
+  _id?: string;
+  name: string;
+  code: ItemCode;
+  description: string;
+  isEnabled?: boolean;
+  redeemPrice: number;
   createdAt?: string;
   updatedAt?: string;
 }

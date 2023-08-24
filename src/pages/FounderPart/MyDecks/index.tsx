@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useContext, useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useSnackbar } from 'notistack';
 import { v4 as uuidv4 } from 'uuid';
 import {
@@ -10,6 +10,7 @@ import {
   Logo,
   Carrousel,
   CarouselCard,
+  AlertDialogComponent,
 } from '@/components';
 import whiteTopRightArrow from '../../../assets/images/ArrowTopRight.svg';
 import styles from './MyDecks.module.css';
@@ -32,12 +33,15 @@ import CalendlyIntegration from '@/components/CalendlyIntegration';
 import { useLocalStorage } from '@/hooks/useLocalStorage';
 
 function MyDecks() {
+  const navigate = useNavigate();
+
   const { getItem, setItem } = useLocalStorage();
   const [previewPickDeckSlide, setPreviewPickDeckSlide] = useState(false);
   const [pageIndex, setPageIndex] = useState(0);
   const [showFreePitchDeckModal, setShowFreePitchDeckModal] =
     useState<boolean>(false);
   const [showCalendly, setShowCalendly] = useState<boolean>(false);
+  const [showReferralAlert, setShowReferralAlert] = useState(false);
 
   const handleOnClosePitchDeckSlidePreview = () => {
     document.body.style.overflow = 'auto';
@@ -65,7 +69,7 @@ function MyDecks() {
     } catch (error: any) {
       enqueueSnackbar(`Couldn't delete the deck. Please contact support.`, {
         variant: 'error',
-        autoHideDuration: 10000,
+        autoHideDuration: 5000,
         anchorOrigin: {
           vertical: 'top',
           horizontal: 'right',
@@ -78,7 +82,7 @@ function MyDecks() {
     const localStorageShowModal = JSON.parse(
       getItem('showFreePitchDeckModal')! ?? true
     );
-    if (!!localStorageShowModal) {
+    if (!!localStorageShowModal && !!deckList.length) {
       setShowFreePitchDeckModal(true);
     } else {
       setShowFreePitchDeckModal(false);
@@ -90,6 +94,10 @@ function MyDecks() {
     setShowFreePitchDeckModal(false);
     setShowCalendly(false);
     setItem('showFreePitchDeckModal', JSON.stringify(false));
+  }
+
+  function onClickGoToReferral() {
+    navigate('/founder/referrals');
   }
 
   // Use the useLoading hook with the actual backend request function
@@ -107,7 +115,7 @@ function MyDecks() {
       .catch(() => {
         enqueueSnackbar(`Couldn't load decks. Please contact support.`, {
           variant: 'error',
-          autoHideDuration: 10000,
+          autoHideDuration: 5000,
           anchorOrigin: {
             vertical: 'top',
             horizontal: 'right',
@@ -122,6 +130,18 @@ function MyDecks() {
     }
     document.body.style.overflow = 'auto';
   }, [showFreePitchDeckModal, showCalendly]);
+
+  useEffect(() => {
+    if ((user?.maxDecksStorageSize ?? 5) <= deckList.length) {
+      setShowReferralAlert(true);
+    } else {
+      setShowReferralAlert(false);
+    }
+  }, [user, deckList]);
+
+  useEffect(() => {
+    checkIfShowFreePitchDeckModal();
+  }, [deckList]);
 
   const cards = [
     {
@@ -149,41 +169,42 @@ function MyDecks() {
             handleOnCloseModal();
           }}
         >
-          <div className="">
-            <h2 className="mobilev:leading-normal desktopxl:text-5xl desktopxl:w-[50rem] desktopxl:leading-normal mobileh:text-2xl mobileh:w-[35rem] mobileh:leading-normal desktop:text-4xl desktop:leading-normal text-mirage desktop:w-[40rem] mb-8 mt-[-1rem] mobilev:mt-[-0.5rem]">
+          <div className="flex flex-col gap-6">
+            <h2 className="mobilev:leading-normal mobilev:text-[14px] mobileh:text-[16px] tablet:text-[20px] desktop:text-[24px] desktopxl:text-[32px] desktopxl:w-[50rem] mobileh:w-[35rem] text-mirage desktop:w-[40rem] mt-[-1rem] mobilev:mt-[-0.5rem]">
               Not getting as much
               <br />
               <span className="text-white p-2 mobilev:p-1 bg-persimmon">
                 VC meetings as you want?
               </span>
             </h2>
-            <div className="flex justify-between items-start">
-              <img
-                src={reviewStats}
-                className="desktopxl:max-h-[7rem] mobileh:max-h-[4rem] mobilev:max-h-[3rem] max-h-[5rem] h-auto"
-                alt="Review Stats"
-              />
-              <img
-                src={customImage}
-                className="desktopxl:max-h-[17rem] mobileh:max-h-[10rem] mobilev:max-h-[7rem] max-h-[15rem] h-auto"
-                aria-hidden
-                alt="Custom Image"
-              />
-            </div>
+            <div className="flex flex-col gap-[-2rem]">
+              <div className="flex justify-between items-start">
+                <img
+                  src={reviewStats}
+                  className="mobilev:max-h-[3rem] mobileh:max-h-[4rem] tablet:max-h-[5rem] laptop:max-h-[6rem] desktopxl:max-h-[7rem]"
+                  alt="Review Stats"
+                />
+                <img
+                  src={customImage}
+                  className="mobilev:max-h-[7rem] mobileh:max-h-[10rem] tablet:max-h-[12rem] desktop:max-h-[14rem] desktopxl:max-h-[17rem]"
+                  aria-hidden
+                  alt="Custom Image"
+                />
+              </div>
 
-            <div className="desktopxl:h-[20rem] mobilev:h-[6rem] mobilev:mt-[-7rem] mobilev:mb-24 mobileh:mb-2 desktop:mb-8 desktop:mt-[-5rem] mobileh:h-[15rem] w-full h-[15rem] mx-auto mb-12 mt-[-4rem]">
-              <Carrousel
-                cards={cards}
-                height="15rem"
-                width="100%"
-                margin="0 auto"
-                offset={2}
-              />
+              <div className="mobilev:h-auto mobileh:h-[9rem] laptop:h-[9rem] desktopxl:h-[11rem]">
+                <Carrousel
+                  cards={cards}
+                  height="5rem"
+                  width="100%"
+                  margin="0 auto"
+                  offset={2}
+                />
+              </div>
             </div>
-
             <Button
               type="button"
-              text="Free Pitch Deck Review"
+              text="Get Free Pitch Deck Review"
               icon={<Logo color="#FFFFFF" width="10" height="11" />}
               backgroundColor="#F1511B"
               textColor="#FFF"
@@ -216,21 +237,37 @@ function MyDecks() {
               <h2 className={styles.title}>
                 Hi {user?.firstName}! Here is your created decks
               </h2>
-              <Link
-                className={`${styles.link} hover:no-underline`}
-                to="/founder/deck/create"
-                state={{
-                  deckListLength: deckList.length,
-                }}
-              >
-                <Button
-                  type="button"
-                  text="Create New Deck"
-                  icon={<img src={whiteTopRightArrow} alt="Arrow" />}
-                  backgroundColor="#F1511B"
-                  textColor="#FFF"
-                />
-              </Link>
+              {!showReferralAlert ? (
+                <Link
+                  className={`${styles.link} hover:no-underline`}
+                  to="/founder/deck/create"
+                  state={{
+                    deckListLength: deckList.length,
+                  }}
+                >
+                  <Button
+                    type="button"
+                    text="Create New Deck"
+                    icon={<img src={whiteTopRightArrow} alt="Arrow" />}
+                    backgroundColor="#F1511B"
+                    textColor="#FFF"
+                  />
+                </Link>
+              ) : (
+                <AlertDialogComponent
+                  alertTitle="Can't create more decks"
+                  alertDescription="You need to redeem an upgrade to unlock more decks storage. Go to Referral System page and refer a new user to unlock."
+                  action={() => onClickGoToReferral()}
+                >
+                  <Button
+                    type="button"
+                    text="Create New Deck"
+                    icon={<img src={whiteTopRightArrow} alt="Arrow" />}
+                    backgroundColor="#F1511B"
+                    textColor="#FFF"
+                  />
+                </AlertDialogComponent>
+              )}
             </div>
             <div className={styles.decksBlock}>
               {deckList.map((deck) => (

@@ -13,7 +13,8 @@ interface ContextProps {
     firstName: string,
     lastName: string,
     companyName: string,
-    companyWebUrl: string
+    companyWebUrl: string,
+    referredBy: string
   ) => Promise<{
     hasError: boolean;
     message?: string;

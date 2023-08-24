@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
+import axios from 'axios';
 import { useSnackbar } from 'notistack';
 import { Button, Logo, MainLayout } from '../../../components';
 import { deckService, deckViewService } from '../../../services';
@@ -19,8 +20,30 @@ function DeclkDetail() {
   const navigate = useNavigate();
 
   const [deck, setDeck] = useState<IDeck | null>(null);
-  const [deckViews, setDeckViews] = useState<IDeckView[] | null>(null);
+  const [deckViews, setDeckViews] = useState<IDeckView[] | null>([]);
   const [isPopupVisible, setPopupVisible] = useState(false);
+
+  const handleError = (error: Error | string) => {
+    if (axios.isAxiosError(error)) {
+      enqueueSnackbar(error.response?.data?.message, {
+        variant: 'error',
+        autoHideDuration: 10000,
+        anchorOrigin: {
+          vertical: 'top',
+          horizontal: 'right',
+        },
+      });
+    } else {
+      enqueueSnackbar((error as Error).message ?? error, {
+        variant: 'error',
+        autoHideDuration: 10000,
+        anchorOrigin: {
+          vertical: 'top',
+          horizontal: 'right',
+        },
+      });
+    }
+  };
 
   const isLoading = useLoading(async () => {
     if (!id) {
@@ -40,7 +63,7 @@ function DeclkDetail() {
           },
         });
         if (!data.length) {
-          enqueueSnackbar(`Whoops!! You don't have any views yet.`, {
+          enqueueSnackbar(`You don't have any views yet.`, {
             variant: 'info',
             autoHideDuration: 3000,
             anchorOrigin: {
@@ -51,7 +74,8 @@ function DeclkDetail() {
         }
         setDeckViews(data);
       } catch (error: any) {
-        console.error('Error: ', error.message);
+        console.error('Error: ', error);
+        handleError(error);
       }
     }
   });
@@ -84,7 +108,7 @@ function DeclkDetail() {
           });
         },
         (error) => {
-          enqueueSnackbar(`Failed to copy. Please contact support. ${error}`, {
+          enqueueSnackbar(error.message, {
             variant: 'error',
             autoHideDuration: 2000,
             anchorOrigin: {
@@ -103,7 +127,7 @@ function DeclkDetail() {
       {/* Here put the top page actions new component (not yet created) */}
 
       <div className="w-full justify-items-center	 items-center my-12 grid grid-cols-1 md:flex md:justify-between md:content-center xl:grid-cols-3 gap-7 max-h-fit justify-center">
-        <div className="flex justify-center md:justify-start gap-6">
+        <div className="flex justify-center md:justify-start gap-4 min-w-max">
           <Button
             icon={<Logo color="white" />}
             type="button"
@@ -114,8 +138,10 @@ function DeclkDetail() {
             Go Back
           </span>
         </div>
-        <h1 className="text-2xl leading-normal text-center">
-          <span className="text-persimmon text-center">{deck?.name} </span>
+        <h1 className="text-2xl leading-normal text-center break-all">
+          <span className="text-persimmon text-center break-all">
+            {deck?.name}{' '}
+          </span>
           Detailed Information
         </h1>
         <div
@@ -130,11 +156,12 @@ function DeclkDetail() {
             text="Copy Link"
             icon={<img src={copyIcon} alt="" />}
             textColor="#F1511B"
+            className="min-w-max"
             onClick={handleCopyClick}
           />
           {isPopupVisible && (
             <div
-              className={styles.popup}
+              className={`${styles.popup} right-0 left-auto`}
             >{`fundraisingtoolbox.io/preview/${deck?.customDeckLink}`}</div>
           )}
         </div>

@@ -36,10 +36,6 @@ export interface Props {
   deckId?: string;
 }
 
-const deckAmountBeforeShowFreePitchDeckModal = [
-  0, 4, 9, 14, 19, 24, 29, 34, 39,
-];
-
 function Deck({ title = 'Create', deckId }: Props) {
   const scrollModePluginInstance = scrollModePlugin();
   scrollModePluginInstance.switchScrollMode(ScrollMode.Horizontal);
@@ -97,26 +93,19 @@ function Deck({ title = 'Create', deckId }: Props) {
   };
 
   const handleError = (error: Error | string) => {
-    let errorMessage: string =
-      'Whoops! Something went wrong. Please contact support. Error: ';
     if (axios.isAxiosError(error)) {
-      errorMessage +=
-        error.response?.data?.message ??
-        error.response?.data ??
-        'Server error.';
-      enqueueSnackbar(errorMessage, {
+      enqueueSnackbar(error.response?.data?.message, {
         variant: 'error',
-        autoHideDuration: 10000,
+        autoHideDuration: 5000,
         anchorOrigin: {
           vertical: 'top',
           horizontal: 'right',
         },
       });
     } else {
-      errorMessage += (error as Error).message ?? error;
-      enqueueSnackbar(errorMessage, {
+      enqueueSnackbar((error as Error).message ?? error, {
         variant: 'error',
-        autoHideDuration: 10000,
+        autoHideDuration: 5000,
         anchorOrigin: {
           vertical: 'top',
           horizontal: 'right',
@@ -278,11 +267,15 @@ function Deck({ title = 'Create', deckId }: Props) {
         },
       });
 
-      if (
-        deckAmountBeforeShowFreePitchDeckModal.includes(
-          location.state?.deckListLength
-        )
-      ) {
+      const checkIfDeckListLengthIsDivisibleByFive = () => {
+        // Also checks if deckListLength is zero
+        return (
+          ((location.state?.deckListLength ?? 0) + 1) % 5 === 0 ||
+          location.state?.deckListLength === 0
+        );
+      };
+
+      if (checkIfDeckListLengthIsDivisibleByFive()) {
         setItem('showFreePitchDeckModal', JSON.stringify(true));
       }
       navigate('/founder/decks');

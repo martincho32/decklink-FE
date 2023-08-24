@@ -19,6 +19,7 @@ type RegisterUserCredentials = UserCredentials & {
 
 export const registerUser = (
   user: RegisterUserCredentials,
+  referredBy: string,
   role = 'FOUNDER'
 ): Promise<{
   data: {
@@ -29,7 +30,8 @@ export const registerUser = (
     lastName: string;
     hasCreatedDeck: boolean;
   };
-}> => api.post(`${resource}/register?role=${role}`, user);
+}> =>
+  api.post(`${resource}/register?role=${role}&referredBy=${referredBy}`, user);
 
 export const loginUser = (
   userCredentials: UserCredentials
@@ -53,5 +55,7 @@ export const validateUserToken = (
     token: string;
     hasCreatedDeck: boolean;
     firstName: string;
+    id: string;
+    maxDecksStorageSize: number;
   };
 }> => api.get(`${resource}/validate-token`, config);
