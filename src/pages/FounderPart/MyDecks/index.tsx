@@ -2,14 +2,11 @@ import * as React from 'react';
 import { useContext, useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useSnackbar } from 'notistack';
-import { v4 as uuidv4 } from 'uuid';
 import {
   MainLayout,
   Button,
   DeckPreview,
   Logo,
-  Carrousel,
-  CarouselCard,
   AlertDialogComponent,
 } from '@/components';
 import whiteTopRightArrow from '../../../assets/images/ArrowTopRight.svg';
@@ -143,21 +140,6 @@ function MyDecks() {
     checkIfShowFreePitchDeckModal();
   }, [deckList]);
 
-  const cards = [
-    {
-      key: uuidv4(),
-      content: <CarouselCard image={firstReview} />,
-    },
-    {
-      key: uuidv4(),
-      content: <CarouselCard image={secondReview} />,
-    },
-    {
-      key: uuidv4(),
-      content: <CarouselCard image={thirdReview} />,
-    },
-  ];
-
   return isLoading ? (
     <Loading />
   ) : (
@@ -192,13 +174,21 @@ function MyDecks() {
                 />
               </div>
 
-              <div className="mobilev:h-auto mobileh:h-[9rem] laptop:h-[9rem] desktopxl:h-[11rem]">
-                <Carrousel
-                  cards={cards}
-                  height="5rem"
-                  width="100%"
-                  margin="0 auto"
-                  offset={2}
+              <div className="mobilev:h-32 mobileh:h-[9rem] laptop:h-[9rem] desktopxl:h-[11rem] relative">
+                <img
+                  className="absolute hidden mobileh:block mobileh:w-[20rem] desktop:w-[25rem] bottom-0 rotate-[-5.283deg]"
+                  src={secondReview}
+                  alt="second review"
+                />
+                <img
+                  className="absolute mobileh:w-[20rem] desktop:w-[25rem] bottom-0 mobileh:left-[120px] desktop:left-[150px] desktopxl:left-[213px] z-[1]"
+                  src={firstReview}
+                  alt="first review"
+                />
+                <img
+                  className="absolute hidden mobileh:block mobileh:w-[20rem] desktop:w-[25rem] bottom-[-25px] mobileh:bottom-[-15px] right-[18px] rotate-[4.078deg]"
+                  src={thirdReview}
+                  alt="third review"
                 />
               </div>
             </div>
