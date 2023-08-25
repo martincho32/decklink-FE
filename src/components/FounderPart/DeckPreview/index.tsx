@@ -135,14 +135,11 @@ function DeckPreview({
   };
 
   const updateSlideTime = () => {
-    console.log('isPageActive: ', isPageActive);
-    console.log('slidesStats.lenght: ', slidesStats.length);
     if (isPageActive) {
       if (slidesStats.length) {
         const currentTime = Date.now();
         const elapsedTime = currentTime - currentSlideStartTime;
         const auxSlidesStats = JSON.parse(JSON.stringify(slidesStats));
-        console.log('auxSlidesStats: ', auxSlidesStats);
         auxSlidesStats[pageIndex].viewingTime += elapsedTime;
         if (auxSlidesStats[pageIndex]?.viewingTime >= 180000) {
           auxSlidesStats[pageIndex].viewingTime = 180000;

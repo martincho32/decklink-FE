@@ -72,10 +72,11 @@ function Presentation() {
   return (
     <MainLayout>
       <SEO
-        title="DeckLink presentation Page!!"
+        title="Slide Presentation"
         description="Friendly page for sharing deck links."
         name="DeckLink."
         type="article"
+        href={`/preview/${customDeckLink}`}
       />
       {deckFile ? ( // Check if deckFile is truthy
         <DeckPreview
