@@ -5,15 +5,17 @@ interface Props {
   description: string;
   name: string;
   type: string;
+  href: string;
 }
 
-function SEO({ title, description, name, type }: Props) {
+function SEO({ title, description, name, type, href }: Props) {
   return (
     <div>
       <Helmet>
         {/* Standard metadata tags */}
         <title>{title}</title>
         <meta name="description" content={description} />
+        <link rel="canonical" href={href} />
         {/* End standard metadata tags */}
         {/* Facebook tags */}
         <meta property="og:type" content={type} />
