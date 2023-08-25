@@ -19,11 +19,11 @@ function SEO({ title, description, name, type }: Props) {
         <meta property="og:type" content={type} />
         <meta property="og:title" content={title} />
         <meta property="og:description" content={description} />
+        <meta property="og:url" content="https://www.fundraisingtoolbox.io/" />
         <meta
-          property="og:url"
-          content="https://decklink-fe-git-integration-martincho32.vercel.app/preview/oneeee"
+          property="og:image"
+          content="https://assets.website-files.com/64a6606fd2e8cb8b1b9e71fb/64a66145d2e8cb8b1b9f589b_Debonne%20Logo.svg"
         />
-        <meta property="og:image" content="https://www.tacobell.com/" />
         {/* End Facebook tags */}
         {/* Twitter tags */}
         <meta name="twitter:creator" content={name} />
@@ -32,13 +32,16 @@ function SEO({ title, description, name, type }: Props) {
         <meta name="twitter:description" content={description} />
         <meta
           property="twitter:domain"
-          content="decklink-fe-git-integration-martincho32.vercel.app"
+          content="https://www.fundraisingtoolbox.io/"
         />
         <meta
           property="twitter:url"
-          content="https://decklink-fe-git-integration-martincho32.vercel.app/preview/oneeee"
+          content={`https://www.fundraisingtoolbox.io/${href}`}
         />
-        <meta name="twitter:image" content="https://www.tacobell.com/" />
+        <meta
+          name="twitter:image"
+          content="https://assets.website-files.com/64a6606fd2e8cb8b1b9e71fb/64a66145d2e8cb8b1b9f589b_Debonne%20Logo.svg"
+        />
         {/* End Twitter tags */}
       </Helmet>
     </div>
