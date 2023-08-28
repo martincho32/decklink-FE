@@ -11,6 +11,7 @@ import {
 import { scrollModePlugin } from '@react-pdf-viewer/scroll-mode';
 import axios from 'axios';
 import { useSnackbar } from 'notistack';
+import { toPng } from 'html-to-image';
 import './DeckCreation.css';
 import { Logo } from '../../../components/icons';
 import {
@@ -138,6 +139,22 @@ function Deck({ title = 'Create', deckId }: Props) {
         setUploadInputFileLabel('Change File (.pdf)');
         setIsEdited(true);
         setNewFileChoosed(true);
+        // setTimeout(() => {
+        //   const node = document.getElementsByClassName(
+        //     'rpv-core__inner-page'
+        //   )[0];
+
+        //   htmlToImage
+        //     .toPng(node as HTMLElement)
+        //     .then((dataUrl) => {
+        //       const img = new Image();
+        //       img.src = dataUrl;
+        //       document.body.appendChild(img);
+        //     })
+        //     .catch((error) => {
+        //       console.error('oops, something went wrong!', error);
+        //     });
+        // }, 1500);
       }
     }
   };
@@ -228,6 +245,17 @@ function Deck({ title = 'Create', deckId }: Props) {
       return;
     }
     setIsButtonDisabled(true);
+    const node = document.getElementsByClassName('rpv-core__inner-page')[0];
+
+    toPng(node as HTMLElement)
+      .then((dataUrl) => {
+        const img = new Image();
+        img.src = dataUrl;
+        document.body.appendChild(img);
+      })
+      .catch((error) => {
+        console.error('oops, something went wrong!', error);
+      });
 
     try {
       const fd = new FormData();

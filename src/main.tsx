@@ -19,7 +19,7 @@ import './assets/fonts/NeuePlak/NeuePlak-Regular.ttf';
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
-    <HelmetProvider>
+    <HelmetProvider context={{}}>
       <App />
     </HelmetProvider>
   </React.StrictMode>

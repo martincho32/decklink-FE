@@ -24,7 +24,7 @@ function SEO({ title, description, name, type, href }: Props) {
         <meta property="og:url" content="https://www.fundraisingtoolbox.io/" />
         <meta
           property="og:image"
-          content="https://assets.website-files.com/64a6606fd2e8cb8b1b9e71fb/64a66145d2e8cb8b1b9f589b_Debonne%20Logo.svg"
+          content="https://img.freepik.com/vector-gratis/vector-degradado-logotipo-colorido-pajaro_343694-1365.jpg"
         />
         {/* End Facebook tags */}
         {/* Twitter tags */}
@@ -42,7 +42,7 @@ function SEO({ title, description, name, type, href }: Props) {
         />
         <meta
           name="twitter:image"
-          content="https://assets.website-files.com/64a6606fd2e8cb8b1b9e71fb/64a66145d2e8cb8b1b9f589b_Debonne%20Logo.svg"
+          content="https://img.freepik.com/vector-gratis/vector-degradado-logotipo-colorido-pajaro_343694-1365.jpg"
         />
         {/* End Twitter tags */}
       </Helmet>
