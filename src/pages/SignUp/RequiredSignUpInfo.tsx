@@ -96,7 +96,7 @@ function RequiredSignUpInfo({
           style="default"
           type="email"
           placeholder="example@gmail.com"
-          label="Your Email"
+          label="Your Email *"
           id="email"
           value={formData.email}
           inputIsInvalid={emailInputIsInvalid}
@@ -111,7 +111,7 @@ function RequiredSignUpInfo({
           style="default"
           type="text"
           placeholder="Jhon"
-          label="Your First Name"
+          label="Your First Name *"
           id="firstName"
           value={formData.firstName}
           inputIsInvalid={firstNameInputIsInvalid}
@@ -126,7 +126,7 @@ function RequiredSignUpInfo({
           style="default"
           type="text"
           placeholder="Kullo"
-          label="Your Last Name"
+          label="Your Last Name *"
           id="lastName"
           value={formData.lastName}
           inputIsInvalid={lastNameInputIsInvalid}
@@ -140,7 +140,7 @@ function RequiredSignUpInfo({
           required
           style="password"
           placeholder="******"
-          label="Password"
+          label="Password *"
           id="passwod"
           value={formData.password}
           inputIsInvalid={passwordInputIsInvalid}
@@ -154,7 +154,7 @@ function RequiredSignUpInfo({
           required
           style="password"
           placeholder="******"
-          label="Repeat Your Password"
+          label="Repeat Your Password *"
           id="repeat-password"
           value={formData.confirmPassword}
           inputIsInvalid={repeatPasswordInputIsInvalid}
