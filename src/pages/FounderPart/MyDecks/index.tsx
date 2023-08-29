@@ -230,7 +230,7 @@ function MyDecks() {
           <div className={styles.myDesksWrapper}>
             <div className={styles.pageNavigation}>
               <h2 className={styles.title}>
-                Hi {user?.firstName}! Here is your created decks
+                Hi {user?.firstName}! Here are your created decks
               </h2>
               {!showReferralAlert ? (
                 <Link
@@ -268,12 +268,6 @@ function MyDecks() {
               {deckList.map((deck) => (
                 <React.Fragment key={deck._id}>
                   <Card
-                    onClick={(event: React.MouseEvent<HTMLDivElement>) => {
-                      if (event.target instanceof HTMLDivElement) {
-                        document.body.style.overflow = 'hidden';
-                        setPreviewPickDeckSlide(true);
-                      }
-                    }}
                     deck={deck}
                     handleClickDelete={() => handleClickDelete(deck._id)}
                   />

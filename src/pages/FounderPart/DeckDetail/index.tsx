@@ -21,7 +21,6 @@ function DeclkDetail() {
 
   const [deck, setDeck] = useState<IDeck | null>(null);
   const [deckViews, setDeckViews] = useState<IDeckView[] | null>([]);
-  const [isPopupVisible, setPopupVisible] = useState(false);
 
   const handleError = (error: Error | string) => {
     if (axios.isAxiosError(error)) {
@@ -84,13 +83,6 @@ function DeclkDetail() {
     navigate('/founder/decks');
   };
 
-  const handleMouseEnter = () => {
-    setPopupVisible(true);
-  };
-
-  const handleMouseLeave = () => {
-    setPopupVisible(false);
-  };
   const handleCopyClick = () => {
     navigator.clipboard
       .writeText(
@@ -124,50 +116,35 @@ function DeclkDetail() {
     <Loading />
   ) : (
     <MainLayout>
-      {/* Here put the top page actions new component (not yet created) */}
-
-      <div className="w-full justify-items-center	 items-center my-12 grid grid-cols-1 md:flex md:justify-between md:content-center xl:grid-cols-3 gap-7 max-h-fit justify-center">
-        <div className="flex justify-center md:justify-start gap-4 min-w-max">
+      <div className="flex flex-col gap-12">
+        <div className="w-full grid grid-cols-1 md:flex md:justify-between md:content-center xl:grid-cols-3 gap-7 justify-center place-items-center">
           <Button
-            icon={<Logo color="white" />}
+            icon={<Logo switchHorizontal color="#161A20" />}
             type="button"
-            className="bg-persimmon -rotate-90 p-4"
+            text="Go Back"
             onClick={onClickGoBack}
+            className="flex-row-reverse gap-2 font-bold"
           />
-          <span className="self-center text-xl leading-normal justify-center">
-            Go Back
-          </span>
+          <h1 className="text-[1.5rem] font-bold text-center">
+            <span className="text-persimmon text-center break-all">
+              {deck?.name}{' '}
+            </span>
+            Detailed Information
+          </h1>
+          <div className={`${styles.buttonContainer}`}>
+            <Button
+              type="button"
+              text="Copy Link"
+              icon={<img src={copyIcon} alt="" />}
+              textColor="#F1511B"
+              className="min-w-max"
+              onClick={handleCopyClick}
+            />
+          </div>
         </div>
-        <h1 className="text-2xl leading-normal text-center break-all">
-          <span className="text-persimmon text-center break-all">
-            {deck?.name}{' '}
-          </span>
-          Detailed Information
-        </h1>
-        <div
-          role="button"
-          tabIndex={0}
-          onMouseEnter={handleMouseEnter}
-          onMouseLeave={handleMouseLeave}
-          className={`${styles.buttonContainer}`}
-        >
-          <Button
-            type="button"
-            text="Copy Link"
-            icon={<img src={copyIcon} alt="" />}
-            textColor="#F1511B"
-            className="min-w-max"
-            onClick={handleCopyClick}
-          />
-          {isPopupVisible && (
-            <div
-              className={`${styles.popup} right-0 left-auto`}
-            >{`fundraisingtoolbox.io/preview/${deck?.customDeckLink}`}</div>
-          )}
-        </div>
+        <DeckAverageStats deckViews={deckViews} deck={deck} />
+        <DeckIndividualStats deckViews={deckViews} deck={deck} />
       </div>
-      <DeckAverageStats deckViews={deckViews} deck={deck} />
-      <DeckIndividualStats deckViews={deckViews} deck={deck} />
     </MainLayout>
   );
 }

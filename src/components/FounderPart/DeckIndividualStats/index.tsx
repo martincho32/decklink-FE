@@ -120,7 +120,7 @@ function DeckIndividualStats({ deck, deckViews }: Props) {
       {!!combinedData?.length &&
         combinedData.map((view) => {
           return (
-            <div key={view._id} className="mb-16">
+            <div key={view._id} className="mb-4">
               <Accordion
                 key={view._id}
                 type="single"

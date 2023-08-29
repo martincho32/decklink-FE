@@ -30,3 +30,4 @@ export { default as Preloading } from './PreloadingScreen';
 export { default as Carrousel } from './Carousel';
 export { default as CarouselCard } from './CarouselCard';
 export { default as AnimatedLoader } from './AnimatedLoader';
+export { default as SidebarNavigation } from './Sidebar';

@@ -1,16 +1,77 @@
-import Navbar from '../Navbar';
+import { useContext, useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { Hamburguer, Logo, SidebarNavigation } from '..';
+import { AuthContext } from '@/context';
+// import Navbar from '../Navbar';
 
 interface Props {
   children: JSX.Element | JSX.Element[];
 }
 
 function MainLayout({ children }: Props) {
+  const [sidebarIsToggled, setSidebarIsToggled] = useState(false);
+  const { isLoggedIn, logoutUser } = useContext(AuthContext);
+  const navigate = useNavigate();
+
+  const [screenWidth, setScreenWidth] = useState(window.innerWidth);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setScreenWidth(window.innerWidth);
+    };
+
+    window.addEventListener('resize', handleResize);
+
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+  }, []);
+
+  const handleActions = {
+    handleButtonLogIn: (): void => {
+      navigate('/login');
+    },
+    handleButtonSignUp: (): void => {
+      navigate('/signup');
+    },
+    handleButtonLogout: (): void => {
+      logoutUser();
+      navigate('/');
+    },
+  };
+
   return (
-    <div className="w-full desktop:px-16 tablet:px-8 mobileh:px-5 mobilev:px-4">
-      <div className="desktop:pt-8 tablet:pt-6 pt-2 mx-auto w-full max-w-custom">
-        <Navbar />
-        <main>{children}</main>
-      </div>
+    <div className="w-screen h-screen flex overflow-hidden">
+      <SidebarNavigation
+        handleActions={handleActions}
+        isUserLogged={isLoggedIn}
+        sidebarIsToggled={sidebarIsToggled}
+        setSidebarIsToggled={setSidebarIsToggled}
+      />
+      <main className="h-full w-full overflow-y-auto p-5 flex flex-col gap-8">
+        {screenWidth <= 1024 && !sidebarIsToggled && (
+          <div className="flex justify-between items-center">
+            <div
+              tabIndex={0}
+              role="button"
+              onClick={() => {
+                setSidebarIsToggled(!sidebarIsToggled);
+              }}
+            >
+              <Hamburguer />
+            </div>
+            <div className="flex gap-2 items-center">
+              <Logo width="20" height="18" />
+              <p className="font-black text-persimmon text-[24px]">
+                <span className="text-mirage">Deck</span>Link
+              </p>
+            </div>
+            <div />
+          </div>
+        )}
+
+        {children}
+      </main>
     </div>
   );
 }
