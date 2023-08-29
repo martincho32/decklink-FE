@@ -34,10 +34,11 @@ function RequiredSignUpInfo({
         style="default"
         type="text"
         placeholder="Apple"
-        label="Your Company Name *"
+        label="Your Company Name"
         id="your-company-name"
         value={formData.companyName}
         onChange={handleCompanyNameChange}
+        className="tablet:!max-w-none"
       />
 
       <Input
@@ -48,6 +49,7 @@ function RequiredSignUpInfo({
         id="your-company-website"
         value={formData.companyWebUrl}
         onChange={handleCompanyWebsiteChange}
+        className="tablet:!max-w-none"
       />
       {/* <Input
         required

@@ -103,6 +103,7 @@ function RequiredSignUpInfo({
           errorMessage="Enter valid email address"
           onChange={handleEmailChange}
           onBlur={emailInputBlur}
+          className="tablet:!max-w-none"
         />
       </div>
       <div className={firstNameInputClasses}>
@@ -118,6 +119,7 @@ function RequiredSignUpInfo({
           errorMessage="First name must be at least 1 characters long"
           onChange={handleFirstNameChange}
           onBlur={firstNameInputBlur}
+          className="tablet:!max-w-none"
         />
       </div>
       <div className={lastNameInputClasses}>
@@ -133,6 +135,7 @@ function RequiredSignUpInfo({
           errorMessage="Last name must be at least 1 characters long"
           onChange={handleLastNameChange}
           onBlur={lastNameInputBlur}
+          className="tablet:!max-w-none"
         />
       </div>
       <div className={passwordInputClasses}>
@@ -147,6 +150,7 @@ function RequiredSignUpInfo({
           errorMessage="Password must be 6-35 characters long"
           onChange={handlePasswordChange}
           onBlur={passwordInputBlur}
+          className="tablet:!max-w-none"
         />
       </div>
       <div className={repeatPasswordInputClasses}>
@@ -161,6 +165,7 @@ function RequiredSignUpInfo({
           errorMessage="Passwords do not match"
           onChange={handleRepeatPasswordChange}
           onBlur={repeatPasswordInputBlur}
+          className="tablet:!max-w-none"
         />
       </div>
     </>

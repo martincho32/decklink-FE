@@ -169,10 +169,10 @@ function SignUp() {
 
   return (
     // <AuthLayout>
-    <div className="h-screen w-screen overflow-hidden flex">
-      <div className="w-[43.75%]">
-        <div className="w-full h-full desktop:pl-16 tablet:pl-8 mobileh:pl-5 mobilev:pl-4">
-          <div className="flex flex-col h-full items-center py-16 px-20 ml-auto w-full max-w-custom overflow-auto">
+    <div className="h-screen w-screen mobilev:overflow-auto tablet:overflow-hidden flex">
+      <div className="mobilev:w-full tablet:w-[43.75%]">
+        <div className="w-full h-full desktop:pl-16 tablet:pl-8 tablet:px-0 mobileh:px-5 mobilev:px-4">
+          <div className="flex flex-col py-16 tablet:overflow-auto h-full items-center desktop:px-20 mobilev:px-0 tablet:px-4 ml-auto w-full max-w-custom">
             <div className="flex flex-col gap-7 my-auto items-center justify-center w-full">
               {page === 1 && (
                 <Button
@@ -192,7 +192,10 @@ function SignUp() {
               <p className="text-mirage text-[0.875rem] opacity-40">
                 * - required fileds
               </p>
-              <form onSubmit={submitHandler} className={styles.form}>
+              <form
+                onSubmit={submitHandler}
+                className={`${styles.form} items-center justify-center`}
+              >
                 {page === 0 ? (
                   <>
                     <RequiredSignUpInfo
@@ -225,7 +228,7 @@ function SignUp() {
                       icon={<img src={whiteTopRightArrow} alt="Arrow" />}
                       backgroundColor="#F1511B"
                       textColor="#FFF"
-                      className="w-full"
+                      className="w-full mobilev:!max-w-[24rem] tablet:!max-w-none"
                       // onClick={continueHandler}
                     />
                   </>
@@ -242,7 +245,7 @@ function SignUp() {
                       icon={<img src={whiteTopRightArrow} alt="Arrow" />}
                       backgroundColor="#F1511B"
                       textColor="#FFF"
-                      className="w-full"
+                      className="w-full mobilev:!max-w-[24rem] tablet:!max-w-none"
                     />
 
                     <Button
@@ -253,7 +256,7 @@ function SignUp() {
                   </>
                 )}
               </form>
-              <div className="flex gap-1">
+              <div className="flex flex-col items-center gap-1">
                 <p className="opacity-50">Already have an account?</p>
                 <Link className="text-persimmon" to="/login">
                   Sign In Now
@@ -263,7 +266,7 @@ function SignUp() {
           </div>
         </div>
       </div>
-      <div className="w-[56.25%] bg-persimmon rounded-bl-[24px] rounded-tl-[24px]">
+      <div className="mobilev:hidden tablet:block tablet:w-[56.25%] bg-persimmon rounded-bl-[24px] rounded-tl-[24px]">
         <div className="w-full desktop:px-16 tablet:px-8 mobileh:px-5 mobilev:px-4 h-full">
           <div className="desktop:pt-8 tablet:pt-6 pt-2 mx-auto w-full max-w-custom h-full flex items-center">
             <Swiper
@@ -286,7 +289,7 @@ function SignUp() {
                 <div className="flex flex-col gap-4 items-center">
                   <img src={getAnalyticOnYourDeck} alt="" />
                   <div className="flex flex-col gap-4 max-w-[30rem]">
-                    <h2 className="text-white text-center text-[2rem] font-bold">
+                    <h2 className="text-white text-center tablet:text-[1.25rem] laptop:text-[2rem] font-bold">
                       Get analytic on Your Deck
                     </h2>
                     <p className="text-white text-center font-[NeuePlak]">
@@ -300,7 +303,7 @@ function SignUp() {
                 <div className="flex flex-col gap-4 items-center">
                   <img src={freePitchDeck} alt="" />
                   <div className="flex flex-col gap-4 max-w-[30rem]">
-                    <h2 className="text-white text-center text-[2rem] font-bold">
+                    <h2 className="text-white text-center tablet:text-[1.25rem] laptop:text-[2rem] font-bold">
                       Share up to 10 FREE Decks
                     </h2>
                     <p className="text-white text-center font-[NeuePlak]">
@@ -315,7 +318,7 @@ function SignUp() {
                 <div className="flex flex-col gap-4 items-center">
                   <img src={collectEmails} alt="" />
                   <div className="flex flex-col gap-4 max-w-[30rem]">
-                    <h2 className="text-white text-center text-[2rem] font-bold">
+                    <h2 className="text-white text-center tablet:text-[1.25rem] laptop:text-[2rem] font-bold">
                       Collect Emails
                     </h2>
                     <p className="text-white text-center font-[NeuePlak]">
@@ -329,7 +332,7 @@ function SignUp() {
                 <div className="flex flex-col gap-4 items-center">
                   <img src={customLink} alt="" />
                   <div className="flex flex-col gap-4 max-w-[30rem]">
-                    <h2 className="text-white text-center text-[2rem] font-bold">
+                    <h2 className="text-white text-center tablet:text-[1.25rem] laptop:text-[2rem] font-bold">
                       Create Custom Links
                     </h2>
                     <p className="text-white text-center font-[NeuePlak]">
@@ -343,7 +346,7 @@ function SignUp() {
                 <div className="flex flex-col gap-4 items-center">
                   <img src={previewCard} alt="" />
                   <div className="flex flex-col gap-4 max-w-[30rem]">
-                    <h2 className="text-white text-center text-[2rem] font-bold">
+                    <h2 className="text-white text-center tablet:text-[1.25rem] laptop:text-[2rem] font-bold">
                       Share Link With Preview Card
                     </h2>
                     <p className="text-white text-center font-[NeuePlak]">

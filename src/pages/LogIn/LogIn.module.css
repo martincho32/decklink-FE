@@ -74,6 +74,7 @@
   flex-direction: column;
   gap: 0.125rem;
   width: inherit;
+  max-width: 24rem;
 }
 
 .inputBlockError input {
@@ -82,6 +83,9 @@
 }
 
 @media (max-width: 1536px) {
+  .inputBlock {
+    max-width: none;
+  }
 }
 
 @media (max-width: 1280px) {
@@ -100,6 +104,10 @@
 @media (max-width: 768px) {
   .formWrapper {
     width: 80%;
+  }
+
+  .inputBlock {
+    max-width: 24rem;
   }
 }
 
