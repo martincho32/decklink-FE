@@ -47,6 +47,7 @@ function SignUp() {
     lastName: '',
     password: '',
     confirmPassword: '',
+    allowEmails: true,
     companyName: '',
     companyWebUrl: '',
   });
@@ -77,6 +78,9 @@ function SignUp() {
     formData.confirmPassword === formData.password;
   const repeatPasswordInputIsInvalid =
     !enteredRepeatPasswordIsValid && enternedRepeatPasswordTouched;
+
+  const enteredAllowEmailsIsValid = typeof formData.allowEmails === 'boolean';
+  const allowEmailsInputIsInvalid = !enteredAllowEmailsIsValid;
 
   const submitHandler = async (event: React.FormEvent) => {
     event.preventDefault();
@@ -109,12 +113,14 @@ function SignUp() {
     ) {
       return;
     }
+    console.log('sumbit', formData.allowEmails);
     const { hasError, message } = await registerUser(
       formData.email,
       formData.password,
       formData.confirmPassword,
       formData.firstName,
       formData.lastName,
+      formData.allowEmails,
       formData.companyName,
       formData.companyWebUrl,
       queryParams.get('referredBy')!
@@ -167,6 +173,10 @@ function SignUp() {
     ? `${styles.inputBlock} ${styles.inputBlockError}`
     : styles.inputBlock;
 
+  const allowEmailsInputClasses = allowEmailsInputIsInvalid
+    ? `${styles.inputBlock} ${styles.inputBlockError}`
+    : styles.inputBlock;
+
   return (
     // <AuthLayout>
     <div className="h-screen w-screen mobilev:overflow-auto tablet:overflow-hidden flex">
@@ -213,6 +223,7 @@ function SignUp() {
                       repeatPasswordInputIsInvalid={
                         repeatPasswordInputIsInvalid
                       }
+                      allowEmailsInputClasses={allowEmailsInputClasses}
                       setEnteredEmailTouched={setEnteredEmailTouched}
                       setEnteredFirstNameTouched={setEnteredFirstNameTouched}
                       setEnteredLastNameTouched={setEnteredLastNameTouched}

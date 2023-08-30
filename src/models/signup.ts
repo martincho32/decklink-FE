@@ -9,6 +9,8 @@ class SignUpFormData {
 
   confirmPassword: string;
 
+  allowEmails: boolean;
+
   companyName: string;
 
   companyWebUrl: string;
@@ -19,6 +21,7 @@ class SignUpFormData {
     lastName: string,
     password: string,
     confirmPassword: string,
+    allowEmails: boolean,
     comapnyName: string,
     companyWebUrl: string
   ) {
@@ -27,6 +30,7 @@ class SignUpFormData {
     this.lastName = lastName;
     this.password = password;
     this.confirmPassword = confirmPassword;
+    this.allowEmails = allowEmails;
     this.companyName = comapnyName;
     this.companyWebUrl = companyWebUrl;
   }

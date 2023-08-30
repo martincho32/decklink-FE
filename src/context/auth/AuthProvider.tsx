@@ -59,6 +59,7 @@ export function AuthProvider({ children }: PropsWithChildren) {
     cfpassword: string,
     _firstName: string,
     _lastName: string,
+    allowEmails: boolean,
     companyName: string,
     companyWebUrl: string,
     referredBy: string
@@ -74,6 +75,7 @@ export function AuthProvider({ children }: PropsWithChildren) {
           cfpassword,
           firstName: _firstName,
           lastName: _lastName,
+          allowEmails,
           companyName,
           companyWebUrl,
         },

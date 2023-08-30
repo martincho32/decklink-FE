@@ -12,6 +12,7 @@ interface ContextProps {
     cfpassword: string,
     firstName: string,
     lastName: string,
+    allowEmails: boolean,
     companyName: string,
     companyWebUrl: string,
     referredBy: string

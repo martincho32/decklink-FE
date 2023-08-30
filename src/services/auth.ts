@@ -13,6 +13,7 @@ type RegisterUserCredentials = UserCredentials & {
   cfpassword: string;
   firstName: string;
   lastName: string;
+  allowEmails: boolean;
   companyName: string;
   companyWebUrl: string;
 };
@@ -28,6 +29,7 @@ export const registerUser = (
     token: string;
     firstName: string;
     lastName: string;
+    allowEmails: boolean;
     hasCreatedDeck: boolean;
   };
 }> =>

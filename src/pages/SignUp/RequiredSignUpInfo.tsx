@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { Input } from '../../components';
 import SignUpFormData from '../../models/signup';
 
@@ -22,6 +23,7 @@ export interface RequiredSignUpInfoProps {
   passwordInputIsInvalid: boolean;
   repeatPasswordInputClasses: string;
   repeatPasswordInputIsInvalid: boolean;
+  allowEmailsInputClasses: string;
   setEnteredEmailTouched;
   setEnteredFirstNameTouched;
   setEnteredLastNameTouched;
@@ -42,12 +44,16 @@ function RequiredSignUpInfo({
   passwordInputIsInvalid,
   repeatPasswordInputClasses,
   repeatPasswordInputIsInvalid,
+  allowEmailsInputClasses,
   setEnteredEmailTouched,
   setEnteredFirstNameTouched,
   setEnteredLastNameTouched,
   setEnteredPasswordTouched,
   setEnteredRepeatPasswordTouched,
 }: RequiredSignUpInfoProps) {
+  const [allowEmailsToogleChecked, setAllowEmailsToogleChecked] =
+    useState<boolean>(true);
+
   const handleEmailChange = (value: string) => {
     setFormData({ ...formData, email: value });
   };
@@ -86,6 +92,14 @@ function RequiredSignUpInfo({
 
   const repeatPasswordInputBlur = () => {
     setEnteredRepeatPasswordTouched(true);
+  };
+
+  const handleAllowEmailsChange = () => {
+    setFormData({
+      ...formData,
+      allowEmails: !allowEmailsToogleChecked,
+    });
+    setAllowEmailsToogleChecked(!allowEmailsToogleChecked);
   };
 
   return (
@@ -165,6 +179,18 @@ function RequiredSignUpInfo({
           errorMessage="Passwords do not match"
           onChange={handleRepeatPasswordChange}
           onBlur={repeatPasswordInputBlur}
+          className="tablet:!max-w-none"
+        />
+      </div>
+      <div className={allowEmailsInputClasses}>
+        <Input
+          showExplanation
+          explanationMessage="Allow us to send you weekly updates of your pitch decks and notifications that someone is viewing your pitch deck to your email. No spam messages. "
+          style="toggle"
+          label="Allow sending update emails *"
+          id="allowEmails"
+          checked={allowEmailsToogleChecked}
+          onChange={handleAllowEmailsChange}
           className="tablet:!max-w-none"
         />
       </div>
