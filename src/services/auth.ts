@@ -59,3 +59,24 @@ export const validateUserToken = (
     maxDecksStorageSize: number;
   };
 }> => api.get(`${resource}/validate-token`, config);
+
+export const forgotPassword = (
+  email: string
+): Promise<{
+  data: {
+    status: string;
+    message: string;
+  };
+}> => api.post(`${resource}/forgotPassword`, { email });
+
+export const resetPassword = (
+  token: string,
+  password: string,
+  cfpassword: string
+): Promise<{
+  data: {
+    status: string;
+    message: string;
+    email: string;
+  };
+}> => api.patch(`${resource}/resetPassword/${token}`, { password, cfpassword });

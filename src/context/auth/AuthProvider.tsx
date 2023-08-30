@@ -97,7 +97,36 @@ export function AuthProvider({ children }: PropsWithChildren) {
       }
       return {
         hasError: true,
-        message: 'Something went wrong. Please contact support.',
+        message: 'Something went very wrong. Please contact support.',
+      };
+    }
+  };
+
+  const forgotPassword = async (
+    email: string
+  ): Promise<{
+    hasError: boolean;
+    message?: string;
+  }> => {
+    try {
+      const { data } = await loginService.forgotPassword(email);
+
+      const { message } = data;
+
+      return {
+        hasError: false,
+        message,
+      };
+    } catch (error: any) {
+      if (error.response.data.message === 'There is no user with such email') {
+        return {
+          hasError: true,
+          message: 'User with such email already exists',
+        };
+      }
+      return {
+        hasError: true,
+        message: 'Something went very wrong. Please contact support.',
       };
     }
   };
@@ -155,6 +184,7 @@ export function AuthProvider({ children }: PropsWithChildren) {
           // Methods
           loginUser,
           registerUser,
+          forgotPassword,
           validateToken,
           logoutUser,
         }),

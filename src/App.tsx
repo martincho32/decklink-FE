@@ -11,6 +11,8 @@ import {
   DeckDetail,
   Presentation,
   Referrals,
+  ForgotPassword,
+  ResetPassword,
 } from './pages';
 import ProtectedRoute from './components/ProtectedRoute';
 import { AuthProvider, UIProvider } from './context';
@@ -26,6 +28,8 @@ function App() {
               <Route path="/landing" element={<Landing />} />
               <Route path="/login" element={<LogIn />} />
               <Route path="/signup" element={<SignUp />} />
+              <Route path="/resetPassword/:token" element={<ResetPassword />} />
+              <Route path="/forgotPassword" element={<ForgotPassword />} />
               <Route element={<ProtectedRoute />}>
                 <Route path="/founder/decks" element={<MyDecks />} />
                 <Route path="/founder/referrals" element={<Referrals />} />
