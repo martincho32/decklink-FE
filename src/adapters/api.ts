@@ -9,9 +9,10 @@ const basePath = import.meta.env.DEV
 
 console.log('basePath: ', basePath);
 console.log('import.meta.env.PROD: ', import.meta.env.PROD);
-console.log('import.meta.env.PROD: ', import.meta.env.DEV);
-console.log('import.meta.env.PROD: ', import.meta.env.MODE);
-console.log('import.meta.env.PROD: ', import.meta.url);
+console.log('import.meta.env.DEV: ', import.meta.env.DEV);
+console.log('import.meta.env.MODE: ', import.meta.env.MODE);
+console.log('import.meta.url: ', import.meta.url);
+console.log('import.meta.env: ', import.meta.env);
 
 const axiosApi = axios.create({
   // baseURL: 'https://algebraic-hub-392717.uc.r.appspot.com/api',
