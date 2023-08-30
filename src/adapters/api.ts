@@ -2,12 +2,16 @@ import axios, { AxiosRequestConfig } from 'axios';
 
 function setBasePath(): string {
   if (import.meta.url.includes('local')) {
+    console.log(1);
     return 'http://localhost:3000/api';
   }
   if (import.meta.url.includes('integration')) {
-    return 'https://development-dot-algebraic-hub-392717.uc.r.appspot.com/api';
+    console.log(2);
+    // return 'https://development-dot-algebraic-hub-392717.uc.r.appspot.com/api';
+    return 'https://algebraic-hub-392717.uc.r.appspot.com/api';
   }
   if (import.meta.url.includes('fundraisingtoolbox')) {
+    console.log(3);
     return 'https://algebraic-hub-392717.uc.r.appspot.com/api';
   }
   console.log('Url does not includes any of the roveded parameters');
@@ -16,11 +20,7 @@ function setBasePath(): string {
 
 const basePath = setBasePath();
 
-console.log('basePath: ', basePath);
-console.log(import.meta.url.includes('integration'));
-
 const axiosApi = axios.create({
-  // baseURL: 'https://algebraic-hub-392717.uc.r.appspot.com/api',
   baseURL: basePath,
   withCredentials: true,
   headers: {
