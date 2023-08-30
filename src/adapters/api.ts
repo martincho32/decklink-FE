@@ -1,9 +1,11 @@
+/* eslint-disable no-nested-ternary */
 import axios, { AxiosRequestConfig } from 'axios';
 
 const basePath = import.meta.env.DEV
   ? 'http://localhost:3000/api'
-  : 'https://algebraic-hub-392717.uc.r.appspot.com/api';
-
+  : import.meta.env.PROD
+  ? 'https://algebraic-hub-392717.uc.r.appspot.com/api'
+  : 'https://development-dot-algebraic-hub-392717.uc.r.appspot.com/';
 const axiosApi = axios.create({
   // baseURL: 'https://algebraic-hub-392717.uc.r.appspot.com/api',
   baseURL: basePath,
