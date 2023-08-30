@@ -6,6 +6,7 @@ const basePath = import.meta.env.DEV
   : import.meta.env.PROD
   ? 'https://algebraic-hub-392717.uc.r.appspot.com/api'
   : 'https://development-dot-algebraic-hub-392717.uc.r.appspot.com/';
+console.log('basePath: ', basePath);
 const axiosApi = axios.create({
   // baseURL: 'https://algebraic-hub-392717.uc.r.appspot.com/api',
   baseURL: basePath,
