@@ -20,8 +20,19 @@ interface ContextProps {
     hasError: boolean;
     message?: string;
   }>;
-  resetPassword: (password: string, token: string) => Promise<boolean>;
-  forgotPassword: (email: string) => Promise<boolean>;
+  resetPassword: (
+    token: string,
+    password: string,
+    repeatPassword: string
+  ) => Promise<{
+    hasError: boolean;
+    message?: string;
+    email?: string;
+  }>;
+  forgotPassword: (email: string) => Promise<{
+    hasError: boolean;
+    message?: string;
+  }>;
   validateToken: () => Promise<boolean>;
   logoutUser: () => void;
 }

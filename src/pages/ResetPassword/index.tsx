@@ -15,11 +15,11 @@ import collectEmails from '../../assets/images/CollectEmails.png';
 import customLink from '../../assets/images/CustomLink.png';
 import previewCard from '../../assets/images/PreviewCard.png';
 import styles from './ResetPassword.module.css';
-import { loginService } from '@/services';
+// import { loginService } from '@/services';
 import { AuthContext } from '@/context';
 
 function ResetPassword() {
-  const { loginUser } = useContext(AuthContext);
+  const { loginUser, resetPassword } = useContext(AuthContext);
   const navigate = useNavigate();
 
   const params = useParams();
@@ -67,44 +67,34 @@ function ResetPassword() {
       return;
     }
 
-    try {
-      const { data } = await loginService.resetPassword(
-        params.token as string,
-        password,
-        repeatPassword
-      );
-      if (data.status === 'success') {
-        enqueueSnackbar(data.message, {
-          variant: 'success',
-          autoHideDuration: 5000,
-          anchorOrigin: {
-            vertical: 'top',
-            horizontal: 'right',
-          },
-        });
+    const { hasError, message, email } = await resetPassword(
+      params.token as string,
+      password,
+      repeatPassword
+    );
 
-        const isvalidLogin = await loginUser(data.email, password);
-        navigate('/founder/decks', {
-          state: { isLoggedIn: isvalidLogin },
-          replace: true,
-        });
+    if (!hasError) {
+      enqueueSnackbar(message, {
+        variant: 'success',
+        autoHideDuration: 5000,
+        anchorOrigin: {
+          vertical: 'top',
+          horizontal: 'right',
+        },
+      });
 
-        setRepeatPassword('');
-        setEnteredRepeatPasswordTouched(false);
-        setPassword('');
-        setEnteredPasswordTouched(false);
-      } else {
-        enqueueSnackbar(data.message, {
-          variant: 'error',
-          autoHideDuration: 5000,
-          anchorOrigin: {
-            vertical: 'top',
-            horizontal: 'right',
-          },
-        });
-      }
-    } catch (error: any) {
-      enqueueSnackbar(error.response.data.message, {
+      const isvalidLogin = await loginUser(email as string, password);
+      navigate('/founder/decks', {
+        state: { isLoggedIn: isvalidLogin },
+        replace: true,
+      });
+
+      setRepeatPassword('');
+      setEnteredRepeatPasswordTouched(false);
+      setPassword('');
+      setEnteredPasswordTouched(false);
+    } else {
+      enqueueSnackbar(message, {
         variant: 'error',
         autoHideDuration: 5000,
         anchorOrigin: {

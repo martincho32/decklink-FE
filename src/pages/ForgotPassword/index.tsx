@@ -1,6 +1,6 @@
 import { useSnackbar } from 'notistack';
 import { Link } from 'react-router-dom';
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/css';
 import 'swiper/css/pagination';
@@ -15,12 +15,13 @@ import collectEmails from '../../assets/images/CollectEmails.png';
 import customLink from '../../assets/images/CustomLink.png';
 import previewCard from '../../assets/images/PreviewCard.png';
 import styles from './ForgotPassword.module.css';
-import { loginService } from '@/services';
+// import { loginService } from '@/services';
+import { AuthContext } from '@/context';
 
 function ForgotPassword() {
   const { enqueueSnackbar } = useSnackbar();
 
-  // const navigate = useNavigate();
+  const { forgotPassword } = useContext(AuthContext);
 
   const [email, setEmail] = useState<string>('');
 
@@ -48,33 +49,21 @@ function ForgotPassword() {
       return;
     }
 
-    try {
-      const { data } = await loginService.forgotPassword(email);
-      if (data.status === 'success') {
-        enqueueSnackbar(data.message, {
-          variant: 'success',
-          autoHideDuration: 5000,
-          anchorOrigin: {
-            vertical: 'top',
-            horizontal: 'right',
-          },
-        });
+    const { hasError, message } = await forgotPassword(email);
+    if (!hasError) {
+      enqueueSnackbar(message, {
+        variant: 'success',
+        autoHideDuration: 5000,
+        anchorOrigin: {
+          vertical: 'top',
+          horizontal: 'right',
+        },
+      });
 
-        setEmail('');
-        setEnteredEmailTouched(false);
-      } else {
-        enqueueSnackbar(data.message, {
-          variant: 'error',
-          autoHideDuration: 5000,
-          anchorOrigin: {
-            vertical: 'top',
-            horizontal: 'right',
-          },
-        });
-      }
-    } catch (error: any) {
-      console.log(error);
-      enqueueSnackbar(error.response.data.message, {
+      setEmail('');
+      setEnteredEmailTouched(false);
+    } else {
+      enqueueSnackbar(message, {
         variant: 'error',
         autoHideDuration: 5000,
         anchorOrigin: {

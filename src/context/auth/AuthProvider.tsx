@@ -115,6 +115,13 @@ export function AuthProvider({ children }: PropsWithChildren) {
 
       const { message } = data;
 
+      if (data.status !== 'success') {
+        return {
+          hasError: true,
+          message,
+        };
+      }
+
       return {
         hasError: false,
         message,
@@ -129,6 +136,44 @@ export function AuthProvider({ children }: PropsWithChildren) {
       return {
         hasError: true,
         message: 'Something went very wrong. Please contact support.',
+      };
+    }
+  };
+
+  const resetPassword = async (
+    token: string,
+    password: string,
+    repeatPassword: string
+  ): Promise<{
+    hasError: boolean;
+    message?: string;
+    email?: string;
+  }> => {
+    try {
+      const { data } = await loginService.resetPassword(
+        token,
+        password,
+        repeatPassword
+      );
+
+      const { message, email } = data;
+      if (data.status !== 'success') {
+        return {
+          hasError: true,
+          message,
+          email,
+        };
+      }
+
+      return {
+        hasError: false,
+        message,
+        email,
+      };
+    } catch (error: any) {
+      return {
+        hasError: true,
+        message: error.response.data.message,
       };
     }
   };
@@ -187,6 +232,7 @@ export function AuthProvider({ children }: PropsWithChildren) {
           loginUser,
           registerUser,
           forgotPassword,
+          resetPassword,
           validateToken,
           logoutUser,
         }),
