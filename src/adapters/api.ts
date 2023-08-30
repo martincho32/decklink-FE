@@ -14,11 +14,6 @@ function setBasePath(): string {
 const basePath = setBasePath();
 
 console.log('basePath: ', basePath);
-console.log('variable-import.meta.env.PROD: ', import.meta.env.PROD);
-console.log('variable-import.meta.env.DEV: ', import.meta.env.DEV);
-console.log('variable-import.meta.env.MODE: ', import.meta.env.MODE);
-console.log('variable-import.meta.url: ', import.meta.url);
-console.log('variable-import.meta.env: ', import.meta.env);
 
 const axiosApi = axios.create({
   // baseURL: 'https://algebraic-hub-392717.uc.r.appspot.com/api',
