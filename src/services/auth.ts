@@ -82,3 +82,21 @@ export const resetPassword = (
     email: string;
   };
 }> => api.patch(`${resource}/resetPassword/${token}`, { password, cfpassword });
+
+export const sendEmailVerification = (
+  email: string
+): Promise<{
+  data: {
+    status: string;
+    message: string;
+  };
+}> => api.post(`${resource}/verify`, { email });
+
+export const verifyEmail = (
+  token: string
+): Promise<{
+  data: {
+    status: string;
+    message: string;
+  };
+}> => api.patch(`${resource}/verify/${token}`, {});

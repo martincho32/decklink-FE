@@ -5,7 +5,13 @@ interface ContextProps {
   isLoggedIn: boolean;
   user?: Partial<IUser>;
 
-  loginUser: (_email: string, password: string) => Promise<boolean>;
+  loginUser: (
+    _email: string,
+    password: string
+  ) => Promise<{
+    noError: boolean;
+    message?: string;
+  }>;
   registerUser: (
     _email: string,
     password: string,
@@ -30,6 +36,14 @@ interface ContextProps {
     email?: string;
   }>;
   forgotPassword: (email: string) => Promise<{
+    hasError: boolean;
+    message?: string;
+  }>;
+  sendEmailVerification: (email: string) => Promise<{
+    hasError: boolean;
+    message?: string;
+  }>;
+  verifyEmail: (token: string) => Promise<{
     hasError: boolean;
     message?: string;
   }>;

@@ -28,7 +28,10 @@ export function AuthProvider({ children }: PropsWithChildren) {
   const loginUser = async (
     _email: string,
     password: string
-  ): Promise<boolean> => {
+  ): Promise<{
+    noError: boolean;
+    message?: string;
+  }> => {
     try {
       const { data } = await loginService.loginUser({
         email: _email,
@@ -47,9 +50,15 @@ export function AuthProvider({ children }: PropsWithChildren) {
           hasCreatedDeck,
         },
       });
-      return true;
-    } catch (error) {
-      return false;
+      return {
+        noError: true,
+        message: 'You successfully logged in',
+      };
+    } catch (error: any) {
+      return {
+        noError: false,
+        message: error.response.data.message,
+      };
     }
   };
 
@@ -89,6 +98,7 @@ export function AuthProvider({ children }: PropsWithChildren) {
       });
       return {
         hasError: false,
+        message: 'You successfully signed up',
       };
     } catch (error: any) {
       if (error.response.data.message === 'USER_ALREADY_EXISTS') {
@@ -218,6 +228,71 @@ export function AuthProvider({ children }: PropsWithChildren) {
     }
   };
 
+  const sendEmailVerification = async (
+    email: string
+  ): Promise<{
+    hasError: boolean;
+    message?: string;
+  }> => {
+    try {
+      const { data } = await loginService.sendEmailVerification(email);
+
+      const { message } = data;
+
+      if (data.status !== 'success') {
+        return {
+          hasError: true,
+          message,
+        };
+      }
+
+      return {
+        hasError: false,
+        message,
+      };
+    } catch (error: any) {
+      if (error.response.data.message === 'There is no user with such email') {
+        return {
+          hasError: true,
+          message: 'User with such email already exists',
+        };
+      }
+      return {
+        hasError: true,
+        message: 'Something went very wrong. Please contact support.',
+      };
+    }
+  };
+
+  const verifyEmail = async (
+    token: string
+  ): Promise<{
+    hasError: boolean;
+    message?: string;
+  }> => {
+    try {
+      const { data } = await loginService.verifyEmail(token);
+
+      const { status, message } = data;
+      if (status !== 'success') {
+        return {
+          hasError: true,
+          message,
+        };
+      }
+
+      return {
+        hasError: false,
+        message,
+      };
+    } catch (error: any) {
+      return {
+        hasError: true,
+        message: error.response.data.message,
+      };
+    }
+  };
+
   useEffect(() => {
     validateToken();
   }, []);
@@ -235,6 +310,8 @@ export function AuthProvider({ children }: PropsWithChildren) {
           resetPassword,
           validateToken,
           logoutUser,
+          sendEmailVerification,
+          verifyEmail,
         }),
         [state]
       )}
