@@ -6,7 +6,7 @@ import 'swiper/css/pagination';
 import 'swiper/css/navigation';
 
 import whiteTopRightArrow from '../../assets/images/ArrowTopRight.svg';
-import { Input, Button, AuthLayout } from '../../components';
+import { Input, Button, AuthLayout, AnimatedLoader } from '../../components';
 import styles from './ForgotPassword.module.css';
 import { AuthContext } from '@/context';
 
@@ -16,6 +16,7 @@ function ForgotPassword() {
   const { forgotPassword } = useContext(AuthContext);
 
   const [email, setEmail] = useState<string>('');
+  const [isButtonDisabled, setIsButtonDisabled] = useState(false);
 
   const [enteredEmailTouched, setEnteredEmailTouched] =
     useState<boolean>(false);
@@ -41,6 +42,7 @@ function ForgotPassword() {
       return;
     }
 
+    setIsButtonDisabled(true);
     const { hasError, message } = await forgotPassword(email);
     if (!hasError) {
       enqueueSnackbar(message, {
@@ -51,10 +53,11 @@ function ForgotPassword() {
           horizontal: 'right',
         },
       });
-
+      setIsButtonDisabled(false);
       setEmail('');
       setEnteredEmailTouched(false);
     } else {
+      setIsButtonDisabled(false);
       enqueueSnackbar(message, {
         variant: 'error',
         autoHideDuration: 5000,
@@ -97,15 +100,25 @@ function ForgotPassword() {
               className="tablet:!max-w-none"
             />
           </div>
-          <Button
-            id="login-button"
-            type="submit"
-            text="Sent Email"
-            icon={<img src={whiteTopRightArrow} alt="Arrow" />}
-            backgroundColor="#F1511B"
-            textColor="#FFF"
-            className="w-full mobilev:!max-w-[24rem] tablet:!max-w-none"
-          />
+          {isButtonDisabled ? (
+            <Button
+              id="login-button"
+              type="submit"
+              icon={<AnimatedLoader />}
+              backgroundColor="#F1511B"
+              className="w-full mobilev:!max-w-[24rem] tablet:!max-w-none"
+            />
+          ) : (
+            <Button
+              id="login-button"
+              type="submit"
+              text="Sent Email"
+              icon={<img src={whiteTopRightArrow} alt="Arrow" />}
+              backgroundColor="#F1511B"
+              textColor="#FFF"
+              className="w-full mobilev:!max-w-[24rem] tablet:!max-w-none"
+            />
+          )}
         </form>
         <div className="flex flex-col items-center gap-1">
           <p className="opacity-50">Remembered your password?</p>
