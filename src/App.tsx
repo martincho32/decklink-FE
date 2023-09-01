@@ -26,7 +26,7 @@ function App() {
         <SnackbarProvider maxSnack={3}>
           <BrowserRouter>
             <Routes>
-              <Route index element={<Landing />} />
+              <Route index element={<LogIn />} />
               <Route path="/landing" element={<Landing />} />
               <Route path="/login" element={<LogIn />} />
               <Route path="/signup" element={<SignUp />} />

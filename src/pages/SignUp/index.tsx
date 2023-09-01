@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-shadow */
 import { useSnackbar } from 'notistack';
-import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { Link, Navigate, useLocation, useNavigate } from 'react-router-dom';
 import { useState, useContext } from 'react';
 import 'swiper/css';
 import 'swiper/css/pagination';
@@ -196,91 +196,97 @@ function SignUp() {
     ? `${styles.inputBlock} ${styles.inputBlockError}`
     : styles.inputBlock;
 
+  const { isLoggedIn } = useContext(AuthContext);
+
   return (
     <AuthLayout>
-      <div className="flex py-12 flex-col gap-7 my-auto items-center justify-center w-full">
-        {page === 1 && (
-          <Button
-            type="button"
-            text="Go Back"
-            icon={<Logo color="#161A20" topLeft width="12" height="11" />}
-            textColor="#161A20"
-            className="flex-row-reverse"
-            onClick={() => {
-              setPage((currPage) => currPage - 1);
-            }}
-          />
-        )}
-        <h1 className="text-mirage text-[2.25rem] font-black">
-          {formTitles[page]}
-        </h1>
-        <p className="text-mirage text-[0.875rem] opacity-40">
-          * - required fileds
-        </p>
-        <form
-          onSubmit={submitHandler}
-          className={`${styles.form} items-center justify-center`}
-        >
-          {page === 0 ? (
-            <>
-              <RequiredSignUpInfo
-                formData={formData}
-                setFormData={setFormData}
-                emailInputClasses={emailInputClasses}
-                emailInputIsInvalid={emailInputIsInvalid}
-                firstNameInputClasses={firstNameInputClasses}
-                firstNameInputIsInvalid={firstNameInputIsInvalid}
-                lastNameInputClasses={lastNameInputClasses}
-                lastNameInputIsInvalid={lastNameInputIsInvalid}
-                passwordInputClasses={passwordInputClasses}
-                passwordInputIsInvalid={passwordInputIsInvalid}
-                repeatPasswordInputClasses={repeatPasswordInputClasses}
-                repeatPasswordInputIsInvalid={repeatPasswordInputIsInvalid}
-                allowEmailsInputClasses={allowEmailsInputClasses}
-                setEnteredEmailTouched={setEnteredEmailTouched}
-                setEnteredFirstNameTouched={setEnteredFirstNameTouched}
-                setEnteredLastNameTouched={setEnteredLastNameTouched}
-                setEnteredPasswordTouched={setEnteredPasswordTouched}
-                setEnteredRepeatPasswordTouched={
-                  setEnternedRepeatPasswordTouched
-                }
-              />
-              <Button
-                id="continue-button"
-                type="submit"
-                text="Continue"
-                icon={<img src={whiteTopRightArrow} alt="Arrow" />}
-                backgroundColor="#F1511B"
-                textColor="#FFF"
-                className="w-full mobilev:!max-w-[24rem] tablet:!max-w-none"
-                // onClick={continueHandler}
-              />
-            </>
-          ) : (
-            <>
-              <NotRequiredSignUpInfo
-                formData={formData}
-                setFormData={setFormData}
-              />
-              <Button
-                id="signup-button"
-                type="submit"
-                text="Sign up"
-                icon={<img src={whiteTopRightArrow} alt="Arrow" />}
-                backgroundColor="#F1511B"
-                textColor="#FFF"
-                className="w-full mobilev:!max-w-[24rem] tablet:!max-w-none"
-              />
-            </>
+      {!isLoggedIn ? (
+        <div className="flex py-12 flex-col gap-7 my-auto items-center justify-center w-full">
+          {page === 1 && (
+            <Button
+              type="button"
+              text="Go Back"
+              icon={<Logo color="#161A20" topLeft width="12" height="11" />}
+              textColor="#161A20"
+              className="flex-row-reverse"
+              onClick={() => {
+                setPage((currPage) => currPage - 1);
+              }}
+            />
           )}
-        </form>
-        <div className="flex flex-col items-center gap-1">
-          <p className="opacity-50">Already have an account?</p>
-          <Link className="text-persimmon" to="/login">
-            Sign In Now
-          </Link>
+          <h1 className="text-mirage text-[2.25rem] font-black">
+            {formTitles[page]}
+          </h1>
+          <p className="text-mirage text-[0.875rem] opacity-40">
+            * - required fileds
+          </p>
+          <form
+            onSubmit={submitHandler}
+            className={`${styles.form} items-center justify-center`}
+          >
+            {page === 0 ? (
+              <>
+                <RequiredSignUpInfo
+                  formData={formData}
+                  setFormData={setFormData}
+                  emailInputClasses={emailInputClasses}
+                  emailInputIsInvalid={emailInputIsInvalid}
+                  firstNameInputClasses={firstNameInputClasses}
+                  firstNameInputIsInvalid={firstNameInputIsInvalid}
+                  lastNameInputClasses={lastNameInputClasses}
+                  lastNameInputIsInvalid={lastNameInputIsInvalid}
+                  passwordInputClasses={passwordInputClasses}
+                  passwordInputIsInvalid={passwordInputIsInvalid}
+                  repeatPasswordInputClasses={repeatPasswordInputClasses}
+                  repeatPasswordInputIsInvalid={repeatPasswordInputIsInvalid}
+                  allowEmailsInputClasses={allowEmailsInputClasses}
+                  setEnteredEmailTouched={setEnteredEmailTouched}
+                  setEnteredFirstNameTouched={setEnteredFirstNameTouched}
+                  setEnteredLastNameTouched={setEnteredLastNameTouched}
+                  setEnteredPasswordTouched={setEnteredPasswordTouched}
+                  setEnteredRepeatPasswordTouched={
+                    setEnternedRepeatPasswordTouched
+                  }
+                />
+                <Button
+                  id="continue-button"
+                  type="submit"
+                  text="Continue"
+                  icon={<img src={whiteTopRightArrow} alt="Arrow" />}
+                  backgroundColor="#F1511B"
+                  textColor="#FFF"
+                  className="w-full mobilev:!max-w-[24rem] tablet:!max-w-none"
+                  // onClick={continueHandler}
+                />
+              </>
+            ) : (
+              <>
+                <NotRequiredSignUpInfo
+                  formData={formData}
+                  setFormData={setFormData}
+                />
+                <Button
+                  id="signup-button"
+                  type="submit"
+                  text="Sign up"
+                  icon={<img src={whiteTopRightArrow} alt="Arrow" />}
+                  backgroundColor="#F1511B"
+                  textColor="#FFF"
+                  className="w-full mobilev:!max-w-[24rem] tablet:!max-w-none"
+                />
+              </>
+            )}
+          </form>
+          <div className="flex flex-col items-center gap-1">
+            <p className="opacity-50">Already have an account?</p>
+            <Link className="text-persimmon" to="/login">
+              Sign In Now
+            </Link>
+          </div>
         </div>
-      </div>
+      ) : (
+        <Navigate to="/founder/decks" />
+      )}
     </AuthLayout>
   );
 }
