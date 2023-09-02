@@ -1,8 +1,7 @@
 import React, { useContext, useState } from 'react';
 import styles from './AskEmailPassword.module.css';
-import Input from '../UI/Input';
-import Button from '../UI/Button';
-import whiteTopRightArrow from '../../assets/images/ArrowTopRight.svg';
+import { Input, Button } from '@/components/UI';
+import { Logo } from '@/components/icons';
 import { UIContext } from '@/context';
 
 export interface AskEmailPasswordProps {
@@ -127,7 +126,7 @@ function AskEmailPassword({ onSubmit }: AskEmailPasswordProps) {
               <div className={emailInputClasses}>
                 <Input
                   required
-                  labelColor={{ color: '#fff' }}
+                  labelColor={{ color: 'var(--white-color)' }}
                   style="default"
                   type="email"
                   placeholder="example@gmail.com"
@@ -146,7 +145,7 @@ function AskEmailPassword({ onSubmit }: AskEmailPasswordProps) {
               <div className={passwordInputClasses}>
                 <Input
                   required
-                  labelColor={{ color: '#fff' }}
+                  labelColor={{ color: 'var(--white-color)' }}
                   style="password"
                   placeholder="******"
                   label="Password"
@@ -164,9 +163,9 @@ function AskEmailPassword({ onSubmit }: AskEmailPasswordProps) {
               disabled={isFormInvalid()}
               type="submit"
               text="Continue"
-              icon={<img src={whiteTopRightArrow} alt="Arrow" />}
-              backgroundColor="#F1511B"
-              textColor="#FFF"
+              icon={<Logo color="var(--white-color)" />}
+              backgroundColor="var(--primary-color)"
+              textColor="var(--white-color)"
               className="w-full"
             />
           </form>

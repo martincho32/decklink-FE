@@ -16,3 +16,8 @@ export * from './SignIn';
 export * from './SignUp';
 export * from './Views';
 export * from './Wordmark';
+export * from './FirstDummyPitchDeckSlide';
+export * from './SecondDummyPitchDeckSlide';
+export * from './ThirdDummyPitchDeckSlide';
+export * from './ForthDummyPitchDeckSlide';
+export * from './FifthDummyPitchDeckSlide';

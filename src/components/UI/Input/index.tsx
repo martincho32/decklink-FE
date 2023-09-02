@@ -1,9 +1,8 @@
 /* eslint-disable jsx-a11y/label-has-associated-control */
 import React, { useEffect, useState } from 'react';
 import styles from './Input.module.css';
-import hideInputText from '../../../assets/images/HideInput.png';
-import showInputText from '../../../assets/images/ShowInput.png';
-import ExplanationPopup from '@/components/ExplanationPopup';
+import { HideInputImage, ShowInputImage } from '@/assets/images';
+import { ExplanationPopup } from '@/components';
 
 export interface InputProps {
   required?: boolean;
@@ -134,7 +133,7 @@ function Input({
             />
             <img
               className={styles.hideInputText}
-              src={showPassword ? showInputText : hideInputText}
+              src={showPassword ? ShowInputImage : HideInputImage}
               alt={showPassword ? 'Hide Password' : 'Show Password'}
               onClick={togglePasswordVisibility}
             />
@@ -325,4 +324,4 @@ function Input({
   return <div className={styles.inputContainer}>{inputElement}</div>;
 }
 
-export default Input;
+export { Input };

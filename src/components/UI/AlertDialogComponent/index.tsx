@@ -9,7 +9,6 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from '@/components/UI/AlertDialog';
-// import { Button } from '@/components/UI/ShadcnButton';
 
 interface Props {
   children: React.ReactNode;
@@ -22,7 +21,7 @@ interface Props {
   cancelTitle?: string;
 }
 
-export default function AlertDialogComponent({
+export function AlertDialogComponent({
   children,
   action,
   actionClassName,

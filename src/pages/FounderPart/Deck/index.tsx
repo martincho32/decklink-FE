@@ -12,20 +12,20 @@ import { scrollModePlugin } from '@react-pdf-viewer/scroll-mode';
 import axios from 'axios';
 import { useSnackbar } from 'notistack';
 import './DeckCreation.css';
-import { Logo } from '../../../components/icons';
+import { Logo } from '@/components/icons';
 import {
   Button,
   Input,
   DeckPreview,
+  EmptyDeckPreview,
   AlertDialogComponent,
   AnimatedLoader,
-} from '../../../components';
+  Preloading,
+} from '@/components';
 /** File library */
 import 'react-pdf/dist/esm/Page/AnnotationLayer.css';
 import 'react-pdf/dist/esm/Page/TextLayer.css';
-import EmptyDeckPreview from '../../../components/FounderPart/DeckPreview/EmptyDeckPreview';
 import { deckService } from '../../../services';
-import Loading from '../../../components/PreloadingScreen';
 import { AuthContext } from '@/context';
 import { useLocalStorage } from '@/hooks/useLocalStorage';
 
@@ -365,7 +365,7 @@ function Deck({ title = 'Create', deckId }: Props) {
   }, [deckFile]);
 
   return isLoading ? (
-    <Loading />
+    <Preloading />
   ) : (
     <div className="flex flex-col gap-12">
       <form onSubmit={submitHandler} className="max-w-none" action="submit">
@@ -377,7 +377,7 @@ function Deck({ title = 'Create', deckId }: Props) {
               alertDescription="You didn't save your recent changes."
             >
               <Button
-                icon={<Logo switchHorizontal color="#161A20" />}
+                icon={<Logo switchHorizontal color="var(--primary-color)" />}
                 type="button"
                 text="Go Back"
                 onClick={onClickGoBack}
@@ -386,7 +386,7 @@ function Deck({ title = 'Create', deckId }: Props) {
             </AlertDialogComponent>
           ) : (
             <Button
-              icon={<Logo switchHorizontal color="#161A20" />}
+              icon={<Logo switchHorizontal color="var(--primary-color)" />}
               type="button"
               text="Go Back"
               onClick={onClickGoBack}
@@ -407,16 +407,16 @@ function Deck({ title = 'Create', deckId }: Props) {
                 <Button
                   icon={<AnimatedLoader />}
                   type="button"
-                  className="bg-persimmon p-2"
+                  backgroundColor="var(--pimary-color}"
                   disabled
                 />
               ) : (
                 <Button
-                  icon={<Logo color="white" />}
+                  icon={<Logo color="var(--white-color)" />}
                   type="button"
                   text={title}
-                  backgroundColor="#F1511B"
-                  textColor="#ffffff"
+                  backgroundColor="var(--primary-color)"
+                  textColor="var(--white-color)"
                   className="xl:justify-self-end justify-self-center max-w-min"
                 />
               )}
@@ -430,11 +430,11 @@ function Deck({ title = 'Create', deckId }: Props) {
             />
           ) : (
             <Button
-              icon={<Logo color="white" />}
+              icon={<Logo color="var(--white-color)" />}
               type="submit"
               text={title}
-              backgroundColor="#F1511B"
-              textColor="#ffffff"
+              backgroundColor="var(--primary-color)"
+              textColor="var(--white-color)"
               className="xl:justify-self-end justify-self-center max-w-min"
             />
           )}

@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { ExplanationIcon } from '../icons/Explanation';
+import { ExplanationIcon } from '@/components/icons';
 
 type Props = {
   message: string;
@@ -8,12 +8,7 @@ type Props = {
   className?: string;
 };
 
-export default function ExplanationPopup({
-  message,
-  showIcon,
-  children,
-  className,
-}: Props) {
+function ExplanationPopup({ message, showIcon, children, className }: Props) {
   const [isPopupVisible, setPopupVisible] = useState(false);
 
   const onMouseEnterExplanationIcon = () => {
@@ -43,3 +38,5 @@ export default function ExplanationPopup({
     </>
   );
 }
+
+export default ExplanationPopup;

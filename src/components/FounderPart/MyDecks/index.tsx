@@ -7,7 +7,6 @@ import { thumbnailPlugin } from '@react-pdf-viewer/thumbnail';
 import '@react-pdf-viewer/thumbnail/lib/styles/index.css';
 
 import { Link } from 'react-router-dom';
-import { Button } from '../..';
 import styles from './Card.module.css';
 import { IDeck, IDeckView } from '../../../types';
 import {
@@ -20,17 +19,19 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
   AlertDialogTrigger,
-} from '../../UI/AlertDialog';
+  Button,
+} from '@/components/UI';
 import { deckViewService } from '@/services';
 import { getAverageTotalTimeInMinutes } from '@/utils';
-
 import { pageThumbnailPlugin } from './pageThumbnailPlugin';
-import { EditIcon } from '@/components/icons/Edit';
-import { ViewsIcon } from '@/components/icons/Views';
-import { GraphIcon } from '@/components/icons/Grapth';
-import { CopyIcon } from '@/components/icons/Copy';
-import { DeleteIcon } from '@/components/icons/Delete';
-import ExplanationPopup from '@/components/ExplanationPopup';
+import {
+  EditIcon,
+  ViewsIcon,
+  GraphIcon,
+  CopyIcon,
+  DeleteIcon,
+} from '@/components/icons/';
+import { ExplanationPopup } from '@/components/';
 
 interface Props {
   deck: IDeck;
@@ -140,7 +141,7 @@ function Card({ deck, handleClickDelete }: Props) {
                   type="button"
                   text="Edit"
                   icon={<EditIcon />}
-                  textColor="#F1511B"
+                  textColor="var(--primary-color)"
                   className="w-full font-bold"
                 />
               </Link>
@@ -183,9 +184,9 @@ function Card({ deck, handleClickDelete }: Props) {
           <Button
             type="button"
             text="Copy Link"
-            icon={<CopyIcon />}
-            backgroundColor="#F1511B"
-            textColor="#FFF"
+            icon={<CopyIcon color="var(--primary-color)" />}
+            backgroundColor="var(--primary-color)"
+            textColor="var(--white-color)"
             className="w-full font-semibold relative"
             onClick={handleCopyClick}
           />
@@ -199,8 +200,8 @@ function Card({ deck, handleClickDelete }: Props) {
                 type="button"
                 text="Stats"
                 icon={<GraphIcon />}
-                borderColor="#161A20"
-                textColor="#161A20"
+                borderColor="var(--primary-color)"
+                textColor="var(--primary-color)"
                 className="w-full font-semibold"
               />
             </Link>

@@ -1,8 +1,7 @@
 import { useContext, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Hamburguer, Logo, SidebarNavigation } from '..';
+import { Hamburguer, Logo, SidebarNavigation } from '@/components';
 import { AuthContext } from '@/context';
-// import Navbar from '../Navbar';
 
 interface Props {
   children: JSX.Element | JSX.Element[];

@@ -1,5 +1,5 @@
 import { useParams } from 'react-router-dom';
-import { MainLayout } from '../../../components';
+import { MainLayout } from '@/components';
 import Deck from '../Deck';
 
 function DeckEdit() {

@@ -19,28 +19,25 @@ import {
 } from '@react-pdf-viewer/thumbnail';
 import { pageNavigationPlugin } from '@react-pdf-viewer/page-navigation';
 import { getFilePlugin, RenderDownloadProps } from '@react-pdf-viewer/get-file';
-
 import '@react-pdf-viewer/core/lib/styles/index.css';
 import '@react-pdf-viewer/page-navigation/lib/styles/index.css';
 import '@react-pdf-viewer/default-layout/lib/styles/index.css';
 import '@react-pdf-viewer/thumbnail/lib/styles/index.css';
 import axios from 'axios';
 import { enqueueSnackbar } from 'notistack';
-// import { Helmet } from 'react-helmet-async';
 import './DeckPreview.css';
-import Button from '../../UI/Button';
-import { CloseIcon } from '../..';
-import AskEmailPassword from '../../AskEmailPassword';
+import { Button } from '@/components/UI/';
+import AskEmailPassword from '@/components/AskEmailPassword';
 import { UIContext } from '@/context';
 import { deckService, deckViewService } from '@/services';
 import { IDeckSlidesStats } from '@/types';
-import arrowBottom from '../../../assets/images/ArrowBottom.svg';
-import { ExplanationIcon } from '@/components/icons/Explanation';
-import { DownloadIcon } from '@/components/icons/Download';
+import {
+  ExplanationIcon,
+  DownloadIcon,
+  CloseIcon,
+  Logo,
+} from '@/components/icons/';
 import ExplanationPopup from '@/components/ExplanationPopup';
-// import Loading from '../../PreloadingScreen';
-
-// import { milisecondsToMinutesAndSeconds } from '@/utils';
 
 interface KeyboardEvent {
   key: string;
@@ -333,17 +330,6 @@ function DeckPreview({
     };
   }, []);
 
-  // useEffect(() => {
-  //   if (type === 'deckUserPreview') {
-  //     document.title = deckName;
-  //   }
-
-  //   // Cleanup function to reset the document title when the component unmounts
-  //   return () => {
-  //     document.title = 'Fundraisingtoolbox'; // Replace with default tab name
-  //   };
-  // }, [type]);
-
   const renderThumbnailItem = (props: RenderThumbnailItemProps) => (
     <div
       key={props.pageIndex}
@@ -401,12 +387,12 @@ function DeckPreview({
                     className="prev"
                     style={{
                       zIndex: '1',
-                      background: '#F1511B',
+                      background: 'var(--primary-color)',
                       borderRadius: '4px',
                     }}
                   >
                     <MinimalButton onClick={jumpToPreviousPage}>
-                      <img src={arrowBottom} className="rotate-180" alt="" />
+                      <Logo rotation={45} />
                     </MinimalButton>
                   </div>
                   <div className="text-white p-2 text-[12px]">
@@ -416,12 +402,12 @@ function DeckPreview({
                     className="next"
                     style={{
                       zIndex: '1',
-                      background: '#F1511B',
+                      background: 'var(--primary-color)',
                       borderRadius: '4px',
                     }}
                   >
                     <MinimalButton onClick={jumpToNextPage}>
-                      <img src={arrowBottom} alt="" />
+                      <Logo rotation={-135} />
                     </MinimalButton>
                   </div>
                 </div>
@@ -465,7 +451,7 @@ function DeckPreview({
                 <div className="flex">
                   <div className="prev z-[1] bg-persimmon rounded">
                     <MinimalButton onClick={jumpToPreviousPage}>
-                      <img src={arrowBottom} className="rotate-180" alt="" />
+                      <Logo rotation={45} />
                     </MinimalButton>
                   </div>
                   <div className="text-white p-2 text-[12px]">
@@ -473,7 +459,7 @@ function DeckPreview({
                   </div>
                   <div className="next z-[1] bg-persimmon rounded">
                     <MinimalButton onClick={jumpToNextPage}>
-                      <img src={arrowBottom} alt="" />
+                      <Logo rotation={-135} />
                     </MinimalButton>
                   </div>
                 </div>
@@ -484,10 +470,14 @@ function DeckPreview({
                     <Button
                       type="button"
                       icon={
-                        <DownloadIcon color="white" width="16" height="16" />
+                        <DownloadIcon
+                          color="var(--white-color)"
+                          width="16"
+                          height="16"
+                        />
                       }
-                      className="bg-persimmon"
-                      textColor="#FFF"
+                      backgroundColor="var(--primary-color)"
+                      textColor="var(--white-color)"
                       onClick={props.onClick}
                     />
                   )}
@@ -534,15 +524,20 @@ function DeckPreview({
             showIcon={false}
             className="!w-max"
           >
-            <ExplanationIcon width="24" height="24" color="white" />
+            <ExplanationIcon
+              width="24"
+              height="24"
+              color="var(--white-color)"
+            />
           </ExplanationPopup>
         </div>
       )}
       {type === 'deckCreationPreview' && (
         <Button
           type="button"
-          icon={<CloseIcon width="16" height="16" color="#FFFFFF" />}
-          className="buttonClose fixed w-8 h-8 top-8 right-8 p-2 bg-persimmon rounded-md"
+          icon={<CloseIcon width="16" height="16" color="var(--white-color)" />}
+          className="buttonClose fixed w-8 h-8 top-8 right-8 rounded-md"
+          backgroundColor="var(--primary-color)"
           onClick={onClose}
         />
       )}

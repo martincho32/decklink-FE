@@ -8,25 +8,26 @@ import {
   DeckPreview,
   Logo,
   AlertDialogComponent,
+  Preloading,
+  ItemEmptyState,
+  Card,
+  CalendlyIntegration,
 } from '@/components';
-import whiteTopRightArrow from '../../../assets/images/ArrowTopRight.svg';
 import styles from './MyDecks.module.css';
-import Card from '../../../components/FounderPart/MyDecks/Card';
-import EmptyState from '../../../components/ItemEmptyState';
 import { deckService } from '../../../services';
 import { IDeck } from '../../../types';
-import Loading from '../../../components/PreloadingScreen';
-import firstReview from '../../../assets/images/FirstReview.png';
-import secondReview from '../../../assets/images/SecondReview.png';
-import thirdReview from '../../../assets/images/ThirdReview.png';
-import reviewStats from '../../../assets/images/ReviewStats.png';
-import customImage from '../../../assets/images/CustromImage.png';
+import {
+  FirstReviewImage,
+  SecondReviewImage,
+  ThirdReviewImage,
+  ReviewStatsImage,
+  CreatingPitchDeck3DImage,
+} from '@/assets/images';
 
 // Import the useLoading hook
 import useLoading from '../../../hooks/useLoading';
 import { AuthContext } from '@/context';
-import Popup from '@/components/UI/Popup';
-import CalendlyIntegration from '@/components/CalendlyIntegration';
+import { Popup } from '@/components/UI/';
 import { useLocalStorage } from '@/hooks/useLocalStorage';
 
 function MyDecks() {
@@ -146,7 +147,7 @@ function MyDecks() {
   }, [deckList]);
 
   return isLoading ? (
-    <Loading />
+    <Preloading />
   ) : (
     <>
       {showFreePitchDeckModal && (
@@ -167,12 +168,12 @@ function MyDecks() {
             <div className="flex flex-col gap-[-2rem]">
               <div className="flex justify-between items-start">
                 <img
-                  src={reviewStats}
+                  src={ReviewStatsImage}
                   className="mobilev:max-h-[3rem] mobileh:max-h-[4rem] tablet:max-h-[5rem] laptop:max-h-[6rem] desktopxl:max-h-[7rem]"
                   alt="Review Stats"
                 />
                 <img
-                  src={customImage}
+                  src={CreatingPitchDeck3DImage}
                   className="mobilev:max-h-[7rem] mobileh:max-h-[10rem] tablet:max-h-[12rem] desktop:max-h-[14rem] desktopxl:max-h-[17rem]"
                   aria-hidden
                   alt="Custom Image"
@@ -182,17 +183,17 @@ function MyDecks() {
               <div className="mobilev:h-32 mobileh:h-[9rem] laptop:h-[9rem] desktopxl:h-[11rem] relative">
                 <img
                   className="absolute hidden mobileh:block mobileh:w-[20rem] desktop:w-[25rem] bottom-0 rotate-[-5.283deg]"
-                  src={secondReview}
+                  src={SecondReviewImage}
                   alt="second review"
                 />
                 <img
                   className="absolute mobileh:w-[20rem] desktop:w-[25rem] bottom-0 mobileh:left-[120px] desktop:left-[150px] desktopxl:left-[213px] z-[1]"
-                  src={firstReview}
+                  src={FirstReviewImage}
                   alt="first review"
                 />
                 <img
                   className="absolute hidden mobileh:block mobileh:w-[20rem] desktop:w-[25rem] bottom-[-25px] mobileh:bottom-[-15px] right-[18px] rotate-[4.078deg]"
-                  src={thirdReview}
+                  src={ThirdReviewImage}
                   alt="third review"
                 />
               </div>
@@ -200,9 +201,9 @@ function MyDecks() {
             <Button
               type="button"
               text="Get Free Pitch Deck Review"
-              icon={<Logo color="#FFFFFF" width="10" height="11" />}
-              backgroundColor="#F1511B"
-              textColor="#FFF"
+              icon={<Logo color="var(--white-color)" width="10" height="11" />}
+              backgroundColor="var(--primary-color)"
+              textColor="var(--white-color)"
               onClick={() => {
                 setShowFreePitchDeckModal(false);
                 setShowCalendly(true);
@@ -243,9 +244,9 @@ function MyDecks() {
                   <Button
                     type="button"
                     text="Create New Deck"
-                    icon={<img src={whiteTopRightArrow} alt="Arrow" />}
-                    backgroundColor="#F1511B"
-                    textColor="#FFF"
+                    icon={<Logo color="var(--white-color)" />}
+                    backgroundColor="var(--primary-color)"
+                    textColor="var(--white-color)"
                   />
                 </Link>
               ) : (
@@ -257,9 +258,9 @@ function MyDecks() {
                   <Button
                     type="button"
                     text="Create New Deck"
-                    icon={<img src={whiteTopRightArrow} alt="Arrow" />}
-                    backgroundColor="#F1511B"
-                    textColor="#FFF"
+                    icon={<Logo color="var(--white-color)" />}
+                    backgroundColor="var(--primary-color)"
+                    textColor="var(--white-color)"
                   />
                 </AlertDialogComponent>
               )}
@@ -287,7 +288,7 @@ function MyDecks() {
             </div>
           </div>
         ) : (
-          <EmptyState
+          <ItemEmptyState
             title="Zero pitchdecks at the moment."
             subtitle="Why not be the first to create one and kickstart the fun?"
             button={
@@ -301,9 +302,9 @@ function MyDecks() {
                 <Button
                   type="button"
                   text="Create New Deck"
-                  icon={<img src={whiteTopRightArrow} alt="Arrow" />}
-                  backgroundColor="#F1511B"
-                  textColor="#FFF"
+                  icon={<Logo color="var(--white-color)" />}
+                  backgroundColor="var(--primary-color)"
+                  textColor="var(--white-color)"
                 />
               </Link>
             }

@@ -5,11 +5,10 @@ import { useSnackbar } from 'notistack';
 import { Button, Logo, MainLayout } from '../../../components';
 import { deckService, deckViewService } from '../../../services';
 import { IDeck, IDeckView } from '../../../types/index';
-import DeckAverageStats from '../../../components/FounderPart/DeckAverageStats';
-import DeckIndividualStats from '@/components/FounderPart/DeckIndividualStats';
+import { DeckAverageStats, DeckIndividualStats } from '@/components';
 import useLoading from '@/hooks/useLoading';
 import Loading from '../../../components/PreloadingScreen';
-import copyIcon from '../../../assets/images/CopyIcon.svg';
+import { CopyIcon } from '@/components/icons';
 
 import styles from './Detail.module.css';
 
@@ -119,7 +118,7 @@ function DeclkDetail() {
       <div className="flex flex-col gap-12">
         <div className="w-full grid grid-cols-1 md:flex md:justify-between md:content-center xl:grid-cols-3 gap-7 justify-center place-items-center">
           <Button
-            icon={<Logo switchHorizontal color="#161A20" />}
+            icon={<Logo switchHorizontal color="var(--primary-color)" />}
             type="button"
             text="Go Back"
             onClick={onClickGoBack}
@@ -135,8 +134,8 @@ function DeclkDetail() {
             <Button
               type="button"
               text="Copy Link"
-              icon={<img src={copyIcon} alt="" />}
-              textColor="#F1511B"
+              icon={<CopyIcon color="var(--primary-color)" />}
+              textColor="var(--primary-color)"
               className="min-w-max"
               onClick={handleCopyClick}
             />

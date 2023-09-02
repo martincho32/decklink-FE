@@ -2,13 +2,15 @@
 import { useEffect, useState } from 'react';
 import { Sidebar, Menu, MenuItem } from 'react-pro-sidebar';
 import { Link, useLocation } from 'react-router-dom';
-import { PitchDecksIcon } from '../icons/PitchDecks';
-import { ReferralSystemIcon } from '../icons/ReferralSystem';
-import { SignInIcon } from '../icons/SignIn';
-import { SignUpIcon } from '../icons/SignUp';
-import { LogOutIcon } from '../icons/LogOut';
-import { DefaultArrowIcon } from '../icons/DefaultArrow';
-import { Logo } from '..';
+import {
+  SignInIcon,
+  SignUpIcon,
+  LogOutIcon,
+  DefaultArrowIcon,
+  Logo,
+  PitchDecksIcon,
+  ReferralSystemIcon,
+} from '@/components/icons';
 
 interface Props {
   isUserLogged;
@@ -50,11 +52,11 @@ export default function SidebarNavigation({
       customBreakPoint="1024px"
       width="250px"
       collapsedWidth="80px"
-      backgroundColor="#FFF"
+      backgroundColor="var(--white-color)"
       toggled={sidebarIsToggled}
       collapsed={isCollapsed}
       rootStyles={{
-        borderColor: 'white !important',
+        borderColor: 'var(--white-color)',
         boxShadow: '2px 0px 10px 0px rgba(0, 0, 0, 0.10)',
       }}
     >
@@ -62,8 +64,8 @@ export default function SidebarNavigation({
         menuItemStyles={{
           button: {
             [`&.ps-active`]: {
-              backgroundColor: '#F1511B',
-              color: '#fff',
+              backgroundColor: 'var(--primary-color)',
+              color: 'var(--white-color)',
             },
           },
         }}
@@ -85,7 +87,7 @@ export default function SidebarNavigation({
             />
           ) : (
             <MenuItem
-              suffix={<DefaultArrowIcon color="#161A20" />}
+              suffix={<DefaultArrowIcon color="var(--primary-color)" />}
               onClick={() => {
                 if (screenWidth > 1024) {
                   setIsCollapsed(!isCollapsed);
@@ -104,25 +106,6 @@ export default function SidebarNavigation({
             </MenuItem>
           )}
         </Menu>
-        {/* <MenuItem
-          icon={<Hamburguer />}
-          onClick={() => {
-            setIsCollapsed(!isCollapsed);
-          }}
-          style={{ textAlign: 'center' }}
-        >
-          <p className="font-black text-persimmon text-[20px]">
-            <span className="text-mirage">Deck</span>Link
-          </p>
-        </MenuItem> */}
-        {/* <div
-          role="button"
-          tabIndex={0}
-          className="absolute top-9 right-0 p-1"
-          onClick={() => setIsToggled(!isToggled)}
-        >
-          <DefaultArrowIcon color="#161A20" />
-        </div> */}
         {isUserLogged && (
           <div>
             <MenuItem
@@ -130,7 +113,9 @@ export default function SidebarNavigation({
               icon={
                 <PitchDecksIcon
                   color={
-                    location.pathname === '/founder/decks' ? '#FFF' : '#161A20'
+                    location.pathname === '/founder/decks'
+                      ? 'var(--white-color)'
+                      : 'var(--primary-color)'
                   }
                 />
               }
@@ -144,8 +129,8 @@ export default function SidebarNavigation({
                 <ReferralSystemIcon
                   color={
                     location.pathname === '/founder/referrals'
-                      ? '#FFF'
-                      : '#161A20'
+                      ? 'var(--white-color)'
+                      : 'var(--primary-color)'
                   }
                 />
               }
@@ -174,7 +159,7 @@ export default function SidebarNavigation({
             </div>
           ) : (
             <MenuItem
-              icon={<LogOutIcon color="#161A20" />}
+              icon={<LogOutIcon color="var(--primary-color)" />}
               onClick={handleActions.handleButtonLogout}
             >
               LogOut
