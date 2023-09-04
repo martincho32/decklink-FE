@@ -19,25 +19,25 @@ import {
 } from '@react-pdf-viewer/thumbnail';
 import { pageNavigationPlugin } from '@react-pdf-viewer/page-navigation';
 import { getFilePlugin, RenderDownloadProps } from '@react-pdf-viewer/get-file';
-
 import '@react-pdf-viewer/core/lib/styles/index.css';
 import '@react-pdf-viewer/page-navigation/lib/styles/index.css';
 import '@react-pdf-viewer/default-layout/lib/styles/index.css';
 import '@react-pdf-viewer/thumbnail/lib/styles/index.css';
 import axios from 'axios';
 import { enqueueSnackbar } from 'notistack';
-// import { Helmet } from 'react-helmet-async';
 import './DeckPreview.css';
-import Button from '../../UI/Button';
-import { CloseIcon, Logo } from '../..';
-import AskEmailPassword from '../../AskEmailPassword';
+import { Button } from '@/components/UI/';
+import AskEmailPassword from '@/components/AskEmailPassword';
 import { UIContext } from '@/context';
 import { deckService, deckViewService } from '@/services';
 import { IDeckSlidesStats } from '@/types';
-import arrowBottom from '../../../assets/images/ArrowBottom.svg';
-// import Loading from '../../PreloadingScreen';
-
-// import { milisecondsToMinutesAndSeconds } from '@/utils';
+import {
+  ExplanationIcon,
+  DownloadIcon,
+  CloseIcon,
+  Logo,
+} from '@/components/icons/';
+import ExplanationPopup from '@/components/ExplanationPopup';
 
 interface KeyboardEvent {
   key: string;
@@ -330,17 +330,6 @@ function DeckPreview({
     };
   }, []);
 
-  // useEffect(() => {
-  //   if (type === 'deckUserPreview') {
-  //     document.title = deckName;
-  //   }
-
-  //   // Cleanup function to reset the document title when the component unmounts
-  //   return () => {
-  //     document.title = 'Fundraisingtoolbox'; // Replace with default tab name
-  //   };
-  // }, [type]);
-
   const renderThumbnailItem = (props: RenderThumbnailItemProps) => (
     <div
       key={props.pageIndex}
@@ -373,7 +362,7 @@ function DeckPreview({
       role="button"
       tabIndex={0}
       onClick={handleOnClose}
-      className="fixed !h-full inset-0 bg-black bg-opacity-80 backdrop-blur-sm p-2 z-10"
+      className="fixed !h-full inset-0 bg-black bg-opacity-80 backdrop-blur-sm p-2 z-10 cursor-default"
     >
       <AskEmailPassword onSubmit={handleModalSubmit} />
       {!isShowModal && type === 'deckCreationPreview' ? (
@@ -398,12 +387,12 @@ function DeckPreview({
                     className="prev"
                     style={{
                       zIndex: '1',
-                      background: '#F1511B',
+                      background: 'var(--primary-color)',
                       borderRadius: '4px',
                     }}
                   >
                     <MinimalButton onClick={jumpToPreviousPage}>
-                      <img src={arrowBottom} className="rotate-180" alt="" />
+                      <Logo rotation={45} />
                     </MinimalButton>
                   </div>
                   <div className="text-white p-2 text-[12px]">
@@ -413,12 +402,12 @@ function DeckPreview({
                     className="next"
                     style={{
                       zIndex: '1',
-                      background: '#F1511B',
+                      background: 'var(--primary-color)',
                       borderRadius: '4px',
                     }}
                   >
                     <MinimalButton onClick={jumpToNextPage}>
-                      <img src={arrowBottom} alt="" />
+                      <Logo rotation={-135} />
                     </MinimalButton>
                   </div>
                 </div>
@@ -456,30 +445,44 @@ function DeckPreview({
           id="deckUserPreview"
           className="flex flex-col gap-4 !w-full !h-full p-4 bg-mirage rounded-lg md:rounded-none justify-between"
         >
-          <div
-            style={{
-              display: 'flex',
-              height: '100%',
-              width: '100%',
-              flexDirection: 'column',
-            }}
-          >
-            <div className="absolute bg-persimmon  rounded-lg z-10 bottom-4 flex gap-2 left-[50%] -translate-x-1/2 ">
-              <div className="flex">
-                <div className="prev z-[1] bg-persimmon rounded">
-                  <MinimalButton onClick={jumpToPreviousPage}>
-                    <img src={arrowBottom} className="rotate-180" alt="" />
-                  </MinimalButton>
-                </div>
-                <div className="text-white p-2 text-[12px]">
-                  {pageIndex + 1}/{deckSlidesNumber}
-                </div>
-                <div className="next z-[1] bg-persimmon rounded">
-                  <MinimalButton onClick={jumpToNextPage}>
-                    <img src={arrowBottom} alt="" />
-                  </MinimalButton>
+          <div className="flex h-full w-full flex-col">
+            <div className="absolute flex gap-1 bottom-4 left-[50%] -translate-x-1/2 z-10">
+              <div className="bg-persimmon  rounded-lg flex gap-2">
+                <div className="flex">
+                  <div className="prev z-[1] bg-persimmon rounded">
+                    <MinimalButton onClick={jumpToPreviousPage}>
+                      <Logo rotation={45} />
+                    </MinimalButton>
+                  </div>
+                  <div className="text-white p-2 text-[12px]">
+                    {pageIndex + 1}/{deckSlidesNumber}
+                  </div>
+                  <div className="next z-[1] bg-persimmon rounded">
+                    <MinimalButton onClick={jumpToNextPage}>
+                      <Logo rotation={-135} />
+                    </MinimalButton>
+                  </div>
                 </div>
               </div>
+              {type === 'deckUserPreview' && deckDownloadUrl && (
+                <Download>
+                  {(props: RenderDownloadProps) => (
+                    <Button
+                      type="button"
+                      icon={
+                        <DownloadIcon
+                          color="var(--white-color)"
+                          width="16"
+                          height="16"
+                        />
+                      }
+                      backgroundColor="var(--primary-color)"
+                      textColor="var(--white-color)"
+                      onClick={props.onClick}
+                    />
+                  )}
+                </Download>
+              )}
             </div>
             <div
               className="deckUserPreview"
@@ -509,42 +512,32 @@ function DeckPreview({
       ) : (
         <div>Something went wrong, please contact support</div>
       )}
-      <div className="fixed top-5 laptop:right-5 laptop:translate-x-0 right-[50%] translate-x-1/2 flex gap-4">
-        {type === 'deckUserPreview' && deckDownloadUrl && (
-          <Download>
-            {(props: RenderDownloadProps) => (
-              <Button
-                type="button"
-                text="Download"
-                icon={
-                  <div className="rotate-[135deg]">
-                    <Logo color="white" width="10" height="10" />
-                  </div>
-                }
-                className="bg-persimmon gap-2 text-[14px] text-white py-3 px-3"
-                textColor="#FFF"
-                onClick={props.onClick}
-              />
-            )}
-          </Download>
-        )}
-
-        {type === 'deckUserPreview' && (
-          <Button
-            type="button"
-            text="Join DeckLink"
-            icon={<Logo color="white" width="10" height="10" />}
-            className="text-[14px] text-white py-3 px-3"
-            textColor="#FFF"
-            onClick={onSaveDeck}
-          />
-        )}
-      </div>
+      {type === 'deckUserPreview' && (
+        <div
+          tabIndex={0}
+          role="button"
+          onClick={onSaveDeck}
+          className="absolute bottom-6 left-6"
+        >
+          <ExplanationPopup
+            message="How to join DeckLink?"
+            showIcon={false}
+            className="!w-max"
+          >
+            <ExplanationIcon
+              width="24"
+              height="24"
+              color="var(--white-color)"
+            />
+          </ExplanationPopup>
+        </div>
+      )}
       {type === 'deckCreationPreview' && (
         <Button
           type="button"
-          icon={<CloseIcon width="16" height="16" color="#FFFFFF" />}
-          className="buttonClose fixed w-8 h-8 top-8 right-8 p-2 bg-persimmon rounded-md"
+          icon={<CloseIcon width="16" height="16" color="var(--white-color)" />}
+          className="buttonClose fixed w-8 h-8 top-8 right-8 rounded-md"
+          backgroundColor="var(--primary-color)"
           onClick={onClose}
         />
       )}

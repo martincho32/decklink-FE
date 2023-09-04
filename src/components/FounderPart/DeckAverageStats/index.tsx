@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { LineChart } from '../..'; // Replace this with the correct path to your LineChart component
+import { LineChart } from '@/components'; // Replace this with the correct path to your LineChart component
 import { IDeck, IDeckSlidesStats, IDeckView } from '../../../types';
 import './DeckAverageStats.css';
 

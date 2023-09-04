@@ -1,10 +1,8 @@
 import { useContext } from 'react';
 import { Navigate, useNavigate } from 'react-router-dom';
 import styles from './landing.module.css';
-import Logotype from '../../assets/images/logo-on-type-bg.svg';
-import orangeTopRightArrow from '../../assets/images/OrangeArrowTopRight.svg';
-import graphImageFlying from '../../assets/images/graph-image-flying.png';
-import graphImageStanding from '../../assets/images/graph-image-standing.png';
+import { Logo, LogoAndWordmarkIcon } from '@/components/icons';
+import { GraphFlyingImage, GraphStandingImage } from '@/assets/images';
 import { MainLayout, Button } from '../../components';
 import { AuthContext } from '../../context';
 
@@ -23,16 +21,16 @@ function Landing() {
         <div className={styles.blockContainer}>
           <img
             className={styles.imgTopRight}
-            src={graphImageFlying}
+            src={GraphFlyingImage}
             alt="graphImageStanding"
           />
           <img
             className={styles.imgBotLeft}
-            src={graphImageStanding}
+            src={GraphStandingImage}
             alt="graphImageStanding"
           />
           <div className={styles.mainContent}>
-            <img className={styles.logotype} src={Logotype} alt="Logotype" />
+            <LogoAndWordmarkIcon />
             <h1 className={styles.h1}>
               Which <span className={styles.textOrange}>account</span> do you
               want to log in to?
@@ -41,9 +39,9 @@ function Landing() {
               <Button
                 type="button"
                 text="Log In To Founder Account"
-                icon={<img src={orangeTopRightArrow} alt="Arrow" />}
-                borderColor="#F1511B"
-                textColor="#F1511B"
+                icon={<Logo color="var(--primary-color)" />}
+                borderColor="var(--primary-color)"
+                textColor="var(--white-color)"
                 onClick={handleButtonLogInToFounderAccount}
               />
             </div>

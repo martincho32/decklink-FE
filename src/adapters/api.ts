@@ -1,18 +1,19 @@
 import axios, { AxiosRequestConfig } from 'axios';
 
 function setBasePath(): string {
-  if (import.meta.url.includes('local')) {
-    return 'http://localhost:3000/api';
-  }
-  if (import.meta.url.includes('integration')) {
-    // return 'https://development-dot-algebraic-hub-392717.uc.r.appspot.com/api';
-    return 'https://algebraic-hub-392717.uc.r.appspot.com/api';
-  }
-  if (import.meta.url.includes('fundraisingtoolbox')) {
-    return 'https://algebraic-hub-392717.uc.r.appspot.com/api';
+  if (typeof window !== 'undefined') {
+    if (window.location.href.includes('local')) {
+      return 'http://localhost:3001/api';
+    }
+    if (window.location.href.includes('integration')) {
+      return 'https://development-dot-algebraic-hub-392717.uc.r.appspot.com/api';
+    }
+    if (window.location.href.includes('fundraisingtoolbox')) {
+      return 'https://algebraic-hub-392717.uc.r.appspot.com/api';
+    }
   }
   console.log('Url does not includes any of the provided parameters');
-  return '';
+  return 'http://localhost:3001/api';
 }
 
 const basePath = setBasePath();

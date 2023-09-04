@@ -1,10 +1,8 @@
 /* eslint-disable jsx-a11y/label-has-associated-control */
 import React, { useEffect, useState } from 'react';
 import styles from './Input.module.css';
-import hideInputText from '../../../assets/images/HideInput.png';
-import showInputText from '../../../assets/images/ShowInput.png';
-import uploadFileIcon from '../../../assets/images/ArrowTopRight.svg';
-import explanationIcon from '../../../assets/images/ExplanationIcon.svg';
+import { HideInputImage, ShowInputImage } from '@/assets/images';
+import { ExplanationPopup } from '@/components';
 
 export interface InputProps {
   required?: boolean;
@@ -104,37 +102,19 @@ function Input({
     setShowPassword(!showPassword);
   };
 
-  const [isPopupVisible, setPopupVisible] = useState(false);
-
-  const onMouseEnterExplanationIcon = () => {
-    setPopupVisible(true);
-  };
-
-  const onMouseLeaveExplanationIcon = () => {
-    setPopupVisible(false);
-  };
-
   switch (style) {
     case 'password':
       inputElement = (
         <div className={styles.InputWrapper}>
-          <div className="flex flex-row gap-2 relative">
+          <div className="flex flex-row gap-2 items-center relative">
             <label style={labelColor} htmlFor={id}>
               {label}
             </label>
-            {showExplanation ? (
-              <img
-                onMouseEnter={onMouseEnterExplanationIcon}
-                onMouseLeave={onMouseLeaveExplanationIcon}
-                className="w4 h4"
-                src={explanationIcon}
-                alt=""
+            {showExplanation && (
+              <ExplanationPopup
+                message={explanationMessage as string}
+                showIcon
               />
-            ) : (
-              ''
-            )}
-            {isPopupVisible && (
-              <div className={styles.popup}>{explanationMessage}</div>
             )}
           </div>
           <div className={styles.defaultInputContainer}>
@@ -153,7 +133,7 @@ function Input({
             />
             <img
               className={styles.hideInputText}
-              src={showPassword ? showInputText : hideInputText}
+              src={showPassword ? ShowInputImage : HideInputImage}
               alt={showPassword ? 'Hide Password' : 'Show Password'}
               onClick={togglePasswordVisibility}
             />
@@ -167,23 +147,15 @@ function Input({
     case 'toggle':
       inputElement = (
         <div className={styles.InputWrapper}>
-          <div className="flex flex-row gap-2 relative">
+          <div className="flex flex-row gap-2 items-center relative">
             <label style={labelColor} htmlFor={id}>
               {label}
             </label>
-            {showExplanation ? (
-              <img
-                onMouseEnter={onMouseEnterExplanationIcon}
-                onMouseLeave={onMouseLeaveExplanationIcon}
-                className="w4 h4"
-                src={explanationIcon}
-                alt=""
+            {showExplanation && (
+              <ExplanationPopup
+                message={explanationMessage as string}
+                showIcon
               />
-            ) : (
-              ''
-            )}
-            {isPopupVisible && (
-              <div className={styles.popup}>{explanationMessage}</div>
             )}
           </div>
           <label
@@ -212,12 +184,9 @@ function Input({
     case 'upload':
       inputElement = (
         <div className={styles.InputWrapper}>
-          {/* <label style={labelColor} htmlFor={id}>
-            {label}
-          </label> */}
           <div className={styles.UploadFileInputWrapper}>
             <label htmlFor={id} className={styles.fileInput}>
-              {label} <img src={uploadFileIcon} alt="" />
+              {label}
               <div className={styles.uploadInput}>
                 <input
                   required={required}
@@ -240,23 +209,15 @@ function Input({
     case 'default':
       inputElement = (
         <div className={styles.InputWrapper}>
-          <div className="flex flex-row gap-2 relative">
+          <div className="flex flex-row gap-2 items-center relative">
             <label style={labelColor} htmlFor={id}>
               {label}
             </label>
-            {showExplanation ? (
-              <img
-                onMouseEnter={onMouseEnterExplanationIcon}
-                onMouseLeave={onMouseLeaveExplanationIcon}
-                className="w4 h4"
-                src={explanationIcon}
-                alt=""
+            {showExplanation && (
+              <ExplanationPopup
+                message={explanationMessage as string}
+                showIcon
               />
-            ) : (
-              ''
-            )}
-            {isPopupVisible && (
-              <div className={styles.popup}>{explanationMessage}</div>
             )}
           </div>
           <input
@@ -281,23 +242,15 @@ function Input({
     case 'prefilled':
       inputElement = (
         <div className={styles.InputWrapper}>
-          <div className="flex flex-row gap-2 relative">
+          <div className="flex flex-row gap-2 items-center relative">
             <label style={labelColor} htmlFor={id}>
               {label}
             </label>
-            {showExplanation ? (
-              <img
-                onMouseEnter={onMouseEnterExplanationIcon}
-                onMouseLeave={onMouseLeaveExplanationIcon}
-                className="w4 h4"
-                src={explanationIcon}
-                alt=""
+            {showExplanation && (
+              <ExplanationPopup
+                message={explanationMessage as string}
+                showIcon
               />
-            ) : (
-              ''
-            )}
-            {isPopupVisible && (
-              <div className={styles.popup}>{explanationMessage}</div>
             )}
           </div>
           <div
@@ -308,7 +261,7 @@ function Input({
             }
           >
             <label className={styles.placeholder} htmlFor={id}>
-              fundraisingtoolbox.io/preview/
+              preview/
             </label>
             <input
               required={required}
@@ -331,23 +284,15 @@ function Input({
     default:
       inputElement = (
         <div className={styles.InputWrapper}>
-          <div className="flex flex-row gap-2 relative">
+          <div className="flex flex-row gap-2 items-center relative">
             <label style={labelColor} htmlFor={id}>
               {label}
             </label>
-            {showExplanation ? (
-              <img
-                onMouseEnter={onMouseEnterExplanationIcon}
-                onMouseLeave={onMouseLeaveExplanationIcon}
-                className="w4 h4"
-                src={explanationIcon}
-                alt=""
+            {showExplanation && (
+              <ExplanationPopup
+                message={explanationMessage as string}
+                showIcon
               />
-            ) : (
-              ''
-            )}
-            {isPopupVisible && (
-              <div className={styles.popup}>{explanationMessage}</div>
             )}
           </div>
           <input
@@ -379,4 +324,4 @@ function Input({
   return <div className={styles.inputContainer}>{inputElement}</div>;
 }
 
-export default Input;
+export { Input };

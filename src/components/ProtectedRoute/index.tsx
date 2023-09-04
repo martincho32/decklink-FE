@@ -1,8 +1,6 @@
 import { Outlet, useNavigate } from 'react-router-dom';
-// import Cookies from 'js-cookie';
 import { useContext, useEffect, useState } from 'react';
 import { AuthContext } from '../../context';
-// import { useLocalStorage } from '@/hooks/useLocalStorage';
 
 export interface Props {
   children?: React.ReactNode | null;
