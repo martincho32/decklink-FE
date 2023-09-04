@@ -1,4 +1,5 @@
 import { PropsWithChildren, useReducer, useMemo, useEffect } from 'react';
+import axios from 'axios';
 import { AuthContext, authReducer } from '.';
 import { IUser } from '../../types';
 import { loginService } from '../../services';
@@ -23,6 +24,13 @@ export function AuthProvider({ children }: PropsWithChildren) {
     dispatch({
       type: '[Auth] - Logout',
     });
+  };
+
+  const handleError = (error: Error | string) => {
+    if (axios.isAxiosError(error)) {
+      return error.response?.data?.message;
+    }
+    return (error as Error).message ?? error;
   };
 
   const loginUser = async (
@@ -57,7 +65,7 @@ export function AuthProvider({ children }: PropsWithChildren) {
     } catch (error: any) {
       return {
         noError: false,
-        message: error.response.data.message,
+        message: handleError(error),
       };
     }
   };
@@ -109,7 +117,7 @@ export function AuthProvider({ children }: PropsWithChildren) {
       }
       return {
         hasError: true,
-        message: 'Something went very wrong. Please contact support.',
+        message: 'Something went wrong. Please contact support.',
       };
     }
   };
@@ -145,7 +153,7 @@ export function AuthProvider({ children }: PropsWithChildren) {
       }
       return {
         hasError: true,
-        message: 'Something went very wrong. Please contact support.',
+        message: 'Something went wrong. Please contact support.',
       };
     }
   };
@@ -183,7 +191,7 @@ export function AuthProvider({ children }: PropsWithChildren) {
     } catch (error: any) {
       return {
         hasError: true,
-        message: error.response.data.message,
+        message: handleError(error),
       };
     }
   };
@@ -288,7 +296,7 @@ export function AuthProvider({ children }: PropsWithChildren) {
     } catch (error: any) {
       return {
         hasError: true,
-        message: error.response.data.message,
+        message: handleError(error),
       };
     }
   };

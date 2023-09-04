@@ -4,13 +4,12 @@
   position: relative;
 }
 
-/* Example styles for custom pagination bullets */
 .custom-pagination-bullet {
-  width: 10px;
-  height: 10px;
+  width: 0.75rem;
+  height: 0.75rem;
   background-color: white;
   border-radius: 50%;
-  margin: 0 8px; /* Adjust spacing between bullets */
+  margin: 0 0.5rem;
   transition: background-color 0.3s;
 }
 
@@ -28,7 +27,7 @@
 }
 
 .headingStyle {
-  color: var(--organge, #f1511b);
+  color: var(--primary-color);
 }
 
 .imgTopRight {
@@ -55,7 +54,7 @@
 }
 
 .link {
-  color: #161a20;
+  color: var(--black-color);
   opacity: 0.5;
   font-size: 0.875rem;
   font-weight: 300;

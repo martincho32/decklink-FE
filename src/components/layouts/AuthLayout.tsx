@@ -2,7 +2,7 @@ import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/css';
 import 'swiper/css/pagination';
 import 'swiper/css/navigation';
-import { Autoplay, Pagination, Navigation } from 'swiper/modules';
+import { Autoplay, Pagination } from 'swiper/modules';
 import getAnalyticOnYourDeck from '../../assets/images/GetAnalyticOnYourDeck.png';
 import freePitchDeck from '../../assets/images/10FreePitchDecks.png';
 import collectEmails from '../../assets/images/CollectEmails.png';
@@ -40,7 +40,7 @@ function AuthLayout({ children }: Props) {
                   return `<span class="${className} !bg-white !top-10"></span>`;
                 },
               }}
-              modules={[Autoplay, Pagination, Navigation]}
+              modules={[Autoplay, Pagination]}
               className="mySwiper"
             >
               <SwiperSlide>

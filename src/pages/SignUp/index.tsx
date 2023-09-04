@@ -206,8 +206,15 @@ function SignUp() {
             <Button
               type="button"
               text="Go Back"
-              icon={<Logo color="#161A20" topLeft width="12" height="11" />}
-              textColor="#161A20"
+              icon={
+                <Logo
+                  color="var(--primary-color)"
+                  topLeft
+                  width="12"
+                  height="11"
+                />
+              }
+              textColor="var(--primary-color)"
               className="flex-row-reverse"
               onClick={() => {
                 setPage((currPage) => currPage - 1);
@@ -253,8 +260,8 @@ function SignUp() {
                   type="submit"
                   text="Continue"
                   icon={<img src={whiteTopRightArrow} alt="Arrow" />}
-                  backgroundColor="#F1511B"
-                  textColor="#FFF"
+                  backgroundColor="var(--primary-color)"
+                  textColor="var(--white-color)"
                   className="w-full mobilev:!max-w-[24rem] tablet:!max-w-none"
                   // onClick={continueHandler}
                 />
@@ -270,8 +277,8 @@ function SignUp() {
                   type="submit"
                   text="Sign up"
                   icon={<img src={whiteTopRightArrow} alt="Arrow" />}
-                  backgroundColor="#F1511B"
-                  textColor="#FFF"
+                  backgroundColor="var(--primary-color)"
+                  textColor="var(--white-color)"
                   className="w-full mobilev:!max-w-[24rem] tablet:!max-w-none"
                 />
               </>
