@@ -13,7 +13,7 @@ import {
 } from '@/components/icons';
 
 interface Props {
-  isUserLogged;
+  isUserLogged: boolean;
   handleActions: {
     handleButtonLogIn: () => void;
     handleButtonSignUp: () => void;
