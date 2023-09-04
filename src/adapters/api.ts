@@ -1,11 +1,24 @@
 import axios, { AxiosRequestConfig } from 'axios';
 
-const basePath = import.meta.env.DEV
-  ? 'http://localhost:3000/api'
-  : 'https://algebraic-hub-392717.uc.r.appspot.com/api';
+function setBasePath(): string {
+  if (typeof window !== 'undefined') {
+    if (window.location.href.includes('local')) {
+      return 'http://localhost:3001/api';
+    }
+    if (window.location.href.includes('integration')) {
+      return 'https://development-dot-algebraic-hub-392717.uc.r.appspot.com/api';
+    }
+    if (window.location.href.includes('fundraisingtoolbox')) {
+      return 'https://algebraic-hub-392717.uc.r.appspot.com/api';
+    }
+  }
+  console.log('Url does not includes any of the provided parameters');
+  return 'http://localhost:3001/api';
+}
+
+const basePath = setBasePath();
 
 const axiosApi = axios.create({
-  // baseURL: 'https://algebraic-hub-392717.uc.r.appspot.com/api',
   baseURL: basePath,
   withCredentials: true,
   headers: {
@@ -16,8 +29,6 @@ const axiosApi = axios.create({
     'Access-Control-Allow-Methods': 'GET, HEAD, POST, PUT, DELETE, OPTIONS',
   },
 });
-
-// const basePath = 'https://algebraic-hub-392717.uc.r.appspot.com/api';
 
 const api = {
   get: (
