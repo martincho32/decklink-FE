@@ -6,13 +6,13 @@ import 'swiper/css';
 import 'swiper/css/pagination';
 import 'swiper/css/navigation';
 
-import whiteTopRightArrow from '../../assets/images/ArrowTopRight.svg';
 import { AuthLayout, Button, Logo } from '../../components';
-import { AuthContext } from '../../context';
-import styles from './SignUp.module.css';
 import SignUpFormData from '@/models/signup';
 import RequiredSignUpInfo from './RequiredSignUpInfo';
 import NotRequiredSignUpInfo from './PartlyNotRequiredSignUpInfo';
+import styles from './SignUp.module.css';
+// import OrangeIconBottomLeft from '../../assets/images/OrangeArrowBottomLeft.svg';
+import { AuthContext } from '../../context';
 
 function SignUp() {
   const { registerUser, sendEmailVerification } = useContext(AuthContext);
@@ -209,7 +209,7 @@ function SignUp() {
               icon={
                 <Logo
                   color="var(--primary-color)"
-                  topLeft
+                  switchHorizontal
                   width="12"
                   height="11"
                 />
@@ -259,10 +259,10 @@ function SignUp() {
                   id="continue-button"
                   type="submit"
                   text="Continue"
-                  icon={<img src={whiteTopRightArrow} alt="Arrow" />}
+                  icon={<Logo color="var(--white-color)" />}
                   backgroundColor="var(--primary-color)"
                   textColor="var(--white-color)"
-                  className="w-full mobilev:!max-w-[24rem] tablet:!max-w-none"
+                  className="w-full"
                   // onClick={continueHandler}
                 />
               </>
@@ -276,10 +276,28 @@ function SignUp() {
                   id="signup-button"
                   type="submit"
                   text="Sign up"
-                  icon={<img src={whiteTopRightArrow} alt="Arrow" />}
+                  icon={<Logo color="var(--white-color)" />}
                   backgroundColor="var(--primary-color)"
                   textColor="var(--white-color)"
-                  className="w-full mobilev:!max-w-[24rem] tablet:!max-w-none"
+                  className="w-full"
+                  // onClick={submitHandler}
+                />
+
+                <Button
+                  type="submit"
+                  text="Continue without this information"
+                  textColor="#161a2088"
+                  // onClick={submitHandler}
+                />
+
+                <Button
+                  type="button"
+                  text="Go Back"
+                  icon={<Logo color="var(--primary-color)" rotation={-135} />}
+                  textColor="var(--primary-color)"
+                  onClick={() => {
+                    setPage((currPage) => currPage - 1);
+                  }}
                 />
               </>
             )}

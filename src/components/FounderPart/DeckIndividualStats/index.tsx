@@ -1,15 +1,15 @@
 /* eslint-disable no-unsafe-optional-chaining */
-import { AccordionTopContent, LineChart } from '../..';
+import { AccordionTopContent, LineChart } from '@/components';
 import { IDeck, IDeckView } from '../../../types';
 import {
   Accordion,
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
-} from '@/components/UI/Accordion';
+  Button,
+} from '@/components/UI/';
 import './DeckIndividualStats.css';
 import { getTotalViewingTime } from '@/utils';
-import Button from '../../UI/Button';
 
 interface Props {
   deck: Partial<IDeck> | null;
@@ -109,7 +109,7 @@ function DeckIndividualStats({ deck, deckViews }: Props) {
         <Button
           id="download-btn"
           type="button"
-          backgroundColor="#f1511b"
+          backgroundColor="var(--primary-color)"
           text="Download viewers email"
           className={
             !!deckViews?.length ? 'rounded text-white p-4 max-w-max' : 'hidden'
@@ -120,7 +120,7 @@ function DeckIndividualStats({ deck, deckViews }: Props) {
       {!!combinedData?.length &&
         combinedData.map((view) => {
           return (
-            <div key={view._id} className="mb-16">
+            <div key={view._id} className="mb-4">
               <Accordion
                 key={view._id}
                 type="single"

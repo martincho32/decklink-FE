@@ -2,8 +2,8 @@ import { useContext, useEffect, useState } from 'react';
 import axios from 'axios';
 import { useSnackbar } from 'notistack';
 import { AlertDialogComponent, Button, Logo, MainLayout } from '@/components';
-import contactImg from '../../../assets/images/Contacts.png';
-import copyIcon from '../../../assets/images/CopyIcon.svg';
+import { CopyIcon } from '@/components/icons';
+import { ContactsImage } from '@/assets/images';
 import { AuthContext } from '@/context';
 import { userService, upgradeService } from '@/services';
 import { IUpgrade, IUser } from '@/types';
@@ -146,14 +146,14 @@ export default function Referral() {
                   >
                     <p>fundraisingtoolbox.io/signup?referredBy={user?.email}</p>
                     <div className="flex gap-2">
-                      <img src={copyIcon} alt="" />
+                      <CopyIcon />
                     </div>
                   </div>
                 </div>
               </>
             ) : null}
           </div>
-          <img className="max-w-[15rem]" src={contactImg} alt="Contacts" />
+          <img className="max-w-[15rem]" src={ContactsImage} alt="Contacts" />
         </div>
         <div className="mobilev:flex-col-reverse desktop:flex-row flex gap-5">
           <div className="mobilev:w-full desktop:w-[70%] bg-white rounded-lg shadow-md flex flex-col gap-5 py-7 px-8 w-[70%]">
@@ -211,9 +211,15 @@ export default function Referral() {
                       <Button
                         type="button"
                         text="Buy Upgrade"
-                        icon={<Logo color="#FFFFFF" width="10" height="11" />}
-                        backgroundColor="#F1511B"
-                        textColor="#FFF"
+                        icon={
+                          <Logo
+                            color="var(--white-color)"
+                            width="10"
+                            height="11"
+                          />
+                        }
+                        backgroundColor="var(--primary-color)"
+                        textColor="var(--white-color)"
                         className="py-3 w-full relative z-10 max-w-max"
                       />
                     </AlertDialogComponent>

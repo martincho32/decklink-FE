@@ -1,10 +1,10 @@
 import { useSnackbar } from 'notistack';
 import { Link, Navigate, useNavigate } from 'react-router-dom';
 import { useState, useContext } from 'react';
-import whiteTopRightArrow from '../../assets/images/ArrowTopRight.svg';
-import { Input, Button, AuthLayout } from '../../components';
-import { AuthContext } from '../../context';
+import { Logo } from '@/components/icons';
 import styles from './LogIn.module.css';
+import { Input, Button } from '../../components';
+import { AuthContext } from '../../context';
 
 function LogIn() {
   const { enqueueSnackbar } = useSnackbar();
@@ -132,10 +132,10 @@ function LogIn() {
               id="login-button"
               type="submit"
               text="Sign In"
-              icon={<img src={whiteTopRightArrow} alt="Arrow" />}
-              backgroundColor="#F1511B"
-              textColor="#FFF"
-              className="w-full mobilev:!max-w-[24rem] tablet:!max-w-none"
+              icon={<Logo color="var(--white-color)" />}
+              backgroundColor="var(--primary-color)"
+              textColor="var(--white-color)"
+              className="w-full"
             />
           </form>
           <div className="flex flex-col items-center gap-1">

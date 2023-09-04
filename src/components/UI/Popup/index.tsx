@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
-import Button from '../Button';
-import { CloseIcon } from '@/components';
+import { Button } from '@/components/UI';
+import { CloseIcon } from '@/components/icons';
 
 interface PopupProps {
   isOpen: boolean;
@@ -8,7 +8,7 @@ interface PopupProps {
   children: React.ReactNode;
 }
 
-export default function Popup({ isOpen, onClose, children }: PopupProps) {
+export function Popup({ isOpen, onClose, children }: PopupProps) {
   useEffect(() => {
     if (isOpen) {
       document.body.style.overflow = 'hidden';
@@ -34,7 +34,9 @@ export default function Popup({ isOpen, onClose, children }: PopupProps) {
           {children}
           <Button
             type="button"
-            icon={<CloseIcon width="16" height="16" color="#FFFFFF" />}
+            icon={
+              <CloseIcon width="16" height="16" color="var(--white-color)" />
+            }
             className="mobilev:w-6 mobilev:h-6 mobilev:top-2 mobilev:right-2 text-white z-50 absolute tablet:w-8 tablet:h-8 tablet:top-4 tablet:right-4 p-2 bg-persimmon rounded-md"
             onClick={onClose}
           />

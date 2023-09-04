@@ -12,20 +12,20 @@ import { scrollModePlugin } from '@react-pdf-viewer/scroll-mode';
 import axios from 'axios';
 import { useSnackbar } from 'notistack';
 import './DeckCreation.css';
-import { Logo } from '../../../components/icons';
+import { Logo } from '@/components/icons';
 import {
   Button,
   Input,
   DeckPreview,
+  EmptyDeckPreview,
   AlertDialogComponent,
   AnimatedLoader,
-} from '../../../components';
+  Preloading,
+} from '@/components';
 /** File library */
 import 'react-pdf/dist/esm/Page/AnnotationLayer.css';
 import 'react-pdf/dist/esm/Page/TextLayer.css';
-import EmptyDeckPreview from '../../../components/FounderPart/DeckPreview/EmptyDeckPreview';
 import { deckService } from '../../../services';
-import Loading from '../../../components/PreloadingScreen';
 import { AuthContext } from '@/context';
 import { useLocalStorage } from '@/hooks/useLocalStorage';
 
@@ -365,41 +365,38 @@ function Deck({ title = 'Create', deckId }: Props) {
   }, [deckFile]);
 
   return isLoading ? (
-    <Loading />
+    <Preloading />
   ) : (
-    <>
-      <form
-        onSubmit={submitHandler}
-        className="mt-12 max-w-none"
-        action="submit"
-      >
-        <div className="w-full my-12 grid grid-cols-1 md:flex md:justify-between md:content-center xl:grid-cols-3 gap-7 max-h-fit justify-center">
-          <div className="flex justify-center md:justify-start gap-6">
-            {isEdited ? (
-              <AlertDialogComponent
-                actionClassName="bg-persimmon"
-                action={onClickGoBack}
-                alertDescription="You didn't save your recent changes."
-              >
-                <Button
-                  icon={<Logo color="white" />}
-                  type="button"
-                  className="bg-persimmon -rotate-90 p-4"
-                />
-              </AlertDialogComponent>
-            ) : (
+    <div className="flex flex-col gap-12">
+      <form onSubmit={submitHandler} className="max-w-none" action="submit">
+        <div className="w-full grid grid-cols-1 md:flex md:justify-between md:content-center xl:grid-cols-3 gap-7 justify-center place-items-center">
+          {isEdited ? (
+            <AlertDialogComponent
+              actionClassName="bg-persimmon"
+              action={onClickGoBack}
+              alertDescription="You didn't save your recent changes."
+            >
               <Button
-                icon={<Logo color="white" />}
+                icon={<Logo switchHorizontal color="var(--primary-color)" />}
                 type="button"
-                className="bg-persimmon -rotate-90 p-4"
+                text="Go Back"
                 onClick={onClickGoBack}
+                className="flex-row-reverse gap-2 font-bold"
               />
-            )}
-            <span className="self-center text-xl leading-normal justify-center">
-              Go Back
-            </span>
-          </div>
-          <h1 className="text-2xl leading-normal">{title} new Deck</h1>
+            </AlertDialogComponent>
+          ) : (
+            <Button
+              icon={<Logo switchHorizontal color="var(--primary-color)" />}
+              type="button"
+              text="Go Back"
+              onClick={onClickGoBack}
+              className="flex-row-reverse gap-2 font-bold"
+            />
+          )}
+
+          <h1 className="text-[1.5rem] font-bold text-center">
+            {title} new Deck
+          </h1>
           {newFileChoosed && deckId ? (
             <AlertDialogComponent
               actionClassName="bg-persimmon"
@@ -410,16 +407,16 @@ function Deck({ title = 'Create', deckId }: Props) {
                 <Button
                   icon={<AnimatedLoader />}
                   type="button"
-                  className="bg-persimmon p-2"
+                  backgroundColor="var(--pimary-color}"
                   disabled
                 />
               ) : (
                 <Button
-                  icon={<Logo color="white" />}
+                  icon={<Logo color="var(--white-color)" />}
                   type="button"
                   text={title}
-                  backgroundColor="#F1511B"
-                  textColor="#ffffff"
+                  backgroundColor="var(--primary-color)"
+                  textColor="var(--white-color)"
                   className="xl:justify-self-end justify-self-center max-w-min"
                 />
               )}
@@ -433,11 +430,11 @@ function Deck({ title = 'Create', deckId }: Props) {
             />
           ) : (
             <Button
-              icon={<Logo color="white" />}
+              icon={<Logo color="var(--white-color)" />}
               type="submit"
               text={title}
-              backgroundColor="#F1511B"
-              textColor="#ffffff"
+              backgroundColor="var(--primary-color)"
+              textColor="var(--white-color)"
               className="xl:justify-self-end justify-self-center max-w-min"
             />
           )}
@@ -521,7 +518,7 @@ function Deck({ title = 'Create', deckId }: Props) {
             />
           </div>
         </div>
-        <div className="w-full grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-7 max-h-fit justify-center mt-6">
+        <div className="w-full grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-7 justify-center mt-6">
           <Input
             style="upload"
             placeholder="upload"
@@ -531,6 +528,7 @@ function Deck({ title = 'Create', deckId }: Props) {
             errorMessage={fileInputErrorMessage}
             onChange={onFileChange}
             onBlur={deckFileBlur}
+            className="max-w-min"
           />
         </div>
       </form>
@@ -538,7 +536,7 @@ function Deck({ title = 'Create', deckId }: Props) {
       {deckFile && deckFile !== null ? (
         <div
           className="deckWorkingPreview"
-          style={{ height: '11rem', marginTop: '1rem', marginBottom: '1rem' }}
+          style={{ height: '11rem', marginBottom: '1rem' }}
         >
           <Worker workerUrl="https://unpkg.com/pdfjs-dist@3.6.172/build/pdf.worker.min.js">
             <Viewer
@@ -568,7 +566,7 @@ function Deck({ title = 'Create', deckId }: Props) {
           deckId={null}
         />
       )}
-    </>
+    </div>
   );
 }
 
