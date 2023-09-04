@@ -13,6 +13,7 @@ type RegisterUserCredentials = UserCredentials & {
   cfpassword: string;
   firstName: string;
   lastName: string;
+  allowEmails: boolean;
   companyName: string;
   companyWebUrl: string;
 };
@@ -28,6 +29,7 @@ export const registerUser = (
     token: string;
     firstName: string;
     lastName: string;
+    allowEmails: boolean;
     hasCreatedDeck: boolean;
   };
 }> =>
@@ -59,3 +61,42 @@ export const validateUserToken = (
     maxDecksStorageSize: number;
   };
 }> => api.get(`${resource}/validate-token`, config);
+
+export const forgotPassword = (
+  email: string
+): Promise<{
+  data: {
+    status: string;
+    message: string;
+  };
+}> => api.post(`${resource}/forgotPassword`, { email });
+
+export const resetPassword = (
+  token: string,
+  password: string,
+  cfpassword: string
+): Promise<{
+  data: {
+    status: string;
+    message: string;
+    email: string;
+  };
+}> => api.patch(`${resource}/resetPassword/${token}`, { password, cfpassword });
+
+export const sendEmailVerification = (
+  email: string
+): Promise<{
+  data: {
+    status: string;
+    message: string;
+  };
+}> => api.post(`${resource}/verify`, { email });
+
+export const verifyEmail = (
+  token: string
+): Promise<{
+  data: {
+    status: string;
+    message: string;
+  };
+}> => api.patch(`${resource}/verify/${token}`, {});

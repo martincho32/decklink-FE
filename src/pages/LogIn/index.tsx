@@ -1,10 +1,9 @@
 import { useSnackbar } from 'notistack';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, Navigate, useNavigate } from 'react-router-dom';
 import { useState, useContext } from 'react';
 import { Logo } from '@/components/icons';
 import styles from './LogIn.module.css';
-import { GraphFlyingImage, GraphStandingImage } from '@/assets/images';
-import { MainLayout, Input, Button } from '../../components';
+import { Input, Button, AuthLayout } from '@/components';
 import { AuthContext } from '../../context';
 
 function LogIn() {
@@ -55,9 +54,9 @@ function LogIn() {
       return;
     }
 
-    const isvalidLogin = await loginUser(email, password);
-    if (!isvalidLogin) {
-      enqueueSnackbar('Wrong email or password. Please try again.', {
+    const { noError, message } = await loginUser(email, password);
+    if (!noError) {
+      enqueueSnackbar(message, {
         variant: 'error',
         autoHideDuration: 2000,
         anchorOrigin: {
@@ -68,7 +67,7 @@ function LogIn() {
       return;
     }
     navigate('/founder/decks', {
-      state: { isLoggedIn: isvalidLogin },
+      state: { isLoggedIn: noError },
       replace: true,
     });
 
@@ -86,25 +85,16 @@ function LogIn() {
     ? `${styles.inputBlock} ${styles.inputBlockError}`
     : styles.inputBlock;
 
+  const { isLoggedIn } = useContext(AuthContext);
+
   return (
-    <MainLayout>
-      <div className={styles.blockContainer}>
-        <img
-          className={styles.imgTopRight}
-          src={GraphFlyingImage}
-          alt="graphImageStanding"
-        />
-        <img
-          className={styles.imgBotLeft}
-          src={GraphStandingImage}
-          alt="graphImageStanding"
-        />
-        <div className={styles.formWrapper}>
-          {/* set title from props here */}
-          <h1 className={styles.headingStyle}>Log In</h1>
+    <AuthLayout>
+      {!isLoggedIn ? (
+        <div className="flex flex-col gap-7 my-auto items-center justify-center w-full">
+          <h1 className="text-mirage text-[2.25rem] font-black">Sign In</h1>
           <form
             onSubmit={submitHandler}
-            className={styles.form}
+            className={`${styles.form} items-center justify-center`}
             action="submit"
           >
             <div className={emailInputClasses}>
@@ -120,6 +110,7 @@ function LogIn() {
                 errorMessage="Enter valid email"
                 onChange={handleEmailChange}
                 onBlur={emailInputBlur}
+                className="tablet:!max-w-none"
               />
             </div>
             <div className={passwordInputClasses}>
@@ -134,34 +125,34 @@ function LogIn() {
                 errorMessage="Password must be 6-35 characters long"
                 onChange={handlePasswordChange}
                 onBlur={passwordInputBlur}
+                className="tablet:!max-w-none"
               />
             </div>
             <Button
               id="login-button"
               type="submit"
-              text="Log In"
+              text="Sign In"
               icon={<Logo color="var(--white-color)" />}
               backgroundColor="var(--primary-color)"
               textColor="var(--white-color)"
               className="w-full"
             />
-
-            {/* TODO add login process via google and linkedin */}
           </form>
-          <div className={styles.links}>
-            {/* <Link className={styles.link} to="/">
-              Create VC Account
-            </Link>
-            <Link className={styles.link} to="/">
-              Log In To Founder Account
-            </Link> */}
-            <Link className={styles.link} to="/signup">
-              Create Founder Account
+          <div className="flex flex-col items-center gap-1">
+            <p className="opacity-50">Don&apos;t have an account?</p>
+            <Link className="text-persimmon" to="/signup">
+              Create Now
             </Link>
           </div>
+
+          <Link className="opacity-50" to="/forgotPassword">
+            Forgot your password?
+          </Link>
         </div>
-      </div>
-    </MainLayout>
+      ) : (
+        <Navigate to="/founder/decks" />
+      )}
+    </AuthLayout>
   );
 }
 

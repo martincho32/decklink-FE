@@ -1,18 +1,21 @@
-import { useState, useContext } from 'react';
-import { Link, useLocation, useNavigate } from 'react-router-dom';
+/* eslint-disable @typescript-eslint/no-shadow */
 import { useSnackbar } from 'notistack';
-import { Logo } from '@/components/icons';
-import styles from './SignUp.module.css';
-import { GraphFlyingImage, GraphStandingImage } from '@/assets/images';
-import { MainLayout, Button } from '@/components';
-import SignUpFormData from '../../models/signup';
+import { Link, Navigate, useLocation, useNavigate } from 'react-router-dom';
+import { useState, useContext } from 'react';
+import 'swiper/css';
+import 'swiper/css/pagination';
+import 'swiper/css/navigation';
+
+import { AuthLayout, Button, Logo } from '../../components';
+import SignUpFormData from '@/models/signup';
 import RequiredSignUpInfo from './RequiredSignUpInfo';
 import NotRequiredSignUpInfo from './PartlyNotRequiredSignUpInfo';
+import styles from './SignUp.module.css';
 // import OrangeIconBottomLeft from '../../assets/images/OrangeArrowBottomLeft.svg';
 import { AuthContext } from '../../context';
 
 function SignUp() {
-  const { registerUser } = useContext(AuthContext);
+  const { registerUser, sendEmailVerification } = useContext(AuthContext);
   const { enqueueSnackbar } = useSnackbar();
   const navigate = useNavigate();
   const location = useLocation();
@@ -31,8 +34,6 @@ function SignUp() {
   useState<boolean>(false);
   const [enternedRepeatPasswordTouched, setEnternedRepeatPasswordTouched] =
     useState<boolean>(false);
-  const [enternedCompanyNameTouched, setEnternedCompanyNameTouched] =
-    useState<boolean>(false);
 
   const [formData, setFormData] = useState<SignUpFormData>({
     email: '',
@@ -40,6 +41,7 @@ function SignUp() {
     lastName: '',
     password: '',
     confirmPassword: '',
+    allowEmails: true,
     companyName: '',
     companyWebUrl: '',
   });
@@ -71,10 +73,8 @@ function SignUp() {
   const repeatPasswordInputIsInvalid =
     !enteredRepeatPasswordIsValid && enternedRepeatPasswordTouched;
 
-  const enteredCompanyNameIsValid =
-    formData.companyName.trim() !== '' && formData.companyName?.length >= 2;
-  const companyNameIsInvalid =
-    !enteredCompanyNameIsValid && enternedCompanyNameTouched;
+  const enteredAllowEmailsIsValid = typeof formData.allowEmails === 'boolean';
+  const allowEmailsInputIsInvalid = !enteredAllowEmailsIsValid;
 
   const submitHandler = async (event: React.FormEvent) => {
     event.preventDefault();
@@ -100,13 +100,10 @@ function SignUp() {
       return;
     }
 
-    setEnternedCompanyNameTouched(true);
-
     if (
       !enteredEmailIsValid ||
       !enteredPasswordIsValid ||
-      !enteredRepeatPasswordIsValid ||
-      !enteredCompanyNameIsValid
+      !enteredRepeatPasswordIsValid
     ) {
       return;
     }
@@ -116,6 +113,7 @@ function SignUp() {
       formData.confirmPassword,
       formData.firstName,
       formData.lastName,
+      formData.allowEmails,
       formData.companyName,
       formData.companyWebUrl,
       queryParams.get('referredBy')!
@@ -131,15 +129,41 @@ function SignUp() {
       });
       return;
     }
-    navigate('/founder/decks', { state: { isSignedUp: true } });
-    enqueueSnackbar('Registration succesful!', {
-      variant: 'success',
-      autoHideDuration: 2000,
-      anchorOrigin: {
-        vertical: 'top',
-        horizontal: 'right',
-      },
+
+    const sendEmailVerificationFunction = async () => {
+      const { hasError, message } = await sendEmailVerification(formData.email);
+      if (hasError) {
+        enqueueSnackbar(message, {
+          variant: 'error',
+          autoHideDuration: 5000,
+          anchorOrigin: {
+            vertical: 'top',
+            horizontal: 'right',
+          },
+        });
+      }
+    };
+
+    sendEmailVerificationFunction().catch((error) => {
+      enqueueSnackbar(error, {
+        variant: 'error',
+        autoHideDuration: 5000,
+        anchorOrigin: {
+          vertical: 'top',
+          horizontal: 'right',
+        },
+      });
     });
+    // navigate('/founder/decks', { state: { isSignedUp: true } });
+    navigate('/verify', { state: { email: formData.email } });
+    // enqueueSnackbar('Registration succesful!', {
+    //   variant: 'success',
+    //   autoHideDuration: 2000,
+    //   anchorOrigin: {
+    //     vertical: 'top',
+    //     horizontal: 'right',
+    //   },
+    // });
     formData.email = '';
     setEnteredEmailTouched(false);
     formData.password = '';
@@ -152,6 +176,14 @@ function SignUp() {
     ? `${styles.inputBlock} ${styles.inputBlockError}`
     : styles.inputBlock;
 
+  const firstNameInputClasses = firstNameInputIsInvalid
+    ? `${styles.inputBlock} ${styles.inputBlockError}`
+    : styles.inputBlock;
+
+  const lastNameInputClasses = lastNameInputIsInvalid
+    ? `${styles.inputBlock} ${styles.inputBlockError}`
+    : styles.inputBlock;
+
   const passwordInputClasses = passwordInputIsInvalid
     ? `${styles.inputBlock} ${styles.inputBlockError}`
     : styles.inputBlock;
@@ -160,28 +192,45 @@ function SignUp() {
     ? `${styles.inputBlock} ${styles.inputBlockError}`
     : styles.inputBlock;
 
-  const companyNameInputClasses = companyNameIsInvalid
+  const allowEmailsInputClasses = allowEmailsInputIsInvalid
     ? `${styles.inputBlock} ${styles.inputBlockError}`
     : styles.inputBlock;
 
+  const { isLoggedIn } = useContext(AuthContext);
+
   return (
-    <MainLayout>
-      <div className={styles.blockContainer}>
-        <img
-          className={styles.imgTopRight}
-          src={GraphFlyingImage}
-          alt="graphImageStanding"
-        />
-        <img
-          className={styles.imgBotLeft}
-          src={GraphStandingImage}
-          alt="graphImageStanding"
-        />
-        <div className={styles.formWrapper}>
-          {/* set title from props here */}
-          <h1 className={styles.headingStyle}>{formTitles[page]}</h1>
-          <form onSubmit={submitHandler} className={styles.form}>
-            {/* <PageDisplay /> */}
+    <AuthLayout>
+      {!isLoggedIn ? (
+        <div className="flex py-12 flex-col gap-7 my-auto items-center justify-center w-full">
+          {page === 1 && (
+            <Button
+              type="button"
+              text="Go Back"
+              icon={
+                <Logo
+                  color="var(--primary-color)"
+                  switchHorizontal
+                  width="12"
+                  height="11"
+                />
+              }
+              textColor="var(--primary-color)"
+              className="flex-row-reverse"
+              onClick={() => {
+                setPage((currPage) => currPage - 1);
+              }}
+            />
+          )}
+          <h1 className="text-mirage text-[2.25rem] font-black">
+            {formTitles[page]}
+          </h1>
+          <p className="text-mirage text-[0.875rem] opacity-40">
+            * - required fileds
+          </p>
+          <form
+            onSubmit={submitHandler}
+            className={`${styles.form} items-center justify-center`}
+          >
             {page === 0 ? (
               <>
                 <RequiredSignUpInfo
@@ -189,14 +238,15 @@ function SignUp() {
                   setFormData={setFormData}
                   emailInputClasses={emailInputClasses}
                   emailInputIsInvalid={emailInputIsInvalid}
-                  firstNameInputClasses={emailInputClasses}
+                  firstNameInputClasses={firstNameInputClasses}
                   firstNameInputIsInvalid={firstNameInputIsInvalid}
-                  lastNameInputClasses={emailInputClasses}
+                  lastNameInputClasses={lastNameInputClasses}
                   lastNameInputIsInvalid={lastNameInputIsInvalid}
                   passwordInputClasses={passwordInputClasses}
                   passwordInputIsInvalid={passwordInputIsInvalid}
                   repeatPasswordInputClasses={repeatPasswordInputClasses}
                   repeatPasswordInputIsInvalid={repeatPasswordInputIsInvalid}
+                  allowEmailsInputClasses={allowEmailsInputClasses}
                   setEnteredEmailTouched={setEnteredEmailTouched}
                   setEnteredFirstNameTouched={setEnteredFirstNameTouched}
                   setEnteredLastNameTouched={setEnteredLastNameTouched}
@@ -221,9 +271,6 @@ function SignUp() {
                 <NotRequiredSignUpInfo
                   formData={formData}
                   setFormData={setFormData}
-                  companyNameInputClasses={companyNameInputClasses}
-                  companyNameIsInvalid={companyNameIsInvalid}
-                  setEnternedCompanyNameTouched={setEnternedCompanyNameTouched}
                 />
                 <Button
                   id="signup-button"
@@ -254,23 +301,18 @@ function SignUp() {
                 />
               </>
             )}
-
-            {/* TODO add login process via google and linkedin */}
           </form>
-          <div className={styles.links}>
-            <Link className={styles.link} to="/login">
-              Log In To Founder Account
+          <div className="flex flex-col items-center gap-1">
+            <p className="opacity-50">Already have an account?</p>
+            <Link className="text-persimmon" to="/login">
+              Sign In Now
             </Link>
-            {/* <Link className={styles.link} to="/">
-              Log In To VC Account
-            </Link>
-            <Link className={styles.link} to="/">
-              Create VC Account
-            </Link> */}
           </div>
         </div>
-      </div>
-    </MainLayout>
+      ) : (
+        <Navigate to="/founder/decks" />
+      )}
+    </AuthLayout>
   );
 }
 
