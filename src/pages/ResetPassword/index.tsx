@@ -5,8 +5,7 @@ import 'swiper/css';
 import 'swiper/css/pagination';
 import 'swiper/css/navigation';
 
-import whiteTopRightArrow from '../../assets/images/ArrowTopRight.svg';
-import { Input, Button, AuthLayout } from '../../components';
+import { Input, Button, AuthLayout, Logo } from '../../components';
 import styles from './ResetPassword.module.css';
 // import { loginService } from '@/services';
 import { AuthContext } from '@/context';
@@ -151,7 +150,7 @@ function ResetPassword() {
             id="login-button"
             type="submit"
             text="Reset Password"
-            icon={<img src={whiteTopRightArrow} alt="Arrow" />}
+            icon={<Logo color="var(--white-color)" />}
             backgroundColor="#F1511B"
             textColor="#FFF"
             className="w-full mobilev:!max-w-[24rem] tablet:!max-w-none"

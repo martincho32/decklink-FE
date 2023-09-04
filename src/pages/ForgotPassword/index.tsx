@@ -5,8 +5,13 @@ import 'swiper/css';
 import 'swiper/css/pagination';
 import 'swiper/css/navigation';
 
-import whiteTopRightArrow from '../../assets/images/ArrowTopRight.svg';
-import { Input, Button, AuthLayout, AnimatedLoader } from '../../components';
+import {
+  Input,
+  Button,
+  AuthLayout,
+  AnimatedLoader,
+  Logo,
+} from '../../components';
 import styles from './ForgotPassword.module.css';
 import { AuthContext } from '@/context';
 
@@ -113,7 +118,7 @@ function ForgotPassword() {
               id="login-button"
               type="submit"
               text="Sent Email"
-              icon={<img src={whiteTopRightArrow} alt="Arrow" />}
+              icon={<Logo color="var(--white-color)" />}
               backgroundColor="#F1511B"
               textColor="#FFF"
               className="w-full mobilev:!max-w-[24rem] tablet:!max-w-none"

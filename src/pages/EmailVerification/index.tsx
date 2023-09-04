@@ -5,8 +5,7 @@ import 'swiper/css';
 import 'swiper/css/pagination';
 import 'swiper/css/navigation';
 
-import whiteTopRightArrow from '../../assets/images/ArrowTopRight.svg';
-import { AuthLayout, Button } from '@/components';
+import { AuthLayout, Button, Logo } from '@/components';
 import { AuthContext } from '@/context';
 
 function EmailVerification() {
@@ -46,7 +45,7 @@ function EmailVerification() {
           id="signup-button"
           type="button"
           text="Sign In"
-          icon={<img src={whiteTopRightArrow} alt="Arrow" />}
+          icon={<Logo color="var(--white-color)" />}
           backgroundColor="#F1511B"
           textColor="#FFF"
           className="w-full mobilev:!max-w-[24rem] tablet:!max-w-none"
