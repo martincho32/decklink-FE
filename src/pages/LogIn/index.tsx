@@ -3,7 +3,7 @@ import { Link, Navigate, useNavigate } from 'react-router-dom';
 import { useState, useContext } from 'react';
 import { Logo } from '@/components/icons';
 import styles from './LogIn.module.css';
-import { Input, Button } from '../../components';
+import { Input, Button, AuthLayout } from '@/components';
 import { AuthContext } from '../../context';
 
 function LogIn() {
