@@ -8,7 +8,6 @@ import { MainLayout, Button } from '@/components';
 import SignUpFormData from '../../models/signup';
 import RequiredSignUpInfo from './RequiredSignUpInfo';
 import NotRequiredSignUpInfo from './PartlyNotRequiredSignUpInfo';
-// import OrangeIconBottomLeft from '../../assets/images/OrangeArrowBottomLeft.svg';
 import { AuthContext } from '../../context';
 
 function SignUp() {
@@ -19,7 +18,6 @@ function SignUp() {
   const queryParams = new URLSearchParams(location.search);
   const [page, setPage] = useState<number>(0);
 
-  // const [loginError, setSignUpError] = useState<string | null>(null);
   const [enteredEmailTouched, setEnteredEmailTouched] =
     useState<boolean>(false);
   const [enteredFirstNameTouched, setEnteredFirstNameTouched] =
