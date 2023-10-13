@@ -1,1 +1,15 @@
-{"projectId":"prj_q55JsPcwpPS7IMf2SXgQ9XHF98KP","orgId":"ryFj94yV9lyjluyHma4iYNpW"}
+{
+  "projectId": "prj_q55JsPcwpPS7IMf2SXgQ9XHF98KP",
+  "orgId": "ryFj94yV9lyjluyHma4iYNpW",
+  "settings": {
+    "createdAt": 1691166418096,
+    "framework": "vite",
+    "devCommand": null,
+    "installCommand": null,
+    "buildCommand": null,
+    "outputDirectory": null,
+    "rootDirectory": null,
+    "directoryListing": false,
+    "nodeVersion": "18.x"
+  }
+}

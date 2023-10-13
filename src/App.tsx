@@ -1,7 +1,6 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { SnackbarProvider } from 'notistack';
 import {
-  Landing,
   LogIn,
   NotFound,
   SignUp,
@@ -22,8 +21,7 @@ function App() {
         <SnackbarProvider maxSnack={3}>
           <BrowserRouter>
             <Routes>
-              <Route index element={<Landing />} />
-              <Route path="/landing" element={<Landing />} />
+              <Route index element={<LogIn />} />
               <Route path="/login" element={<LogIn />} />
               <Route path="/signup" element={<SignUp />} />
               <Route element={<ProtectedRoute />}>

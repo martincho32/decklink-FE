@@ -1,15 +1,13 @@
 import { useState, useContext } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useSnackbar } from 'notistack';
-import whiteTopRightArrow from '../../assets/images/ArrowTopRight.svg';
+import { Logo } from '@/components/icons';
 import styles from './SignUp.module.css';
-import graphImageFlying from '../../assets/images/graph-image-flying.png';
-import graphImageStanding from '../../assets/images/graph-image-standing.png';
-import { MainLayout, Button } from '../../components';
+import { GraphFlyingImage, GraphStandingImage } from '@/assets/images';
+import { MainLayout, Button } from '@/components';
 import SignUpFormData from '../../models/signup';
 import RequiredSignUpInfo from './RequiredSignUpInfo';
 import NotRequiredSignUpInfo from './PartlyNotRequiredSignUpInfo';
-import OrangeIconBottomLeft from '../../assets/images/OrangeArrowBottomLeft.svg';
 import { AuthContext } from '../../context';
 
 function SignUp() {
@@ -20,7 +18,6 @@ function SignUp() {
   const queryParams = new URLSearchParams(location.search);
   const [page, setPage] = useState<number>(0);
 
-  // const [loginError, setSignUpError] = useState<string | null>(null);
   const [enteredEmailTouched, setEnteredEmailTouched] =
     useState<boolean>(false);
   const [enteredFirstNameTouched, setEnteredFirstNameTouched] =
@@ -170,12 +167,12 @@ function SignUp() {
       <div className={styles.blockContainer}>
         <img
           className={styles.imgTopRight}
-          src={graphImageFlying}
+          src={GraphFlyingImage}
           alt="graphImageStanding"
         />
         <img
           className={styles.imgBotLeft}
-          src={graphImageStanding}
+          src={GraphStandingImage}
           alt="graphImageStanding"
         />
         <div className={styles.formWrapper}>
@@ -210,9 +207,9 @@ function SignUp() {
                   id="continue-button"
                   type="submit"
                   text="Continue"
-                  icon={<img src={whiteTopRightArrow} alt="Arrow" />}
-                  backgroundColor="#F1511B"
-                  textColor="#FFF"
+                  icon={<Logo color="var(--white-color)" />}
+                  backgroundColor="var(--primary-color)"
+                  textColor="var(--white-color)"
                   className="w-full"
                   // onClick={continueHandler}
                 />
@@ -230,9 +227,9 @@ function SignUp() {
                   id="signup-button"
                   type="submit"
                   text="Sign up"
-                  icon={<img src={whiteTopRightArrow} alt="Arrow" />}
-                  backgroundColor="#F1511B"
-                  textColor="#FFF"
+                  icon={<Logo color="var(--white-color)" />}
+                  backgroundColor="var(--primary-color)"
+                  textColor="var(--white-color)"
                   className="w-full"
                   // onClick={submitHandler}
                 />
@@ -247,8 +244,8 @@ function SignUp() {
                 <Button
                   type="button"
                   text="Go Back"
-                  icon={<img src={OrangeIconBottomLeft} alt="Arrow" />}
-                  textColor="#F1511B"
+                  icon={<Logo color="var(--primary-color)" rotation={-135} />}
+                  textColor="var(--primary-color)"
                   onClick={() => {
                     setPage((currPage) => currPage - 1);
                   }}

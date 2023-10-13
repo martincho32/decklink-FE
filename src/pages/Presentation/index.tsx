@@ -1,11 +1,9 @@
 import { useContext, useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useSnackbar } from 'notistack';
-import { DeckPreview, MainLayout } from '@/components';
+import { DeckPreview, MainLayout, SEO, Preloading } from '@/components';
 import { deckService } from '../../services';
 import { UIContext } from '@/context';
-import Loading from '../../components/PreloadingScreen';
-import SEO from '@/components/SEO';
 
 function Presentation() {
   const { setShowModal, setRequireEmail, setRequirePassword } =
@@ -91,7 +89,7 @@ function Presentation() {
           deckDownloadUrl={deckDownloadURL}
         />
       ) : (
-        <Loading />
+        <Preloading />
       )}
     </MainLayout>
   );

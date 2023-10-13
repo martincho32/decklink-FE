@@ -2,7 +2,7 @@
 import React from 'react';
 import styles from './Button.module.css';
 
-export interface ButtonProps {
+interface ButtonProps {
   id?: string;
   type: 'button' | 'submit' | 'reset' | undefined;
   text?: string;
@@ -65,14 +65,4 @@ function Button({
   );
 }
 
-export default Button;
-
-// Using of Different Button Styles
-{
-  /* 
-<Button text="Log In To VC Account" icon={<img src={whiteTopRightArrow} alt="Arrow" />} backgroundColor="#F1511B" textColor="#FFF" onClick={handleButtonLogInToVCAccount}/>
-<Button text="Log In To Founder Account" icon={<img src={orangeTopRightArrow} alt="Arrow" />} borderColor="#F1511B" textColor="#F1511B" onClick={handleButtonLogInToFounderAccount} />      
-<Button text="Button 3" icon={<img src={orangeTopRightArrow} alt="Arrow" />} textColor="#F1511B" onClick={handleButtonLogInToFounderAccount} />        
-<Button icon={<img src={orangeTopRightArrow} alt="Arrow" />} backgroundColor="black" onClick={handleButtonLogInToFounderAccount} /> 
-*/
-}
+export { Button };

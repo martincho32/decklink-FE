@@ -1,10 +1,9 @@
 import { useSnackbar } from 'notistack';
 import { Link, useNavigate } from 'react-router-dom';
 import { useState, useContext } from 'react';
-import whiteTopRightArrow from '../../assets/images/ArrowTopRight.svg';
+import { Logo } from '@/components/icons';
 import styles from './LogIn.module.css';
-import graphImageFlying from '../../assets/images/graph-image-flying.png';
-import graphImageStanding from '../../assets/images/graph-image-standing.png';
+import { GraphFlyingImage, GraphStandingImage } from '@/assets/images';
 import { MainLayout, Input, Button } from '../../components';
 import { AuthContext } from '../../context';
 
@@ -92,12 +91,12 @@ function LogIn() {
       <div className={styles.blockContainer}>
         <img
           className={styles.imgTopRight}
-          src={graphImageFlying}
+          src={GraphFlyingImage}
           alt="graphImageStanding"
         />
         <img
           className={styles.imgBotLeft}
-          src={graphImageStanding}
+          src={GraphStandingImage}
           alt="graphImageStanding"
         />
         <div className={styles.formWrapper}>
@@ -141,9 +140,9 @@ function LogIn() {
               id="login-button"
               type="submit"
               text="Log In"
-              icon={<img src={whiteTopRightArrow} alt="Arrow" />}
-              backgroundColor="#F1511B"
-              textColor="#FFF"
+              icon={<Logo color="var(--white-color)" />}
+              backgroundColor="var(--primary-color)"
+              textColor="var(--white-color)"
               className="w-full"
             />
 

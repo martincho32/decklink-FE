@@ -7,16 +7,8 @@ import { thumbnailPlugin } from '@react-pdf-viewer/thumbnail';
 import '@react-pdf-viewer/thumbnail/lib/styles/index.css';
 
 import { Link } from 'react-router-dom';
-import { Button } from '../..';
-import whiteTopRightArrow from '../../../assets/images/ArrowTopRight.svg';
 import styles from './Card.module.css';
-import viewIcon from '../../../assets/images/Views.png';
-import AverageTimeIcon from '../../../assets/images/AverageTime.png';
-import orangeTopRightArrow from '../../../assets/images/OrangeArrowTopRight.svg';
-import deleteIcon from '../../../assets/images/Delete.png';
 import { IDeck, IDeckView } from '../../../types';
-import copyIcon from '../../../assets/images/CopyIcon.svg';
-import chartIcon from '../../../assets/images/ChartIcon.svg';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -27,19 +19,26 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
   AlertDialogTrigger,
-} from '../../UI/AlertDialog';
+  Button,
+} from '@/components/UI';
 import { deckViewService } from '@/services';
 import { getAverageTotalTimeInMinutes } from '@/utils';
-
 import { pageThumbnailPlugin } from './pageThumbnailPlugin';
+import {
+  EditIcon,
+  ViewsIcon,
+  GraphIcon,
+  CopyIcon,
+  DeleteIcon,
+} from '@/components/icons/';
+import { ExplanationPopup } from '@/components/';
 
 interface Props {
   deck: IDeck;
   handleClickDelete: (id: string) => Promise<void>;
-  onClick: (event) => void;
 }
 
-function Card({ deck, handleClickDelete, onClick }: Props) {
+function Card({ deck, handleClickDelete }: Props) {
   const thumbnailPluginInstance = thumbnailPlugin();
   const { Cover } = thumbnailPluginInstance;
 
@@ -47,15 +46,15 @@ function Card({ deck, handleClickDelete, onClick }: Props) {
     PageThumbnail: <Cover width={500} getPageIndex={() => 0} />,
   });
 
-  const [isPopupVisible, setPopupVisible] = useState(false);
+  // const [isPopupVisible, setPopupVisible] = useState(false);
 
-  const handleMouseEnter = () => {
-    setPopupVisible(true);
-  };
+  // const handleMouseEnter = () => {
+  //   setPopupVisible(true);
+  // };
 
-  const handleMouseLeave = () => {
-    setPopupVisible(false);
-  };
+  // const handleMouseLeave = () => {
+  //   setPopupVisible(false);
+  // };
 
   const { enqueueSnackbar } = useSnackbar();
 
@@ -108,90 +107,71 @@ function Card({ deck, handleClickDelete, onClick }: Props) {
   const viewer = useMemo(
     () => (
       <Worker workerUrl="https://unpkg.com/pdfjs-dist@3.6.172/build/pdf.worker.min.js">
-        <div className="">
-          <Viewer
-            defaultScale={10}
-            fileUrl={deck.deckUrl}
-            plugins={[pageThumbnailPluginInstance, thumbnailPluginInstance]}
-          />
-        </div>
+        <Viewer
+          defaultScale={10}
+          fileUrl={deck.deckUrl}
+          plugins={[pageThumbnailPluginInstance, thumbnailPluginInstance]}
+        />
       </Worker>
     ),
     [deck.deckUrl]
   );
 
+  // const onMouseEnterExplanationIcon = () => {
+  //   setPopupVisible(true);
+  // };
+
+  // const onMouseLeaveExplanationIcon = () => {
+  //   setPopupVisible(false);
+  // };
+
   return (
-    <div
-      onClick={onClick}
-      tabIndex={0}
-      role="button"
-      className={styles.deckBlock}
-    >
-      {/* <Worker workerUrl="https://unpkg.com/pdfjs-dist@3.6.172/build/pdf.worker.min.js">
-        <div className="">
-          <Viewer
-            defaultScale={10}
-            fileUrl={deck.deckUrl}
-            plugins={[pageThumbnailPluginInstance, thumbnailPluginInstance]}
-          />
-        </div>
-      </Worker> */}
-
+    <div className={`${styles.deckBlock}`}>
       {viewer}
-
       <div className={styles.deckMainContentWrapper}>
         <div className={styles.deckMainInfoAndButtons}>
           <div className={styles.deckFirstRow}>
             <div className={styles.deckTitleWrapper}>
               <h3 className={styles.deckTitle}>{deck.name}</h3>
-            </div>
-            <div
-              role="button"
-              tabIndex={0}
-              onMouseEnter={handleMouseEnter}
-              onMouseLeave={handleMouseLeave}
-              className={`${styles.buttonContainer}`}
-            >
-              <Button
-                type="button"
-                text="Copy Link"
-                icon={<img src={copyIcon} alt="" />}
-                textColor="#F1511B"
-                className="min-w-max"
-                onClick={handleCopyClick}
-              />
-              {isPopupVisible && (
-                <div
-                  className={`${styles.popup}`}
-                >{`fundraisingtoolbox.io/preview/${deck?.customDeckLink}`}</div>
-              )}
+              <Link
+                className="hover:no-underline"
+                to={`/founder/deck/edit/${deck._id}`}
+              >
+                <Button
+                  type="button"
+                  text="Edit"
+                  icon={<EditIcon />}
+                  textColor="var(--primary-color)"
+                  className="w-full font-bold"
+                />
+              </Link>
             </div>
           </div>
           <div className={styles.deckMainInfo}>
-            <div className={styles.deckMainInfoItem}>
+            <div className={`${styles.deckMainInfoItem} relative`}>
               <div className={styles.deckTitleAndIcon}>
-                <img
-                  className={styles.deckMainInfoItemDataIcon}
-                  src={viewIcon}
-                  alt="view-icon"
+                <ViewsIcon />
+                <p className={styles.deckMainInfoItemTitle}>Views:</p>
+                <ExplanationPopup
+                  message="How many people viewer the pitch deck"
+                  showIcon
                 />
-                <p className={styles.deckMainInfoItemTitle}>Number of views:</p>
               </div>
               <div className={styles.dashedLine} />
               <p className={styles.deckMainInfoItemData}>
                 {deckViews?.length ?? 0}
               </p>
             </div>
-            <div className={styles.deckMainInfoItem}>
+            <div className={`${styles.deckMainInfoItem} relative`}>
               <div className={styles.deckTitleAndIcon}>
-                <img
-                  className={styles.deckMainInfoItemDataIcon}
-                  src={AverageTimeIcon}
-                  alt="average-time-icon"
-                />
+                <GraphIcon />
                 <p className={styles.deckMainInfoItemTitle}>
-                  Avg spent time(m):
+                  Avg time spent(m):
                 </p>
+                <ExplanationPopup
+                  message="Avg time spent watching the pitch deck in minutes"
+                  showIcon
+                />
               </div>
               <div className={styles.dashedLine} />
               <p className={styles.deckMainInfoItemData}>
@@ -201,34 +181,33 @@ function Card({ deck, handleClickDelete, onClick }: Props) {
           </div>
         </div>
         <div className={styles.buttons}>
-          <Link className="hover:no-underline" to={`/founder/deck/${deck._id}`}>
-            <Button
-              type="button"
-              text="See Detailed Info"
-              leftIcon={<img src={chartIcon} alt="Arrow" />}
-              icon={<img src={whiteTopRightArrow} alt="Arrow" />}
-              backgroundColor="#F1511B"
-              textColor="#FFF"
-              className="w-full"
-            />
-          </Link>
+          <Button
+            type="button"
+            text="Copy Link"
+            icon={<CopyIcon color="var(--primary-color)" />}
+            backgroundColor="var(--primary-color)"
+            textColor="var(--white-color)"
+            className="w-full font-semibold relative"
+            onClick={handleCopyClick}
+          />
+
           <div className={styles.secondaryButtonsWrapper}>
             <Link
               className="hover:no-underline"
-              to={`/founder/deck/edit/${deck._id}`}
+              to={`/founder/deck/${deck._id}`}
             >
               <Button
                 type="button"
-                text="Edit"
-                icon={<img src={orangeTopRightArrow} alt="Arrow" />}
-                borderColor="#F1511B"
-                textColor="#F1511B"
-                className="w-full"
+                text="Stats"
+                icon={<GraphIcon />}
+                borderColor="var(--primary-color)"
+                textColor="var(--primary-color)"
+                className="w-full font-semibold"
               />
             </Link>
             <AlertDialog>
-              <AlertDialogTrigger className="bg-mirage w-14 rounded">
-                <img className="m-auto" src={deleteIcon} alt="delete" />
+              <AlertDialogTrigger className="bg-mirage w-14 rounded flex justify-center items-center">
+                <DeleteIcon width="25" height="25" />
               </AlertDialogTrigger>
               <AlertDialogContent>
                 <AlertDialogHeader>
